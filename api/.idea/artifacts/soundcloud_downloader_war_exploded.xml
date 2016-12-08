@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="soundcloud_downloader:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/soundcloud_downloader_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="soundcloud_downloader/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="soundcloud_downloader" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
