@@ -5,7 +5,6 @@ import com.theah64.scd.database.Connection;
 import com.theah64.scd.models.Request;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**

@@ -52,6 +52,7 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         if (!isBinaryServlet()) {
             resp.setContentType(getContentType());
         }
@@ -80,7 +81,7 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
         }
     }
 
-    protected String getContentType() {
+    private String getContentType() {
         return CONTENT_TYPE_JSON;
     }
 
@@ -90,7 +91,7 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
 
     protected abstract void doAdvancedPost() throws BaseTable.InsertFailedException, JSONException, BaseTable.UpdateFailedException, Request.RequestException, IOException;
 
-    public HeaderSecurity getHeaderSecurity() {
+    HeaderSecurity getHeaderSecurity() {
         if (!isSecureServlet()) {
             throw new IllegalArgumentException("It's not a secure servlet");
         }
@@ -102,7 +103,7 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
         setGETMethodNotSupported(resp);
     }
 
-    public String getStringParameter(String key) {
+    String getStringParameter(String key) {
         return request.getStringParameter(key);
     }
 
