@@ -26,6 +26,7 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
     private HeaderSecurity hs;
     private PrintWriter out;
     private HttpServletRequest httpServletRequest;
+    private HttpServletResponse httpServletResponse;
 
     protected static void setGETMethodNotSupported(HttpServletResponse response) throws IOException {
         notSupported(ERROR_GET_NOT_SUPPORTED, response);
@@ -47,11 +48,20 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
         return out;
     }
 
+    public abstract boolean isBinaryServlet();
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType(getContentType());
+        if (!isBinaryServlet()) {
+            resp.setContentType(getContentType());
+        }
+
         this.httpServletRequest = req;
-        out = resp.getWriter();
+        this.httpServletResponse = resp;
+
+        if (!isBinaryServlet()) {
+            out = resp.getWriter();
+        }
 
         try {
             if (isSecureServlet()) {
@@ -119,5 +129,9 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
             return Integer.parseInt(value);
         }
         return defaultValue;
+    }
+
+    public HttpServletResponse getHttpServletResponse() {
+        return httpServletResponse;
     }
 }
