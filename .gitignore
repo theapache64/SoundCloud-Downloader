@@ -14,7 +14,7 @@ out
 hs_err_pid*
 
 *.apk
-*/META-INF/context.xml
+api/web/META-INF/context.xml
 
 
 */.idea/workspace.xml
