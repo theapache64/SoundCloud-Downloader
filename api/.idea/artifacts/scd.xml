@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="scd">
+    <output-path>$PROJECT_DIR$/out/artifacts/scd</output-path>
+    <root id="archive" name="scd.war">
+      <element id="artifact" artifact-name="soundcloud_downloader:war exploded" />
+    </root>
+  </artifact>
+</component>

@@ -48,7 +48,7 @@ public class DownloaderServlet extends AdvancedBaseServlet {
         final String downloadUrl = SoundCloudDownloader.getDownloadUrl(soundCloudUrl);
 
         if (downloadUrl != null) {
-            getWriter().write(new APIResponse("Request proccessed", KEY_DOWNLOAD_URL, downloadUrl).getResponse());
+            getWriter().write(new APIResponse("Request processed", KEY_DOWNLOAD_URL, downloadUrl).getResponse());
         } else {
             getWriter().write(new APIResponse("Invalid soundcloud url").getResponse());
         }
