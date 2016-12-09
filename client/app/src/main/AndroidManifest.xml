@@ -19,20 +19,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.DownloaderActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter android:priority="0">
-                <action android:name="android.intent.action.SEND" />
+        <activity android:name=".activities.DownloaderActivity">
 
+            <intent-filter android:priority="9998">
+                <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:mimeType="text/plain" />
             </intent-filter>
-            <intent-filter android:priority="0">
-                <action android:name="android.intent.action.VIEW" />
 
+            <intent-filter android:priority="9999">
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data
@@ -61,7 +58,7 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".activities.SplashActivity"></activity>
+        <activity android:name=".activities.SplashActivity" />
     </application>
 
 </manifest>
