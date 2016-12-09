@@ -7,4 +7,5 @@ import android.app.Application;
  */
 
 public class App extends Application {
+    public static final boolean IS_DEBUG_MODE = false;
 }

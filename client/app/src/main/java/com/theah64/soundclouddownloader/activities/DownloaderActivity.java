@@ -15,7 +15,7 @@ public class DownloaderActivity extends AppCompatActivity {
 
 
     private static final String X = DownloaderActivity.class.getSimpleName();
-    public static final String KEY_SOUNDCLOUD_URL = "soundcloud_url";
+    public static final String KEY_SOUNDCLOUD_URL = "sound_cloud_url";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
