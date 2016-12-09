@@ -15,6 +15,7 @@ INSERT INTO users (id,email,api_key) VALUES ('1','theapache64@gmail.com','abcd12
 CREATE TABLE `requests`(
   id INT(11) NOT NULL AUTO_INCREMENT,
   user_id INT(11) NOT NULL,
+  client
   sound_cloud_url TEXT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(id),
@@ -34,3 +35,10 @@ INSERT INTO preference (_key, _value) VALUES
   ('gmail_username', 'mymailer64@gmail.com'),
   ('gmail_password', 'mypassword64'),
   ('admin_email', 'theapache64@gmail.com');
+
+CREATE TABLE clients(
+  `id`     INT(11)      NOT NULL AUTO_INCREMENT,
+  `_key`   VARCHAR(100) NOT NULL,
+  `_value` TEXT         NOT NULL,
+  PRIMARY KEY (`id`)
+);
