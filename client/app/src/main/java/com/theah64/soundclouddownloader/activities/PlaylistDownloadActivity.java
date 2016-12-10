@@ -50,7 +50,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         setContentView(R.layout.activity_playlist_download);
 
         playlistName = getStringOrThrow(KEY_PLAYLIST_NAME);
-        final List<Track> tracks = new ArrayList<>();
+        trackList = new ArrayList<>();
         try {
             final JSONArray jaTracks = new JSONArray(getStringOrThrow(KEY_TRACKS));
 
@@ -63,7 +63,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                 final String downloadUrl = joTrack.getString(Track.KEY_DOWNLOAD_URL);
 
                 final String subPath = "/SoundCloud Downloader/" + playlistName + File.separator + fileName;
-                tracks.add(new Track(title, fileName, downloadUrl, subPath, true));
+                trackList.add(new Track(title, fileName, downloadUrl, subPath, true));
             }
 
         } catch (JSONException e) {
@@ -78,7 +78,6 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         rvPlaylist.setLayoutManager(new LinearLayoutManager(this));
 
         //noinspection unchecked
-        trackList = (ArrayList<Track>) getIntent().getSerializableExtra(KEY_TRACKS);
         final PlaylistAdapter adapter = new PlaylistAdapter(trackList, this);
         rvPlaylist.setAdapter(adapter);
 
@@ -101,6 +100,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
                 if (NetworkUtils.isNetwork(PlaylistDownloadActivity.this)) {
                     startDownload();
+                    finish();
                 } else {
                     Toast.makeText(PlaylistDownloadActivity.this, R.string.network_error, Toast.LENGTH_SHORT).show();
                 }

@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.activities.DownloaderActivity;
 import com.theah64.soundclouddownloader.activities.PlaylistDownloadActivity;
+import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.utils.APIRequestBuilder;
 import com.theah64.soundclouddownloader.utils.APIResponse;
 import com.theah64.soundclouddownloader.utils.NetworkUtils;
@@ -104,9 +105,10 @@ public class DownloaderService extends Service {
                     try {
                         final APIResponse apiResponse = new APIResponse(OkHttpUtils.logAndGetStringBody(response));
 
-                        final JSONArray jaTracks = apiResponse.getJSONObjectData().getJSONArray("tracks");
+                        final JSONObject joData = apiResponse.getJSONObjectData();
+                        final JSONArray jaTracks = joData.getJSONArray("tracks");
 
-                        if (jaTracks.length() == 1) {
+                        if (!joData.has(Track.KEY_PLAYLIST_NAME)) {
 
                             // Single song
                             final JSONObject joTrack = jaTracks.getJSONObject(0);
@@ -145,6 +147,7 @@ public class DownloaderService extends Service {
                             nm.cancel(notifId);
 
                             final Intent playListDownloadIntent = new Intent(DownloaderService.this, PlaylistDownloadActivity.class);
+                            playListDownloadIntent.putExtra(Track.KEY_PLAYLIST_NAME, joData.getString(Track.KEY_PLAYLIST_NAME));
                             playListDownloadIntent.putExtra(PlaylistDownloadActivity.KEY_TRACKS, jaTracks.toString());
                             startActivity(playListDownloadIntent);
                         }
