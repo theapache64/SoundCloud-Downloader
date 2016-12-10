@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.activities.DownloaderActivity;
+import com.theah64.soundclouddownloader.activities.PlaylistDownloadActivity;
 import com.theah64.soundclouddownloader.utils.APIRequestBuilder;
 import com.theah64.soundclouddownloader.utils.APIResponse;
 import com.theah64.soundclouddownloader.utils.NetworkUtils;
@@ -141,7 +142,11 @@ public class DownloaderService extends Service {
                         } else {
                             //It's a playlist
                             showToast("It's a playlist");
+                            nm.cancel(notifId);
 
+                            final Intent playListDownloadIntent = new Intent(DownloaderService.this, PlaylistDownloadActivity.class);
+                            playListDownloadIntent.putExtra(PlaylistDownloadActivity.KEY_TRACKS, jaTracks.toString());
+                            startActivity(playListDownloadIntent);
                         }
 
 

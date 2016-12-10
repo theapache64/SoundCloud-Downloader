@@ -1,16 +1,181 @@
 package com.theah64.soundclouddownloader.activities;
 
+import android.app.DownloadManager;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.app.Activity;
+import android.os.Environment;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NotificationCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.R;
+import com.theah64.soundclouddownloader.adapters.PlaylistAdapter;
+import com.theah64.soundclouddownloader.models.Track;
+import com.theah64.soundclouddownloader.utils.NetworkUtils;
+import com.theah64.soundclouddownloader.utils.Random;
 
-public class PlaylistDownloadActivity extends Activity {
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+public class PlaylistDownloadActivity extends BaseAppCompatActivity implements PlaylistAdapter.PlaylistListener {
+
+    public static final String KEY_TRACKS = "tracks";
+    private static final String X = PlaylistDownloadActivity.class.getSimpleName();
+    private static final String KEY_PLAYLIST_NAME = "playlist_name";
+    private List<Track> trackList;
+    private FloatingActionButton fabDownloadPlaylist;
+
+
+    private int notifId;
+    private NotificationManager nm;
+    private NotificationCompat.Builder apiNotification;
+    private String playlistName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist_download);
+
+        playlistName = getStringOrThrow(KEY_PLAYLIST_NAME);
+        final List<Track> tracks = new ArrayList<>();
+        try {
+            final JSONArray jaTracks = new JSONArray(getStringOrThrow(KEY_TRACKS));
+
+            for (int i = 0; i < jaTracks.length(); i++) {
+
+                final JSONObject joTrack = jaTracks.getJSONObject(i);
+
+                final String title = joTrack.getString(Track.KEY_TITLE);
+                final String fileName = joTrack.getString(Track.KEY_FILENAME);
+                final String downloadUrl = joTrack.getString(Track.KEY_DOWNLOAD_URL);
+
+                final String subPath = "/SoundCloud Downloader/" + playlistName + File.separator + fileName;
+                tracks.add(new Track(title, fileName, downloadUrl, subPath, true));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException(e.getMessage());
+        }
+
+
+        final RecyclerView rvPlaylist = (RecyclerView) findViewById(R.id.rvPlaylist);
+        fabDownloadPlaylist = (FloatingActionButton) findViewById(R.id.fabDownloadPlaylist);
+
+        rvPlaylist.setLayoutManager(new LinearLayoutManager(this));
+
+        //noinspection unchecked
+        trackList = (ArrayList<Track>) getIntent().getSerializableExtra(KEY_TRACKS);
+        final PlaylistAdapter adapter = new PlaylistAdapter(trackList, this);
+        rvPlaylist.setAdapter(adapter);
+
+        nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        apiNotification = new NotificationCompat.Builder(this)
+                .setContentTitle(getString(R.string.initializing_download))
+                .setContentText("Downloading playlist")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setProgress(100, 0, true)
+                .setAutoCancel(false)
+                .setTicker(getString(R.string.initializing_download))
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
+
+        notifId = Random.getRandomInt();
+        nm.notify(notifId, apiNotification.build());
+
+        findViewById(R.id.fabDownloadPlaylist).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (NetworkUtils.isNetwork(PlaylistDownloadActivity.this)) {
+                    startDownload();
+                } else {
+                    Toast.makeText(PlaylistDownloadActivity.this, R.string.network_error, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
+    private void startDownload() {
+
+        for (final Track track : trackList) {
+
+            Log.e(X, "-------------------------------");
+            Log.i(X, "Track : " + track);
+
+            // Single song
+            apiNotification.setContentTitle(getString(R.string.Starting_download));
+            nm.notify(notifId, apiNotification.build());
+
+            final String absFilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + track.getSubPath();
+            final File trackFile = new File(absFilePath);
+
+            if (!trackFile.exists()) {
+                //Starting download
+                addToDownloadQueue(track.getTitle(), track.getDownloadUrl(), track.getSubPath());
+                Log.i(X, "Added to download queue : " + track);
+            } else {
+                Log.e(X, "Track exist: " + track);
+            }
+
+            Log.e(X, "-------------------------------");
+
+        }
+
+        Toast.makeText(this, R.string.download_started, Toast.LENGTH_SHORT).show();
+        nm.cancel(notifId);
+    }
+
+    private void addToDownloadQueue(final String title, final String downloadUrl, final String subPath) {
+
+        final DownloadManager.Request downloadRequest = new DownloadManager.Request(Uri.parse(downloadUrl));
+
+        downloadRequest.setTitle(title);
+        downloadRequest.setDescription(downloadUrl);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            downloadRequest.allowScanningByMediaScanner();
+            downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        }
+
+        downloadRequest.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, subPath);
+        ((DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE)).enqueue(downloadRequest);
+
+    }
+
+    @Override
+    public void onChecked(int position) {
+        Log.i(X, "Checked: " + trackList.get(position));
+
+        refreshDownloadButton();
+    }
+
+    private void refreshDownloadButton() {
+        for (final Track track : trackList) {
+            if (track.isChecked()) {
+                fabDownloadPlaylist.show();
+                return;
+            }
+        }
+        fabDownloadPlaylist.hide();
+    }
+
+    @Override
+    public void onUnChecked(int position) {
+        Log.e(X, "Unchecked: " + trackList.get(position));
+
+        refreshDownloadButton();
+    }
 }
