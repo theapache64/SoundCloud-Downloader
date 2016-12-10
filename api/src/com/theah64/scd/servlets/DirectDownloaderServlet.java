@@ -2,6 +2,7 @@ package com.theah64.scd.servlets;
 
 import com.theah64.scd.database.tables.BaseTable;
 import com.theah64.scd.database.tables.Requests;
+import com.theah64.scd.models.JSONTracks;
 import com.theah64.scd.models.Track;
 import com.theah64.scd.utils.APIResponse;
 import com.theah64.scd.utils.Request;
@@ -52,16 +53,16 @@ public class DirectDownloaderServlet extends DownloaderServlet {
     @Override
     protected void doAdvancedPost() throws BaseTable.InsertFailedException, JSONException, BaseTable.UpdateFailedException, Request.RequestException {
 
-        final JSONArray jaTracks = super.getTracks();
+        final JSONTracks jTracks = super.getTracks();
 
         final HttpServletResponse response = super.getHttpServletResponse();
 
 
-        if (jaTracks != null) {
+        if (jTracks != null) {
 
             System.out.println("Track found");
 
-            final JSONObject joTrack = jaTracks.getJSONObject(0);
+            final JSONObject joTrack = jTracks.getJSONArrayTracks().getJSONObject(0);
 
             response.setContentType("audio/mpeg");
             response.addHeader("Content-Disposition", "attachment; filename=" + joTrack.getString(Track.KEY_FILENAME));
