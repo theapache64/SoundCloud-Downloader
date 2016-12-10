@@ -26,9 +26,11 @@ import com.theah64.soundclouddownloader.utils.NetworkUtils;
 import com.theah64.soundclouddownloader.utils.OkHttpUtils;
 import com.theah64.soundclouddownloader.utils.Random;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -39,8 +41,8 @@ import okhttp3.Response;
 public class DownloaderService extends Service {
 
     private static final String X = DownloaderService.class.getSimpleName();
-    private static final String KEY_DOWNLOAD_URL = "download_url";
-    private static final String KEY_NAME = "name";
+
+
     private int notifId;
     private NotificationManager nm;
     private NotificationCompat.Builder apiNotification;
@@ -55,6 +57,7 @@ public class DownloaderService extends Service {
     private final Handler handler = new Handler(Looper.getMainLooper());
 
     private void showToast(final String message) {
+        Log.d(X, "Message : " + message);
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -100,38 +103,69 @@ public class DownloaderService extends Service {
                     try {
                         final APIResponse apiResponse = new APIResponse(OkHttpUtils.logAndGetStringBody(response));
 
-                        final JSONObject joData = apiResponse.getJSONObjectData();
+                        final JSONArray jaTracks = apiResponse.getJSONObjectData().getJSONArray("tracks");
 
-                        final String name = joData.getString(KEY_NAME);
-                        final String downloadUrl = joData.getString(KEY_DOWNLOAD_URL);
+                        if (jaTracks.length() == 1) {
 
-                        apiNotification.setContentTitle(getString(R.string.Starting_download));
-                        apiNotification.setContentText(downloadUrl);
-                        nm.notify(notifId, apiNotification.build());
+                            // Single song
+                            final JSONObject joTrack = jaTracks.getJSONObject(0);
 
-                        //Starting download
-                        final DownloadManager.Request downloadRequest = new DownloadManager.Request(Uri.parse(downloadUrl));
+                            final String title = joTrack.getString("title");
+                            final String downloadUrl = joTrack.getString("download_url");
+                            final String fileName = joTrack.getString("filename");
 
-                        final String fileName = name + ".mp3";
+                            apiNotification.setContentTitle(getString(R.string.Starting_download));
+                            apiNotification.setContentText(downloadUrl);
+                            nm.notify(notifId, apiNotification.build());
 
-                        downloadRequest.setTitle(fileName);
-                        downloadRequest.setDescription(name + " - downloaded from Github scd");
+                            //Checking file existence
+                            final String subPath = File.separator + "/SoundCloud Downloader/" + fileName;
+                            final String absFilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + subPath;
+                            final File trackFile = new File(absFilePath);
 
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                            downloadRequest.allowScanningByMediaScanner();
-                            downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                            if (!trackFile.exists()) {
+
+                                //Starting download
+                                addToDownloadQueue(title, downloadUrl, subPath);
+
+                                nm.cancel(notifId);
+                                showToast("Download started");
+
+                            } else {
+                                apiNotification.setContentTitle("Existing song : " + title + ", download skipped.");
+                                apiNotification.setContentText(absFilePath);
+                                apiNotification.setProgress(100, 100, false);
+                                nm.notify(notifId, apiNotification.build());
+                            }
+
+                        } else {
+                            //It's a playlist
+                            showToast("It's a playlist");
+
                         }
 
-                        downloadRequest.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-                        ((DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE)).enqueue(downloadRequest);
-
-                        nm.cancel(notifId);
-                        showToast("Download started");
 
                     } catch (APIResponse.APIException | JSONException e) {
                         e.printStackTrace();
                         showToast("ERROR: " + e.getMessage());
                     }
+                }
+
+                private void addToDownloadQueue(final String title, final String downloadUrl, final String subPath) {
+
+                    final DownloadManager.Request downloadRequest = new DownloadManager.Request(Uri.parse(downloadUrl));
+
+                    downloadRequest.setTitle(title);
+                    downloadRequest.setDescription(downloadUrl);
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                        downloadRequest.allowScanningByMediaScanner();
+                        downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                    }
+
+                    downloadRequest.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, subPath);
+                    ((DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE)).enqueue(downloadRequest);
+
                 }
             });
 

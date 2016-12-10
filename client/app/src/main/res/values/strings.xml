@@ -5,4 +5,5 @@
     <string name="Invalid_soundcloud_URL">Invalid soundcloud URL</string>
     <string name="network_error">No network available, Please check your connection</string>
     <string name="Starting_download">Starting download...</string>
+    <string name="title_activity_playlist_download">PlaylistDownloadActivity</string>
 </resources>
