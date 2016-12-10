@@ -1,14 +1,12 @@
 package com.theah64.scd.core;
 
 import com.theah64.scd.database.tables.Preference;
+import com.theah64.scd.models.JSONTracks;
 import com.theah64.scd.models.Track;
 import com.theah64.scd.utils.NetworkHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by theapache64 on 8/12/16.
@@ -22,13 +20,15 @@ public class SoundCloudDownloader {
     private static final String RESOLVE_TRACK_URL_FORMAT = "https://api.soundcloud.com/resolve.json?url=%s&client_id=" + CLIENT_ID;
     private static final String STREAM_TRACK_URL_FORMAT = "https://api.soundcloud.com/i1/tracks/%s/streams?client_id=" + CLIENT_ID;
 
-    public static JSONArray getTracks(String soundCloudUrl) {
+    public static JSONTracks getTracks(String soundCloudUrl) {
 
-        JSONArray jaTracks = getSoundCloudTracks(soundCloudUrl);
+        JSONTracks jTracks = getSoundCloudTracks(soundCloudUrl);
 
-        if (jaTracks != null) {
+        if (jTracks != null) {
 
             try {
+
+                final JSONArray jaTracks = jTracks.getJSONArrayTracks();
 
                 for (int i = 0; i < jaTracks.length(); i++) {
 
@@ -42,12 +42,12 @@ public class SoundCloudDownloader {
 
             } catch (JSONException e) {
                 e.printStackTrace();
-                jaTracks = null;
+                jTracks = null;
             }
 
         }
 
-        return jaTracks;
+        return jTracks;
     }
 
     private static String getSoundCloudDownloadUrl(String trackId) {
@@ -62,7 +62,7 @@ public class SoundCloudDownloader {
         return null;
     }
 
-    private static JSONArray getSoundCloudTracks(String soundCloudUrl) {
+    private static JSONTracks getSoundCloudTracks(String soundCloudUrl) {
 
         final String resolveTrackResp = new NetworkHelper(String.format(RESOLVE_TRACK_URL_FORMAT, soundCloudUrl)).getResponse();
 
@@ -71,9 +71,14 @@ public class SoundCloudDownloader {
                 final JSONObject joResolve = new JSONObject(resolveTrackResp);
                 final JSONArray jaTracks = new JSONArray();
 
+
                 final String fileNameFormat = Preference.getInstance().getString(Preference.KEY_FILENAME_FORMAT);
 
+                String playlistName = null;
                 if (joResolve.has("playlist_type")) {
+
+                    playlistName = joResolve.getString("title");
+
                     //Url was a playlist
                     final JSONArray jaResolvedTracks = joResolve.getJSONArray("tracks");
                     for (int i = 0; i < jaResolvedTracks.length(); i++) {
@@ -113,7 +118,7 @@ public class SoundCloudDownloader {
                     jaTracks.put(joTrack);
                 }
 
-                return jaTracks;
+                return new JSONTracks(playlistName, jaTracks);
 
             } catch (JSONException e) {
                 e.printStackTrace();
