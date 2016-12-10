@@ -144,12 +144,14 @@ public class DownloaderService extends Service {
                         } else {
                             //It's a playlist
                             showToast("It's a playlist");
-                            nm.cancel(notifId);
 
                             final Intent playListDownloadIntent = new Intent(DownloaderService.this, PlaylistDownloadActivity.class);
                             playListDownloadIntent.putExtra(Track.KEY_PLAYLIST_NAME, joData.getString(Track.KEY_PLAYLIST_NAME));
                             playListDownloadIntent.putExtra(PlaylistDownloadActivity.KEY_TRACKS, jaTracks.toString());
+                            playListDownloadIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(playListDownloadIntent);
+
+                            nm.cancel(notifId);
                         }
 
 

@@ -12,7 +12,7 @@ public class Track implements Serializable {
     public static final String KEY_FILENAME = "filename";
     public static final String KEY_PLAYLIST_NAME = "playlist_name";
     private final String title, fileName, downloadUrl, subPath;
-    private final boolean isChecked;
+    private boolean isChecked;
 
     public Track(String title, String fileName, String downloadUrl, String subPath, boolean isChecked) {
         this.title = title;
@@ -51,5 +51,9 @@ public class Track implements Serializable {
                 ", subPath='" + subPath + '\'' +
                 ", isChecked=" + isChecked +
                 '}';
+    }
+
+    public void setChecked(boolean isChecked) {
+        this.isChecked = isChecked;
     }
 }

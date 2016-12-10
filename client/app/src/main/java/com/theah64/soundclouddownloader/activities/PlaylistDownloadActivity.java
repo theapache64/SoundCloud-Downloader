@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -43,13 +44,20 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
     private NotificationManager nm;
     private NotificationCompat.Builder apiNotification;
     private String playlistName;
+    private DownloadManager dm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist_download);
 
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         playlistName = getStringOrThrow(KEY_PLAYLIST_NAME);
+
+        enableBackNavigation(playlistName);
+
         trackList = new ArrayList<>();
         try {
             final JSONArray jaTracks = new JSONArray(getStringOrThrow(KEY_TRACKS));
@@ -82,6 +90,8 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         rvPlaylist.setAdapter(adapter);
 
         nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        dm = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+
         apiNotification = new NotificationCompat.Builder(this)
                 .setContentTitle(getString(R.string.initializing_download))
                 .setContentText("Downloading playlist")
@@ -92,17 +102,17 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
 
         notifId = Random.getRandomInt();
-        nm.notify(notifId, apiNotification.build());
 
         findViewById(R.id.fabDownloadPlaylist).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 if (NetworkUtils.isNetwork(PlaylistDownloadActivity.this)) {
+                    nm.notify(notifId, apiNotification.build());
                     startDownload();
                     finish();
                 } else {
-                    Toast.makeText(PlaylistDownloadActivity.this, R.string.network_error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PlaylistDownloadActivity.this, R.string.network_error, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -110,31 +120,32 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
     private void startDownload() {
 
+        // Single song
+        apiNotification.setContentTitle(getString(R.string.Starting_download));
+        nm.notify(notifId, apiNotification.build());
+
         for (final Track track : trackList) {
 
             Log.e(X, "-------------------------------");
             Log.i(X, "Track : " + track);
 
-            // Single song
-            apiNotification.setContentTitle(getString(R.string.Starting_download));
-            nm.notify(notifId, apiNotification.build());
-
             final String absFilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + track.getSubPath();
             final File trackFile = new File(absFilePath);
 
-            if (!trackFile.exists()) {
+            if (!trackFile.exists() && track.isChecked()) {
                 //Starting download
                 addToDownloadQueue(track.getTitle(), track.getDownloadUrl(), track.getSubPath());
-                Log.i(X, "Added to download queue : " + track);
+                Log.i(X, "Added to download queue");
+            } else if (!track.isChecked()) {
+                Log.e(X, "Track unchecked");
             } else {
-                Log.e(X, "Track exist: " + track);
+                Log.e(X, "Track exist");
             }
 
             Log.e(X, "-------------------------------");
-
         }
 
-        Toast.makeText(this, R.string.download_started, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.download_started, Toast.LENGTH_LONG).show();
         nm.cancel(notifId);
     }
 
@@ -151,14 +162,13 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         }
 
         downloadRequest.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, subPath);
-        ((DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE)).enqueue(downloadRequest);
-
+        dm.enqueue(downloadRequest);
     }
 
     @Override
     public void onChecked(int position) {
         Log.i(X, "Checked: " + trackList.get(position));
-
+        trackList.get(position).setChecked(true);
         refreshDownloadButton();
     }
 
@@ -175,7 +185,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
     @Override
     public void onUnChecked(int position) {
         Log.e(X, "Unchecked: " + trackList.get(position));
-
+        trackList.get(position).setChecked(false);
         refreshDownloadButton();
     }
 }

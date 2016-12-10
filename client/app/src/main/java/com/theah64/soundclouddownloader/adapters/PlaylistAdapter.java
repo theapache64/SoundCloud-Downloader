@@ -59,8 +59,17 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
 
         public ViewHolder(View itemView) {
             super(itemView);
+
+
             this.cbDownload = (CheckBox) itemView.findViewById(R.id.cbDownload);
             this.tvTrackTitle = (TextView) itemView.findViewById(R.id.tvTrackTitle);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    cbDownload.setChecked(!cbDownload.isChecked());
+                }
+            });
 
             this.cbDownload.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
