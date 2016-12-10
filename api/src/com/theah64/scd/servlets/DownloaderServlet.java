@@ -4,9 +4,11 @@ import com.theah64.scd.core.SoundCloudDownloader;
 import com.theah64.scd.database.tables.BaseTable;
 import com.theah64.scd.database.tables.Preference;
 import com.theah64.scd.database.tables.Requests;
+import com.theah64.scd.models.JSONTracks;
 import com.theah64.scd.models.Track;
 import com.theah64.scd.utils.APIResponse;
 import com.theah64.scd.utils.Request;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,6 +26,7 @@ public class DownloaderServlet extends AdvancedBaseServlet {
 
     private static final String KEY_DOWNLOAD_URL = "download_url";
     private static final String KEY_NAME = "name";
+    private static final String KEY_TRACKS = "tracks";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -48,12 +51,16 @@ public class DownloaderServlet extends AdvancedBaseServlet {
     @Override
     protected void doAdvancedPost() throws BaseTable.InsertFailedException, JSONException, BaseTable.UpdateFailedException, Request.RequestException, IOException {
 
-        final Track track = getTrack();
+        final JSONTracks jTracks = getTracks();
 
-        if (track != null) {
+        if (jTracks != null) {
+
             final JSONObject joTrack = new JSONObject();
-            joTrack.put(KEY_NAME, track.getName());
-            joTrack.put(KEY_DOWNLOAD_URL, track.getDownloadUrl());
+
+            if (jTracks.getPlaylistName() != null) {
+                joTrack.put(Track.KEY_PLAYLIST_NAME, jTracks.getPlaylistName());
+            }
+            joTrack.put(KEY_TRACKS, jTracks.getJSONArrayTracks());
 
             getWriter().write(new APIResponse("Request processed", joTrack).getResponse());
         } else {
@@ -61,11 +68,11 @@ public class DownloaderServlet extends AdvancedBaseServlet {
         }
     }
 
-    Track getTrack() throws BaseTable.InsertFailedException {
+    JSONTracks getTracks() throws BaseTable.InsertFailedException {
         final String userId = isSecureServlet() ? getHeaderSecurity().getUserId() : Preference.getInstance().getString(Preference.KEY_DEFAULT_USER_ID);
         final String soundCloudUrl = getStringParameter(Requests.COLUMN_SOUND_CLOUD_URL);
         final com.theah64.scd.models.Request apiRequest = new com.theah64.scd.models.Request(userId, soundCloudUrl);
         Requests.getInstance().add(apiRequest);
-        return SoundCloudDownloader.getTrack(soundCloudUrl);
+        return SoundCloudDownloader.getTracks(soundCloudUrl);
     }
 }

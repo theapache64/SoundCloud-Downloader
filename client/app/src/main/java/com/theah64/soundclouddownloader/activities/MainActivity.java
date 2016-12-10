@@ -1,4 +1,4 @@
-package com.theah64.soundclouddownloader;
+package com.theah64.soundclouddownloader.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,16 +10,15 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.theah64.soundclouddownloader.R;
+
 public class MainActivity extends AppCompatActivity {
 
-    private static final String X = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Log.d(X, "Intent: " + getIntent());
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

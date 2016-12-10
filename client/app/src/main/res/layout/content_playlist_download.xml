@@ -6,12 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.theah64.soundclouddownloader.activities.MainActivity"
-    tools:showIn="@layout/activity_main">
+    tools:context="com.theah64.soundclouddownloader.activities.PlaylistDownloadActivity"
+    tools:showIn="@layout/activity_playlist_download">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvPlaylist"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:scrollbars="vertical" />
+
+
 
 </RelativeLayout>
