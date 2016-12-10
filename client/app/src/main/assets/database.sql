@@ -3,10 +3,7 @@ CREATE TABLE playlists(
 	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	title VARCHAR(50) NOT NULL,
 	url TEXT NOT NULL,
-	total_tracks INTEGER,
-	downloaded_tracks INTEGER,
-	pending_tracks INTEGER,
-	status VARCHAR(10) CHECK (status IN ('DOWNLOADED','DOWNLOADING','FAILED','UNTOUCHED'))
+	downloaded_tracks INTEGER
 );
 
 DROP TABLE IF EXISTS tracks;
@@ -15,6 +12,6 @@ CREATE TABLE tracks(
 	title TEXT NOT NULL,
 	url TEXT NOT NULL,
 	playlist_id INTEGER,
-	status VARCHAR(10) CHECK (status IN ('DOWNLOADED','DOWNLOADING','FAILED','UNTOUCHED')),
+	download_id INTEGER NOT NULL,
 	FOREIGN KEY (playlist_id) REFERENCES playlists(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
