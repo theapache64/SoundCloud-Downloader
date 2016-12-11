@@ -67,6 +67,7 @@ public class SoundCloudDownloader {
         final String resolveTrackResp = new NetworkHelper(String.format(RESOLVE_TRACK_URL_FORMAT, soundCloudUrl)).getResponse();
 
         if (resolveTrackResp != null) {
+
             try {
                 final JSONObject joResolve = new JSONObject(resolveTrackResp);
                 final JSONArray jaTracks = new JSONArray();
@@ -80,9 +81,9 @@ public class SoundCloudDownloader {
 
                     //Url was a playlist
                     final JSONArray jaResolvedTracks = joResolve.getJSONArray(JSONTracks.KEY_TRACKS);
+
                     for (int i = 0; i < jaResolvedTracks.length(); i++) {
-                        final JSONObject joResolvedTrack = jaResolvedTracks.getJSONObject(i);
-                        jaTracks.put(getResolvedTrack(joResolvedTrack));
+                        jaTracks.put(getResolvedTrack(jaResolvedTracks.getJSONObject(i)));
                     }
 
                 } else {
