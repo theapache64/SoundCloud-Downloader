@@ -71,54 +71,25 @@ public class SoundCloudDownloader {
                 final JSONObject joResolve = new JSONObject(resolveTrackResp);
                 final JSONArray jaTracks = new JSONArray();
 
+                String playlistName = null, playlistArtworkUrl = null;
 
-                final String fileNameFormat = Preference.getInstance().getString(Preference.KEY_FILENAME_FORMAT);
-
-                String playlistName = null;
                 if (joResolve.has("playlist_type")) {
 
                     playlistName = joResolve.getString("title");
+                    playlistArtworkUrl = joResolve.getString("artwork_url");
 
                     //Url was a playlist
-                    final JSONArray jaResolvedTracks = joResolve.getJSONArray("tracks");
+                    final JSONArray jaResolvedTracks = joResolve.getJSONArray(JSONTracks.KEY_TRACKS);
                     for (int i = 0; i < jaResolvedTracks.length(); i++) {
-
                         final JSONObject joResolvedTrack = jaResolvedTracks.getJSONObject(i);
-
-                        //Url is a single track
-                        final String trackId = String.valueOf(joResolvedTrack.getInt("id"));
-                        final String trackName = joResolvedTrack.getString("title");
-                        final String originalFormat = joResolvedTrack.getString("original_format");
-                        final String fileName = String.format(fileNameFormat, trackName, originalFormat);
-
-                        final JSONObject joTrack = new JSONObject();
-                        joTrack.put(Track.KEY_ID, trackId);
-                        joTrack.put(Track.KEY_TITLE, trackName);
-                        joTrack.put(Track.KEY_ORIGINAL_FORMAT, originalFormat);
-                        joTrack.put(Track.KEY_FILENAME, fileName);
-
-                        jaTracks.put(joTrack);
+                        jaTracks.put(getResolvedTrack(joResolvedTrack));
                     }
 
                 } else {
-
-                    //Url is a single track
-                    final String trackId = String.valueOf(joResolve.getInt("id"));
-                    final String trackName = joResolve.getString("title");
-
-                    final String originalFormat = joResolve.getString("original_format");
-                    final String fileName = String.format(fileNameFormat, trackName, originalFormat);
-
-                    final JSONObject joTrack = new JSONObject();
-                    joTrack.put(Track.KEY_ID, trackId);
-                    joTrack.put(Track.KEY_TITLE, trackName);
-                    joTrack.put(Track.KEY_ORIGINAL_FORMAT, originalFormat);
-                    joTrack.put(Track.KEY_FILENAME, fileName);
-
-                    jaTracks.put(joTrack);
+                    jaTracks.put(getResolvedTrack(joResolve));
                 }
 
-                return new JSONTracks(playlistName, jaTracks);
+                return new JSONTracks(playlistName, playlistArtworkUrl, jaTracks);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -126,5 +97,28 @@ public class SoundCloudDownloader {
         }
 
         return null;
+    }
+
+
+    private static JSONObject getResolvedTrack(JSONObject joResolvedTrack) throws JSONException {
+
+        final String fileNameFormat = Preference.getInstance().getString(Preference.KEY_FILENAME_FORMAT);
+
+        //Url is a single track
+        final String trackId = String.valueOf(joResolvedTrack.getInt("id"));
+        final String trackName = joResolvedTrack.getString("title");
+        final String originalFormat = joResolvedTrack.getString("original_format");
+        final String trackArtworkUrl = joResolvedTrack.getString("artwork_url");
+
+        final String fileName = String.format(fileNameFormat, trackName, originalFormat);
+
+        final JSONObject joTrack = new JSONObject();
+        joTrack.put(Track.KEY_ID, trackId);
+        joTrack.put(Track.KEY_TITLE, trackName);
+        joTrack.put(Track.KEY_ORIGINAL_FORMAT, originalFormat);
+        joTrack.put(Track.KEY_FILENAME, fileName);
+        joTrack.put(Track.KEY_ARTWORK_URL, trackArtworkUrl);
+
+        return joTrack;
     }
 }

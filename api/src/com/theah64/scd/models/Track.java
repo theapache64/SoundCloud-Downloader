@@ -11,6 +11,7 @@ public class Track {
     public static final String KEY_FILENAME = "filename";
     public static final String KEY_DOWNLOAD_URL = "download_url";
     public static final String KEY_PLAYLIST_NAME = "playlist_name";
+    public static final String KEY_ARTWORK_URL = "artwork_url";
     private final String id;
     private final String name;
     private String downloadUrl;
