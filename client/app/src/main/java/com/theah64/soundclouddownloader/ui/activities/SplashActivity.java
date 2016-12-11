@@ -1,4 +1,4 @@
-package com.theah64.soundclouddownloader.activities;
+package com.theah64.soundclouddownloader.ui.activities;
 
 import android.Manifest;
 import android.content.Intent;
@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.BuildConfig;
 import com.theah64.soundclouddownloader.R;
-import com.theah64.soundclouddownloader.utils.App;
 
 public class SplashActivity extends AppCompatActivity {
 

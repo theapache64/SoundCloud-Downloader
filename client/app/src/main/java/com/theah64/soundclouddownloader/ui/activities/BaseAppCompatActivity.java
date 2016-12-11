@@ -1,4 +1,4 @@
-package com.theah64.soundclouddownloader.activities;
+package com.theah64.soundclouddownloader.ui.activities;
 
 import android.os.Parcelable;
 import android.support.annotation.Nullable;

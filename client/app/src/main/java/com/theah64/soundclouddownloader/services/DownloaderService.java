@@ -1,7 +1,6 @@
 package com.theah64.soundclouddownloader.services;
 
 import android.app.DownloadManager;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
@@ -19,8 +18,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.R;
-import com.theah64.soundclouddownloader.activities.DownloaderActivity;
-import com.theah64.soundclouddownloader.activities.PlaylistDownloadActivity;
+import com.theah64.soundclouddownloader.ui.activities.DownloaderActivity;
+import com.theah64.soundclouddownloader.ui.activities.PlaylistDownloadActivity;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.utils.APIRequestBuilder;
 import com.theah64.soundclouddownloader.utils.APIResponse;

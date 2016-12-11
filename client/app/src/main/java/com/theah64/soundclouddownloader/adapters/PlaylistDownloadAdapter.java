@@ -17,13 +17,13 @@ import java.util.List;
  * Created by theapache64 on 10/12/16.
  */
 
-public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHolder> {
+public class PlaylistDownloadAdapter extends RecyclerView.Adapter<PlaylistDownloadAdapter.ViewHolder> {
 
     private final List<Track> tracks;
     private LayoutInflater inflater;
     private final PlaylistListener callback;
 
-    public PlaylistAdapter(List<Track> tracks, PlaylistListener callback) {
+    public PlaylistDownloadAdapter(List<Track> tracks, PlaylistListener callback) {
         this.tracks = tracks;
         this.callback = callback;
     }

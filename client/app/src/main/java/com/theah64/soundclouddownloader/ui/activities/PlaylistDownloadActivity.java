@@ -1,4 +1,4 @@
-package com.theah64.soundclouddownloader.activities;
+package com.theah64.soundclouddownloader.ui.activities;
 
 import android.app.DownloadManager;
 import android.app.NotificationManager;
@@ -18,7 +18,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.R;
-import com.theah64.soundclouddownloader.adapters.PlaylistAdapter;
+import com.theah64.soundclouddownloader.adapters.PlaylistDownloadAdapter;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.utils.NetworkUtils;
 import com.theah64.soundclouddownloader.utils.Random;
@@ -31,7 +31,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaylistDownloadActivity extends BaseAppCompatActivity implements PlaylistAdapter.PlaylistListener {
+public class PlaylistDownloadActivity extends BaseAppCompatActivity implements PlaylistDownloadAdapter.PlaylistListener {
 
     public static final String KEY_TRACKS = "tracks";
     private static final String X = PlaylistDownloadActivity.class.getSimpleName();
@@ -69,9 +69,10 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                 final String title = joTrack.getString(Track.KEY_TITLE);
                 final String fileName = joTrack.getString(Track.KEY_FILENAME);
                 final String downloadUrl = joTrack.getString(Track.KEY_DOWNLOAD_URL);
+                final String imageUrl = joTrack.getString(Track.KEY_IMAGE_URL);
 
                 final String subPath = "/SoundCloud Downloader/" + playlistName + File.separator + fileName;
-                trackList.add(new Track(title, fileName, downloadUrl, subPath, true));
+                trackList.add(new Track(title, fileName, downloadUrl, subPath, true, imageUrl, null));
             }
 
         } catch (JSONException e) {
@@ -86,7 +87,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         rvPlaylist.setLayoutManager(new LinearLayoutManager(this));
 
         //noinspection unchecked
-        final PlaylistAdapter adapter = new PlaylistAdapter(trackList, this);
+        final PlaylistDownloadAdapter adapter = new PlaylistDownloadAdapter(trackList, this);
         rvPlaylist.setAdapter(adapter);
 
         nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

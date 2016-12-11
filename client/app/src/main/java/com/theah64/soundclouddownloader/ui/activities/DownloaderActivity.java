@@ -1,4 +1,4 @@
-package com.theah64.soundclouddownloader.activities;
+package com.theah64.soundclouddownloader.ui.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
