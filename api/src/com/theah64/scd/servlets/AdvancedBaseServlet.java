@@ -107,7 +107,6 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
         return request.getStringParameter(key);
     }
 
-
     public boolean getBooleanParameter(String key) {
         return request.getBooleanParameter(key);
     }
