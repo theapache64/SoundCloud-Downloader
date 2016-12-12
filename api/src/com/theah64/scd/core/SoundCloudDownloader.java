@@ -36,6 +36,7 @@ public class SoundCloudDownloader {
 
                     final String downloadUrl = getSoundCloudDownloadUrl(joTrack.getString(Track.KEY_ID));
                     if (downloadUrl != null) {
+                        joTrack.remove(Track.KEY_ID);
                         joTrack.put(Track.KEY_DOWNLOAD_URL, downloadUrl);
                     }
                 }
