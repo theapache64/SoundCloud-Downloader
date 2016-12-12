@@ -17,7 +17,6 @@ import java.util.List;
 public class Playlists extends BaseTable<Playlist> {
 
     public static final String COLUMN_SOUNDCLOUD_URL = "soundcloud_url";
-    public static final String COLUMN_ARTWORK_URL = "artwork_url";
     private static final String COLUMN_TITLE = "title";
     private static final String TABLE_NAME_PLAYLISTS = "playlists";
     private static Playlists instance;

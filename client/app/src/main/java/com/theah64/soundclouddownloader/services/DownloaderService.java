@@ -96,9 +96,11 @@ public class DownloaderService extends Service {
 
             //Processing request
             OkHttpUtils.getInstance().getClient().newCall(scdRequest).enqueue(new Callback() {
+
                 @Override
                 public void onFailure(Call call, IOException e) {
                     showToast("ERROR: " + e.getMessage());
+                    showErrorNotification(e.getMessage(), null);
                 }
 
                 @Override
@@ -118,7 +120,11 @@ public class DownloaderService extends Service {
                             final String title = joTrack.getString("title");
                             final String downloadUrl = joTrack.getString("download_url");
                             final String fileName = joTrack.getString("filename");
-                            final String artworkUrl = joTrack.getString("artwork_url");
+
+                            String artworkUrl = null;
+                            if (joTrack.has(Tracks.COLUMN_ARTWORK_URL)) {
+                                artworkUrl = joTrack.getString(Tracks.COLUMN_ARTWORK_URL);
+                            }
 
                             apiNotification.setContentTitle(getString(R.string.Starting_download));
                             apiNotification.setContentText(downloadUrl);
@@ -141,17 +147,18 @@ public class DownloaderService extends Service {
                                 showToast("Download started");
 
                             } else {
-                                apiNotification.setContentTitle("Existing song : " + title + ", download skipped.");
-                                apiNotification.setContentText(absFilePath);
-                                apiNotification.setProgress(100, 100, false);
-                                nm.notify(notifId, apiNotification.build());
+                                showErrorNotification("Existing song : " + title + ", download skipped.", absFilePath);
                             }
 
                         } else {
                             //It's a playlist
                             showToast("It's a playlist");
 
-                            final String artworkUrl = joData.getString("artwork_url");
+                            String artworkUrl = null;
+                            if (joData.has(Playlists.COLUMN_ARTWORK_URL)) {
+                                artworkUrl = joData.getString(Playlists.COLUMN_ARTWORK_URL);
+                            }
+
                             final Intent playListDownloadIntent = new Intent(DownloaderService.this, PlaylistDownloadActivity.class);
 
                             playListDownloadIntent.putExtra(Track.KEY_PLAYLIST_NAME, joData.getString(Track.KEY_PLAYLIST_NAME));
@@ -169,9 +176,7 @@ public class DownloaderService extends Service {
 
                     } catch (APIResponse.APIException | JSONException e) {
                         e.printStackTrace();
-                        apiNotification.setContentTitle(e.getMessage());
-                        apiNotification.setProgress(0, 0, false);
-                        nm.notify(notifId, apiNotification.build());
+                        showErrorNotification(e.getMessage(), null);
                         showToast("ERROR: " + e.getMessage());
                     }
                 }
@@ -198,7 +203,15 @@ public class DownloaderService extends Service {
             showToast(R.string.network_error);
         }
 
+
         return START_STICKY;
+    }
+
+    private void showErrorNotification(String message, String absFilePath) {
+        apiNotification.setContentTitle(message)
+                .setContentText(absFilePath)
+                .setProgress(0, 0, false);
+        nm.notify(notifId, apiNotification.build());
     }
 
     @Override

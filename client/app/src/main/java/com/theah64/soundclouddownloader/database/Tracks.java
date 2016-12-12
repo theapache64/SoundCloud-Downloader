@@ -18,7 +18,6 @@ public class Tracks extends BaseTable<Track> {
     private static final String COLUMN_TITLE = "title";
     public static final String COLUMN_SOUNDCLOUD_URL = "soundcloud_url";
     private static final String COLUMN_DOWNLOAD_ID = "download_id";
-    private static final String COLUMN_ARTWORK_URL = "artwork_url";
     private static final String TABLE_NAME_TRACKS = "tracks";
     private static final String COLUMN_PLAYLIST_ID = "playlist_id";
     private static Tracks instance;

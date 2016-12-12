@@ -26,12 +26,10 @@ public class BaseTable<T> extends SQLiteOpenHelper {
     public static final String FALSE = "0";
 
     public static final String COLUMN_ID = "id";
-    public static final String COLUMN_NAME = "name";
+    public static final String COLUMN_ARTWORK_URL = "artwork_url";
     private static final String DATABASE_NAME = "scd.db";
-
-    public static final String COLUMN_IS_BEING_UPLOADED = "is_being_uploaded";
-
     static final String COLUMN_CREATED_AT = "created_at";
+
     private static final int DATABASE_VERSION = 1;
     private static final String X = BaseTable.class.getSimpleName();
     private static final String FATAL_ERROR_UNDEFINED_METHOD = "Undefined method";

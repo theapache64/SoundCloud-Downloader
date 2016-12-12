@@ -17,6 +17,7 @@ import com.theah64.soundclouddownloader.R;
  */
 
 public class App extends Application {
+
     public static final boolean IS_DEBUG_MODE = false;
 
     private static void initImageLoader(final Context context) {

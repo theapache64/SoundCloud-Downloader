@@ -11,7 +11,6 @@ public class Track implements Serializable {
     public static final String KEY_DOWNLOAD_URL = "download_url";
     public static final String KEY_FILENAME = "filename";
     public static final String KEY_PLAYLIST_NAME = "playlist_name";
-    public static final String KEY_IMAGE_URL = "image_url";
     private String id;
     private final String title;
     private final String fileName;
