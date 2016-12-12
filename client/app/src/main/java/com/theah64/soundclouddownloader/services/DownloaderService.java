@@ -72,6 +72,8 @@ public class DownloaderService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        Log.d(X, "Download service initialized : " + intent);
+
         if (NetworkUtils.isNetwork(this)) {
 
             final String soundCloudUrl = intent.getStringExtra(DownloaderActivity.KEY_SOUNDCLOUD_URL);
@@ -204,7 +206,7 @@ public class DownloaderService extends Service {
         }
 
 
-        return START_STICKY;
+        return START_REDELIVER_INTENT;
     }
 
     private void showErrorNotification(String message, String absFilePath) {
