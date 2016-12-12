@@ -12,10 +12,8 @@ import android.view.ViewGroup;
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.adapters.ImageTitleSubtitleAdapter;
 import com.theah64.soundclouddownloader.database.Playlists;
-import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.ITSNode;
 import com.theah64.soundclouddownloader.models.Playlist;
-import com.theah64.soundclouddownloader.models.Track;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +35,8 @@ public class PlaylistsFragment extends Fragment implements ImageTitleSubtitleAda
         // Inflate the layout for this fragment
         final View row = inflater.inflate(R.layout.fragment_playlists, container, false);
 
-        final RecyclerView rvTracks = (RecyclerView) row.findViewById(R.id.rvPlaylist);
-        rvTracks.setLayoutManager(new LinearLayoutManager(getContext()));
+        final RecyclerView rvPlaylists = (RecyclerView) row.findViewById(R.id.rvPlaylists);
+        rvPlaylists.setLayoutManager(new LinearLayoutManager(getContext()));
         final List<Playlist> playlists = Playlists.getInstance(getContext()).getAll();
 
         if (playlists != null) {
@@ -49,7 +47,7 @@ public class PlaylistsFragment extends Fragment implements ImageTitleSubtitleAda
             }
 
             final ImageTitleSubtitleAdapter itsAdapter = new ImageTitleSubtitleAdapter(itsNodes, this);
-            rvTracks.setAdapter(itsAdapter);
+            rvPlaylists.setAdapter(itsAdapter);
         } else {
             //showing no tracks downloaded text view.
             row.findViewById(R.id.tvNoPlaylistDownloaded).setVisibility(View.VISIBLE);

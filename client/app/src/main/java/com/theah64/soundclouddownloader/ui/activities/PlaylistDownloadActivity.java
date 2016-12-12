@@ -19,6 +19,9 @@ import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.adapters.PlaylistDownloadAdapter;
+import com.theah64.soundclouddownloader.database.Playlists;
+import com.theah64.soundclouddownloader.database.Tracks;
+import com.theah64.soundclouddownloader.models.Playlist;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.utils.NetworkUtils;
 import com.theah64.soundclouddownloader.utils.Random;
@@ -54,13 +57,18 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        final String soundCloudUrl = getStringOrThrow(Playlists.COLUMN_SOUNDCLOUD_URL);
         playlistName = getStringOrThrow(KEY_PLAYLIST_NAME);
+        final String artworkUrl = getIntent().getStringExtra(Playlists.COLUMN_ARTWORK_URL);
 
+        final String playlistId = String.valueOf(Playlists.getInstance(this).add(new Playlist(null, playlistName, soundCloudUrl, artworkUrl)));
         enableBackNavigation(playlistName);
 
         trackList = new ArrayList<>();
         try {
             final JSONArray jaTracks = new JSONArray(getStringOrThrow(KEY_TRACKS));
+
+            final Tracks tracksTable = Tracks.getInstance(this);
 
             for (int i = 0; i < jaTracks.length(); i++) {
 
@@ -72,7 +80,11 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                 final String imageUrl = joTrack.getString(Track.KEY_IMAGE_URL);
 
                 final String subPath = "/SoundCloud Downloader/" + playlistName + File.separator + fileName;
-                trackList.add(new Track(title, fileName, downloadUrl, subPath, imageUrl, null, true));
+                final Track newTrack = new Track(null, title, fileName, downloadUrl, subPath, imageUrl, null, soundCloudUrl, playlistId, true);
+
+                final String id = String.valueOf(tracksTable.add(newTrack));
+                newTrack.setId(id);
+                trackList.add(newTrack);
             }
 
         } catch (JSONException e) {
@@ -81,7 +93,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         }
 
 
-        final RecyclerView rvPlaylist = (RecyclerView) findViewById(R.id.rvPlaylist);
+        final RecyclerView rvPlaylist = (RecyclerView) findViewById(R.id.rvPlaylists);
         fabDownloadPlaylist = (FloatingActionButton) findViewById(R.id.fabDownloadPlaylist);
 
         rvPlaylist.setLayoutManager(new LinearLayoutManager(this));

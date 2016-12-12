@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,8 @@ import java.util.List;
 public class TracksFragment extends Fragment implements ImageTitleSubtitleAdapter.TracksCallback {
 
 
+    private static final String X = TracksFragment.class.getSimpleName();
+
     public TracksFragment() {
         // Required empty public constructor
     }
@@ -36,20 +39,29 @@ public class TracksFragment extends Fragment implements ImageTitleSubtitleAdapte
         // Inflate the layout for this fragment
         final View row = inflater.inflate(R.layout.fragment_tracks, container, false);
 
-        final RecyclerView rvTracks = (RecyclerView) row.findViewById(R.id.rvTracks);
-        rvTracks.setLayoutManager(new LinearLayoutManager(getContext()));
-        final List<Track> trackList = Tracks.getInstance(getContext()).getAll();
+
+        final List<Track> trackList = Tracks.getInstance(getActivity()).getAll();
 
         if (trackList != null) {
+
+            Log.d(X, "Converting to ITS nodes : " + trackList.size());
+
             //Converting to ITS node
             final List<ITSNode> itsNodes = new ArrayList<>(trackList.size());
             for (final Track track : trackList) {
+                Log.d(X, track.toString());
                 itsNodes.add(new ITSNode(track.getArtWorkUrl(), track.getTitle(), getDownloadStatus(track.getDownloadId())));
             }
 
             final ImageTitleSubtitleAdapter itsAdapter = new ImageTitleSubtitleAdapter(itsNodes, this);
+            final RecyclerView rvTracks = (RecyclerView) row.findViewById(R.id.rvTracks);
+            rvTracks.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
             rvTracks.setAdapter(itsAdapter);
+
         } else {
+
+            Log.d(X, "No tracks found");
+
             //showing no tracks downloaded text view.
             row.findViewById(R.id.tvNoTracksDownloaded).setVisibility(View.VISIBLE);
         }

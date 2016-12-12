@@ -12,17 +12,40 @@ public class Track implements Serializable {
     public static final String KEY_FILENAME = "filename";
     public static final String KEY_PLAYLIST_NAME = "playlist_name";
     public static final String KEY_IMAGE_URL = "image_url";
-    private final String title, fileName, downloadUrl, subPath, artWorkUrl, downloadId;
+    private String id;
+    private final String title;
+    private final String fileName;
+    private final String downloadUrl;
+    private final String subPath;
+    private final String artWorkUrl;
+    private final String downloadId;
+    private final String soundCloudUrl;
+    private final String playlistId;
     private boolean isChecked;
 
-    public Track(String title, String fileName, String downloadUrl, String subPath, String artWorkUrl, String downloadId, boolean isChecked) {
+    public Track(String id, String title, String fileName, String downloadUrl, String subPath, String artWorkUrl, String downloadId, String soundCloudUrl, String playlistId, boolean isChecked) {
+        this.id = id;
         this.title = title;
         this.fileName = fileName;
         this.downloadUrl = downloadUrl;
         this.subPath = subPath;
         this.artWorkUrl = artWorkUrl;
         this.downloadId = downloadId;
+        this.soundCloudUrl = soundCloudUrl;
+        this.playlistId = playlistId;
         this.isChecked = isChecked;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getPlaylistId() {
+        return playlistId;
+    }
+
+    public String getSoundCloudUrl() {
+        return soundCloudUrl;
     }
 
     public String getDownloadId() {
@@ -54,19 +77,27 @@ public class Track implements Serializable {
         return subPath;
     }
 
-    @Override
-    public String toString() {
-        return "Track{" +
-                "title='" + title + '\'' +
-                ", fileName='" + fileName + '\'' +
-                ", downloadUrl='" + downloadUrl + '\'' +
-                ", subPath='" + subPath + '\'' +
-                ", isChecked=" + isChecked +
-                '}';
-    }
-
     public void setChecked(boolean isChecked) {
         this.isChecked = isChecked;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Track{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", downloadUrl='" + downloadUrl + '\'' +
+                ", subPath='" + subPath + '\'' +
+                ", artWorkUrl='" + artWorkUrl + '\'' +
+                ", downloadId='" + downloadId + '\'' +
+                ", soundCloudUrl='" + soundCloudUrl + '\'' +
+                ", playlistId='" + playlistId + '\'' +
+                ", isChecked=" + isChecked +
+                '}';
+    }
 }

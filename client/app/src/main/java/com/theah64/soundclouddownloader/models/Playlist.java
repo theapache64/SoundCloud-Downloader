@@ -25,7 +25,7 @@ public class Playlist {
         return title;
     }
 
-    public String getUrl() {
+    public String getSoundCloudUrl() {
         return url;
     }
 }

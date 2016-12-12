@@ -16,7 +16,7 @@ import com.theah64.soundclouddownloader.R;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static final long SPLASH_DELAY = 3500;
+    private static final long SPLASH_DELAY = 500;
     private static final int RQ_CODE_RQ_WRITE_EXTERNAL_STORAGE = 1;
 
     @Override

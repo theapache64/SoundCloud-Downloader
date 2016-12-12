@@ -18,6 +18,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.R;
+import com.theah64.soundclouddownloader.database.Playlists;
+import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.ui.activities.DownloaderActivity;
 import com.theah64.soundclouddownloader.ui.activities.PlaylistDownloadActivity;
 import com.theah64.soundclouddownloader.models.Track;
@@ -107,6 +109,7 @@ public class DownloaderService extends Service {
                         final JSONObject joData = apiResponse.getJSONObjectData();
                         final JSONArray jaTracks = joData.getJSONArray("tracks");
 
+
                         if (!joData.has(Track.KEY_PLAYLIST_NAME)) {
 
                             // Single song
@@ -115,6 +118,7 @@ public class DownloaderService extends Service {
                             final String title = joTrack.getString("title");
                             final String downloadUrl = joTrack.getString("download_url");
                             final String fileName = joTrack.getString("filename");
+                            final String artworkUrl = joTrack.getString("artwork_url");
 
                             apiNotification.setContentTitle(getString(R.string.Starting_download));
                             apiNotification.setContentText(downloadUrl);
@@ -128,7 +132,10 @@ public class DownloaderService extends Service {
                             if (!trackFile.exists()) {
 
                                 //Starting download
-                                addToDownloadQueue(title, downloadUrl, subPath);
+                                final long downloadId = addToDownloadQueue(title, downloadUrl, subPath);
+
+                                //Adding track to database -
+                                Tracks.getInstance(DownloaderService.this).add(new Track(null, title, null, null, null, artworkUrl, String.valueOf(downloadId), soundCloudUrl, null, false));
 
                                 nm.cancel(notifId);
                                 showToast("Download started");
@@ -144,10 +151,16 @@ public class DownloaderService extends Service {
                             //It's a playlist
                             showToast("It's a playlist");
 
+                            final String artworkUrl = joData.getString("artwork_url");
                             final Intent playListDownloadIntent = new Intent(DownloaderService.this, PlaylistDownloadActivity.class);
+
                             playListDownloadIntent.putExtra(Track.KEY_PLAYLIST_NAME, joData.getString(Track.KEY_PLAYLIST_NAME));
                             playListDownloadIntent.putExtra(PlaylistDownloadActivity.KEY_TRACKS, jaTracks.toString());
+                            playListDownloadIntent.putExtra(Playlists.COLUMN_SOUNDCLOUD_URL, soundCloudUrl);
+                            playListDownloadIntent.putExtra(Playlists.COLUMN_ARTWORK_URL, artworkUrl);
+
                             playListDownloadIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
                             startActivity(playListDownloadIntent);
 
                             nm.cancel(notifId);
@@ -156,11 +169,14 @@ public class DownloaderService extends Service {
 
                     } catch (APIResponse.APIException | JSONException e) {
                         e.printStackTrace();
+                        apiNotification.setContentTitle(e.getMessage());
+                        apiNotification.setProgress(0, 0, false);
+                        nm.notify(notifId, apiNotification.build());
                         showToast("ERROR: " + e.getMessage());
                     }
                 }
 
-                private void addToDownloadQueue(final String title, final String downloadUrl, final String subPath) {
+                private long addToDownloadQueue(final String title, final String downloadUrl, final String subPath) {
 
                     final DownloadManager.Request downloadRequest = new DownloadManager.Request(Uri.parse(downloadUrl));
 
@@ -173,7 +189,7 @@ public class DownloaderService extends Service {
                     }
 
                     downloadRequest.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, subPath);
-                    ((DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE)).enqueue(downloadRequest);
+                    return ((DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE)).enqueue(downloadRequest);
 
                 }
             });
