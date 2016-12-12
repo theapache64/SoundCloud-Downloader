@@ -6,6 +6,7 @@ CREATE TABLE playlists(
 	downloaded_tracks INTEGER
 );
 
+
 DROP TABLE IF EXISTS tracks;
 CREATE TABLE tracks(
 	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,

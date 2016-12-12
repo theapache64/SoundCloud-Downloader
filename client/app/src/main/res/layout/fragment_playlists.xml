@@ -5,18 +5,18 @@
     tools:context="com.theah64.soundclouddownloader.ui.fragments.TracksFragment">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvTracks"
+        android:id="@+id/rvPlaylisy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="vertical" />
 
     <TextView
-        android:id="@+id/tvNoTracksDownloaded"
-        android:visibility="gone"
+        android:id="@+id/tvNoPlaylistDownloaded"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/No_tracks_downloaded"
-        android:textSize="18sp" />
+        android:text="@string/No_playlist_downloaded"
+        android:textSize="18sp"
+        android:visibility="gone" />
 
 </FrameLayout>

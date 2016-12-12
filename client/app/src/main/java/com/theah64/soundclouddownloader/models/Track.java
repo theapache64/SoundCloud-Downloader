@@ -5,45 +5,41 @@ import java.io.Serializable;
 /**
  * Created by theapache64 on 9/12/16.
  */
-public class Track implements Serializable, ITSNode {
+public class Track implements Serializable {
 
     public static final String KEY_TITLE = "title";
     public static final String KEY_DOWNLOAD_URL = "download_url";
     public static final String KEY_FILENAME = "filename";
     public static final String KEY_PLAYLIST_NAME = "playlist_name";
     public static final String KEY_IMAGE_URL = "image_url";
-    private final String title, fileName, downloadUrl, subPath;
+    private final String title, fileName, downloadUrl, subPath, artWorkUrl, downloadId;
     private boolean isChecked;
-    private final String imageUrl;
-    private final String downloadStatus;
 
-    public Track(String title, String fileName, String downloadUrl, String subPath, boolean isChecked, String imageUrl, String downloadStatus) {
+    public Track(String title, String fileName, String downloadUrl, String subPath, String artWorkUrl, String downloadId, boolean isChecked) {
         this.title = title;
         this.fileName = fileName;
         this.downloadUrl = downloadUrl;
         this.subPath = subPath;
+        this.artWorkUrl = artWorkUrl;
+        this.downloadId = downloadId;
         this.isChecked = isChecked;
-        this.imageUrl = imageUrl;
-        this.downloadStatus = downloadStatus;
+    }
+
+    public String getDownloadId() {
+        return downloadId;
+    }
+
+    public String getArtWorkUrl() {
+        return artWorkUrl;
     }
 
     public boolean isChecked() {
         return isChecked;
     }
 
-    @Override
-    public String getImageUrl() {
-        return imageUrl;
-    }
 
-    @Override
     public String getTitle() {
         return title;
-    }
-
-    @Override
-    public String getSubtitle() {
-        return downloadStatus;
     }
 
     public String getFileName() {
@@ -72,4 +68,5 @@ public class Track implements Serializable, ITSNode {
     public void setChecked(boolean isChecked) {
         this.isChecked = isChecked;
     }
+
 }
