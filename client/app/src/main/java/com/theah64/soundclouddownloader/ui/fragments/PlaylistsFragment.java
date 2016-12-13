@@ -40,7 +40,7 @@ public class PlaylistsFragment extends Fragment implements ITSAdapter.TracksCall
 
         if (playlists != null) {
             final RecyclerView rvPlaylists = (RecyclerView) row.findViewById(R.id.rvPlaylists);
-            rvPlaylists.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+            rvPlaylists.setLayoutManager(new LinearLayoutManager(getActivity()));
             final ITSAdapter itsAdapter = new ITSAdapter(playlists, this);
             rvPlaylists.setAdapter(itsAdapter);
         } else {
@@ -59,7 +59,9 @@ public class PlaylistsFragment extends Fragment implements ITSAdapter.TracksCall
     }
 
     @Override
-    public void onDownloadButtonClicked(int position) {
+    public void onPopUpMenuClicked(View anchor, int position) {
 
     }
+
+
 }

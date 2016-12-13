@@ -44,7 +44,7 @@ public class ITSAdapter extends RecyclerView.Adapter<ITSAdapter.ViewHolder> {
 
         final ITSNode itsNode = itsNodes.get(position);
 
-        ImageLoader.getInstance().displayImage(itsNode.getArtworkUrl(), holder.ivImage);
+        ImageLoader.getInstance().displayImage(itsNode.getArtworkUrl(), holder.ivArtwork);
         holder.tvTitle.setText(itsNode.getTitle());
 
         if (itsNode.getSubtitle() != null) {
@@ -54,7 +54,6 @@ public class ITSAdapter extends RecyclerView.Adapter<ITSAdapter.ViewHolder> {
             holder.tvSubtitle.setVisibility(View.GONE);
         }
 
-        holder.ibDownloadButton.setVisibility(itsNode.isDownloadVisible() ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -64,28 +63,28 @@ public class ITSAdapter extends RecyclerView.Adapter<ITSAdapter.ViewHolder> {
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private final ImageView ivImage;
+        private final ImageView ivArtwork;
         private final TextView tvTitle, tvSubtitle;
-        private View ibDownloadButton;
+        private View ibShowPopUpuMenu;
 
         ViewHolder(View itemView) {
             super(itemView);
 
-            this.ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
+            this.ivArtwork = (ImageView) itemView.findViewById(R.id.ivArtwork);
             this.tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
             this.tvSubtitle = (TextView) itemView.findViewById(R.id.tvSubtitle);
-            this.ibDownloadButton = itemView.findViewById(R.id.ibDownloadButton);
+            this.ibShowPopUpuMenu = itemView.findViewById(R.id.ibShowPopUpuMenu);
 
             itemView.setOnClickListener(this);
-            this.ibDownloadButton.setOnClickListener(this);
+            this.ibShowPopUpuMenu.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
 
             switch (view.getId()) {
-                case R.id.ibDownloadButton:
-                    callback.onDownloadButtonClicked(getLayoutPosition());
+                case R.id.ibShowPopUpuMenu:
+                    callback.onPopUpMenuClicked(view, getLayoutPosition());
                     break;
 
                 default:
@@ -98,6 +97,6 @@ public class ITSAdapter extends RecyclerView.Adapter<ITSAdapter.ViewHolder> {
     public interface TracksCallback {
         void onRowClicked(int position);
 
-        void onDownloadButtonClicked(int position);
+        void onPopUpMenuClicked(final View anchor, int position);
     }
 }

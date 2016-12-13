@@ -46,7 +46,7 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
 
             final ITSAdapter itsAdapter = new ITSAdapter(trackList, this);
             final RecyclerView rvTracks = (RecyclerView) row.findViewById(R.id.rvTracks);
-            rvTracks.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+            rvTracks.setLayoutManager(new LinearLayoutManager(getActivity()));
             rvTracks.setAdapter(itsAdapter);
 
         } else {
@@ -61,10 +61,6 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
         return row;
     }
 
-    private String getDownloadStatus(String downloadId) {
-        //TODO:
-        return "NONE";
-    }
 
     @Override
     public void onRowClicked(int position) {
@@ -72,7 +68,7 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
     }
 
     @Override
-    public void onDownloadButtonClicked(int position) {
+    public void onPopUpMenuClicked(View anchor, int position) {
 
     }
 
