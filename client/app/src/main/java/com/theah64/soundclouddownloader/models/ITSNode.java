@@ -6,11 +6,9 @@ package com.theah64.soundclouddownloader.models;
 
 public interface ITSNode {
 
-    public abstract String getArtworkUrl();
+    String getArtworkUrl();
 
-    public abstract String getTitle();
+    String getTitle();
 
-    public abstract String getSubtitle();
-
-    public abstract boolean isDownloadVisible();
+    String getSubtitle();
 }

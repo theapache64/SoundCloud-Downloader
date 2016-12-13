@@ -21,8 +21,10 @@ public class Track implements Serializable, ITSNode {
     private final String soundCloudUrl;
     private final String playlistId;
     private boolean isChecked;
+    private final boolean isDownloaded;
+    private final String absoluteFilePath;
 
-    public Track(String id, String title, String fileName, String downloadUrl, String subPath, String artWorkUrl, String downloadId, String soundCloudUrl, String playlistId, boolean isChecked) {
+    public Track(String id, String title, String fileName, String downloadUrl, String subPath, String artWorkUrl, String downloadId, String soundCloudUrl, String playlistId, boolean isChecked, boolean isDownloaded, String absoluteFilePath) {
         this.id = id;
         this.title = title;
         this.fileName = fileName;
@@ -33,6 +35,8 @@ public class Track implements Serializable, ITSNode {
         this.soundCloudUrl = soundCloudUrl;
         this.playlistId = playlistId;
         this.isChecked = isChecked;
+        this.isDownloaded = isDownloaded;
+        this.absoluteFilePath = absoluteFilePath;
     }
 
     public String getId() {
@@ -74,10 +78,6 @@ public class Track implements Serializable, ITSNode {
         return null;
     }
 
-    @Override
-    public boolean isDownloadVisible() {
-        return false;
-    }
 
     public String getFileName() {
         return fileName;
@@ -99,6 +99,15 @@ public class Track implements Serializable, ITSNode {
         this.id = id;
     }
 
+
+    public boolean isDownloaded() {
+        return isDownloaded;
+    }
+
+    public String getAbsoluteFilePath() {
+        return absoluteFilePath;
+    }
+
     @Override
     public String toString() {
         return "Track{" +
@@ -112,6 +121,8 @@ public class Track implements Serializable, ITSNode {
                 ", soundCloudUrl='" + soundCloudUrl + '\'' +
                 ", playlistId='" + playlistId + '\'' +
                 ", isChecked=" + isChecked +
+                ", isDownloaded=" + isDownloaded +
+                ", absoluteFilePath='" + absoluteFilePath + '\'' +
                 '}';
     }
 }

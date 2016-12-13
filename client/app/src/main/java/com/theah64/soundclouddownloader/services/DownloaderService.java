@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.database.Playlists;
 import com.theah64.soundclouddownloader.database.Tracks;
-import com.theah64.soundclouddownloader.ui.activities.DownloaderActivity;
 import com.theah64.soundclouddownloader.ui.activities.PlaylistDownloadActivity;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.utils.APIRequestBuilder;
@@ -80,7 +79,7 @@ public class DownloaderService extends Service {
 
         if (NetworkUtils.isNetwork(this)) {
 
-            final String soundCloudUrl = intent.getStringExtra(DownloaderActivity.KEY_SOUNDCLOUD_URL);
+            final String soundCloudUrl = intent.getStringExtra(Tracks.COLUMN_SOUNDCLOUD_URL);
 
             apiNotification = new NotificationCompat.Builder(this)
                     .setContentTitle(getString(R.string.initializing_download))
@@ -97,7 +96,7 @@ public class DownloaderService extends Service {
 
             //Building json download request
             final Request scdRequest = new APIRequestBuilder("/scd/json")
-                    .addParam(DownloaderActivity.KEY_SOUNDCLOUD_URL, soundCloudUrl)
+                    .addParam("sound_cloud_url", soundCloudUrl)
                     .build();
 
             //Processing request
@@ -150,7 +149,7 @@ public class DownloaderService extends Service {
                                 final long downloadId = addToDownloadQueue(title, downloadUrl, subPath);
 
                                 //Adding track to database -
-                                Tracks.getInstance(DownloaderService.this).add(new Track(null, title, null, null, null, artworkUrl, String.valueOf(downloadId), soundCloudUrl, null, false));
+                                Tracks.getInstance(DownloaderService.this).add(new Track(null, title, null, null, null, artworkUrl, String.valueOf(downloadId), soundCloudUrl, null, false, false, absFilePath));
 
                                 nm.cancel(notifId);
                                 showToast("Download started");

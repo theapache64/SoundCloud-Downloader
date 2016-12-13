@@ -13,6 +13,8 @@ CREATE TABLE tracks(
 	title TEXT NOT NULL,
 	soundcloud_url TEXT NOT NULL,
 	artwork_url TEXT DEFAULT NULL,
+	abs_file_path TEXT DEFAULT NULL,
+    is_downloaded INTEGER CHECK(is_downloaded IN (0,1)) NOT NULL DEFAULT 0,
 	playlist_id INTEGER DEFAULT NULL,
 	download_id INTEGER DEFAULT NULL,
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

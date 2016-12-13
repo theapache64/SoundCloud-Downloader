@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.R;
+import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.services.DownloaderService;
 
 import java.util.regex.Matcher;
@@ -15,7 +16,7 @@ public class DownloaderActivity extends AppCompatActivity {
 
 
     private static final String X = DownloaderActivity.class.getSimpleName();
-    public static final String KEY_SOUNDCLOUD_URL = "sound_cloud_url";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +28,7 @@ public class DownloaderActivity extends AppCompatActivity {
         if (url != null && url.contains("soundcloud.com/")) {
 
             final Intent downloadIntent = new Intent(this, DownloaderService.class);
-            downloadIntent.putExtra(KEY_SOUNDCLOUD_URL, url);
+            downloadIntent.putExtra(Tracks.COLUMN_SOUNDCLOUD_URL, url);
             startService(downloadIntent);
             Toast.makeText(this, R.string.initializing_download, Toast.LENGTH_SHORT).show();
             finish();

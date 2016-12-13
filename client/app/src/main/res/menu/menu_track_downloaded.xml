@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/miPlay"
+        android:title="@string/Play" />
+
+    <item
+        android:id="@+id/miShareFile"
+        android:title="@string/Share_file" />
+
+    <item
+        android:id="@+id/miShareURL"
+        android:title="@string/Share_URL" />
+
+    <item
+        android:id="@+id/miRemove"
+        android:title="@string/Remove" />
+
+</menu>

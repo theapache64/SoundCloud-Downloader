@@ -1,31 +1,42 @@
 package com.theah64.soundclouddownloader.ui.fragments;
 
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.adapters.ITSAdapter;
 import com.theah64.soundclouddownloader.database.Playlists;
 import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.Track;
+import com.theah64.soundclouddownloader.services.DownloaderService;
 
+import java.io.File;
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TracksFragment extends Fragment implements ITSAdapter.TracksCallback {
+public class TracksFragment extends Fragment implements ITSAdapter.TracksCallback, PopupMenu.OnMenuItemClickListener {
 
 
     private static final String X = TracksFragment.class.getSimpleName();
+    private List<Track> trackList;
+    private Tracks tracksTable;
+    private ITSAdapter itsAdapter;
+    private Track track;
+    private int position;
 
     public TracksFragment() {
         // Required empty public constructor
@@ -40,11 +51,12 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
 
         final String playlistId = getArguments().getString(Playlists.COLUMN_ID);
 
-        final List<Track> trackList = Tracks.getInstance(getActivity()).getAll(playlistId);
+        tracksTable = Tracks.getInstance(getActivity());
+        trackList = tracksTable.getAll(playlistId);
 
         if (trackList != null) {
 
-            final ITSAdapter itsAdapter = new ITSAdapter(trackList, this);
+            itsAdapter = new ITSAdapter(trackList, this);
             final RecyclerView rvTracks = (RecyclerView) row.findViewById(R.id.rvTracks);
             rvTracks.setLayoutManager(new LinearLayoutManager(getActivity()));
             rvTracks.setAdapter(itsAdapter);
@@ -64,11 +76,27 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
 
     @Override
     public void onRowClicked(int position) {
+        final Track track = trackList.get(position);
+
+        if (track.isDownloaded()) {
+            //playing track
+            playTrack();
+        } else {
+            Toast.makeText(getActivity(), R.string.Please_download_the_track, Toast.LENGTH_SHORT).show();
+        }
 
     }
 
     @Override
-    public void onPopUpMenuClicked(View anchor, int position) {
+    public void onPopUpMenuClicked(View anchor, final int position) {
+
+        this.position = position;
+        track = trackList.get(position);
+        final PopupMenu trackMenu = new PopupMenu(getActivity(), anchor);
+        trackMenu.getMenuInflater().inflate(track.isDownloaded() ? R.menu.menu_track_downloaded : R.menu.menu_track_not_downloaded, trackMenu.getMenu());
+        trackMenu.setOnMenuItemClickListener(this);
+
+        trackMenu.show();
 
     }
 
@@ -78,5 +106,82 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
         bundle.putString(Playlists.COLUMN_ID, playlistId);
         tracksFragment.setArguments(bundle);
         return tracksFragment;
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.miPlay:
+                playTrack();
+                return true;
+
+            case R.id.miShareFile:
+
+                final File file = new File(track.getAbsoluteFilePath());
+                if (file.exists()) {
+                    //Opening audio file
+                    final Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+                    startActivity(sendIntent);
+
+                } else {
+                    Toast.makeText(getActivity(), R.string.File_not_found, Toast.LENGTH_SHORT).show();
+                }
+
+                return true;
+
+            case R.id.miShareURL:
+
+                final Intent shareUrlIntent = new Intent(Intent.ACTION_SEND);
+                shareUrlIntent.setType("text/plain");
+                shareUrlIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.Download_track_using_soundcloud_downloader_s, track.getDownloadUrl()));
+                startActivity(Intent.createChooser(shareUrlIntent, getString(R.string.Share_using)));
+
+                return true;
+
+            case R.id.miRemove:
+
+                if (tracksTable.delete(Tracks.COLUMN_ID, track.getId())) {
+                    trackList.remove(position);
+                    itsAdapter.notifyItemRemoved(position);
+
+                    Toast.makeText(getActivity(), R.string.Removed, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), R.string.Failed_to_remove, Toast.LENGTH_SHORT).show();
+                }
+
+                return true;
+
+            case R.id.miDownload:
+
+                final Intent downloadIntent = new Intent(getActivity(), DownloaderService.class);
+                downloadIntent.putExtra(Tracks.COLUMN_SOUNDCLOUD_URL, track.getSoundCloudUrl());
+                getActivity().startService(downloadIntent);
+
+                Toast.makeText(getActivity(), R.string.initializing_download, Toast.LENGTH_SHORT).show();
+
+                return true;
+
+            default:
+                return false;
+        }
+
+    }
+
+    private void playTrack() {
+
+        final File audioFile = new File(track.getAbsoluteFilePath());
+        if (audioFile.exists()) {
+            //Opening audio file
+            final Intent playIntent = new Intent(Intent.ACTION_VIEW);
+            playIntent.setDataAndType(Uri.fromFile(audioFile), "audio/*");
+            startActivity(playIntent);
+
+        } else {
+            Toast.makeText(getActivity(), R.string.File_not_found, Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

@@ -71,7 +71,16 @@
         <activity android:name=".ui.activities.TestActivity" />
         <activity
             android:name=".ui.activities.PlaylistTracksActivity"
-            android:label="@string/title_activity_playlist_tracks"></activity>
+            android:label="@string/title_activity_playlist_tracks" />
+
+        <receiver
+            android:name=".receivers.OnDownloadFinishedReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

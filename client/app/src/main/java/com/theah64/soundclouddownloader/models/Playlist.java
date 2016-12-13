@@ -34,11 +34,6 @@ public class Playlist implements ITSNode {
         return null;
     }
 
-    @Override
-    public boolean isDownloadVisible() {
-        return false;
-    }
-
     public String getSoundCloudUrl() {
         return url;
     }
