@@ -6,6 +6,7 @@
     android:padding="8dp"
     android:weightSum="1">
 
+    
     <ImageView
         android:id="@+id/ivImage"
         android:layout_width="match_parent"
