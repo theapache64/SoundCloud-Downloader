@@ -135,7 +135,23 @@ public class BaseTable<T> extends SQLiteOpenHelper {
         return context;
     }
 
-    final String getTableName() {
+    private String getTableName() {
         return tableName;
+    }
+
+    public final int getCount() {
+        int count = 0;
+
+        final Cursor c = this.getReadableDatabase().rawQuery("SELECT COUNT(id) FROM " + getTableName(), null);
+
+        if (c != null && c.moveToFirst()) {
+            count = c.getInt(0);
+        }
+
+        if (c != null) {
+            c.close();
+        }
+
+        return count;
     }
 }

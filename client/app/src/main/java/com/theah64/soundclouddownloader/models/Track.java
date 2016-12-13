@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by theapache64 on 9/12/16.
  */
-public class Track implements Serializable {
+public class Track implements Serializable, ITSNode {
 
     public static final String KEY_TITLE = "title";
     public static final String KEY_DOWNLOAD_URL = "download_url";
@@ -60,8 +60,23 @@ public class Track implements Serializable {
     }
 
 
+    @Override
+    public String getArtworkUrl() {
+        return artWorkUrl;
+    }
+
     public String getTitle() {
         return title;
+    }
+
+    @Override
+    public String getSubtitle() {
+        return null;
+    }
+
+    @Override
+    public boolean isDownloadVisible() {
+        return false;
     }
 
     public String getFileName() {

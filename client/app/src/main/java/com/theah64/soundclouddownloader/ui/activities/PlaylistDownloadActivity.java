@@ -79,13 +79,13 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                 final String downloadUrl = joTrack.getString(Track.KEY_DOWNLOAD_URL);
                 String trackArtWorkUrl = null;
 
-                if (joTrack.has(Tracks.COLUMN_SOUNDCLOUD_URL)) {
+                if (joTrack.has(Tracks.COLUMN_ARTWORK_URL)) {
                     trackArtWorkUrl = joTrack.getString(Tracks.COLUMN_ARTWORK_URL);
                 }
 
                 final String subPath = "/SoundCloud Downloader/" + playlistName + File.separator + fileName;
                 final Track newTrack = new Track(null, title, fileName, downloadUrl, subPath, trackArtWorkUrl, null, soundCloudUrl, playlistId, true);
-                final String dbTrackId = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, soundCloudUrl, Tracks.COLUMN_ID);
+                final String dbTrackId = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, downloadUrl, Tracks.COLUMN_ID);
                 final String id = dbTrackId != null ? dbTrackId : String.valueOf(tracksTable.add(newTrack));
                 newTrack.setId(id);
                 trackList.add(newTrack);

@@ -3,27 +3,26 @@ package com.theah64.soundclouddownloader.ui.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.theah64.soundclouddownloader.R;
-import com.theah64.soundclouddownloader.adapters.ImageTitleSubtitleAdapter;
+import com.theah64.soundclouddownloader.adapters.ITSAdapter;
+import com.theah64.soundclouddownloader.database.Playlists;
 import com.theah64.soundclouddownloader.database.Tracks;
-import com.theah64.soundclouddownloader.models.ITSNode;
 import com.theah64.soundclouddownloader.models.Track;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TracksFragment extends Fragment implements ImageTitleSubtitleAdapter.TracksCallback {
+public class TracksFragment extends Fragment implements ITSAdapter.TracksCallback {
 
 
     private static final String X = TracksFragment.class.getSimpleName();
@@ -39,23 +38,15 @@ public class TracksFragment extends Fragment implements ImageTitleSubtitleAdapte
         // Inflate the layout for this fragment
         final View row = inflater.inflate(R.layout.fragment_tracks, container, false);
 
+        final String playlistId = getArguments().getString(Playlists.COLUMN_ID);
 
-        final List<Track> trackList = Tracks.getInstance(getActivity()).getAll();
+        final List<Track> trackList = Tracks.getInstance(getActivity()).getAll(playlistId);
 
         if (trackList != null) {
 
-            Log.d(X, "Converting to ITS nodes : " + trackList.size());
-
-            //Converting to ITS node
-            final List<ITSNode> itsNodes = new ArrayList<>(trackList.size());
-            for (final Track track : trackList) {
-                Log.d(X, track.toString());
-                itsNodes.add(new ITSNode(track.getArtWorkUrl(), track.getTitle(), getDownloadStatus(track.getDownloadId())));
-            }
-
-            final ImageTitleSubtitleAdapter itsAdapter = new ImageTitleSubtitleAdapter(itsNodes, this);
+            final ITSAdapter itsAdapter = new ITSAdapter(trackList, this);
             final RecyclerView rvTracks = (RecyclerView) row.findViewById(R.id.rvTracks);
-            rvTracks.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+            rvTracks.setLayoutManager(new GridLayoutManager(getActivity(), 2));
             rvTracks.setAdapter(itsAdapter);
 
         } else {
@@ -78,5 +69,18 @@ public class TracksFragment extends Fragment implements ImageTitleSubtitleAdapte
     @Override
     public void onRowClicked(int position) {
 
+    }
+
+    @Override
+    public void onDownloadButtonClicked(int position) {
+
+    }
+
+    public static TracksFragment getNewInstance(String playlistId) {
+        final TracksFragment tracksFragment = new TracksFragment();
+        final Bundle bundle = new Bundle();
+        bundle.putString(Playlists.COLUMN_ID, playlistId);
+        tracksFragment.setArguments(bundle);
+        return tracksFragment;
     }
 }

@@ -6,8 +6,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.adapters.TracksAndPlaylistsViewPagerAdapter;
@@ -24,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         final ViewPager vpTracksAndPlaylists = (ViewPager) findViewById(R.id.vpTracksAndPlaylists);
-        vpTracksAndPlaylists.setAdapter(new TracksAndPlaylistsViewPagerAdapter(getSupportFragmentManager()));
+        vpTracksAndPlaylists.setAdapter(new TracksAndPlaylistsViewPagerAdapter(getSupportFragmentManager(), this));
 
         final TabLayout tlTracksAndPlaylists = (TabLayout) findViewById(R.id.tlTracksAndPlaylists);
         tlTracksAndPlaylists.setupWithViewPager(vpTracksAndPlaylists);
@@ -32,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.fabAdd).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: Show a a dialogue to enter soundcloud url
+                //TODO: Show a dialogue to enter soundcloud url
             }
         });
     }

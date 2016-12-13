@@ -59,18 +59,19 @@
         <activity
             android:name=".ui.activities.SplashActivity"
             android:theme="@style/AppTheme.NoActionBar">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".ui.activities.PlaylistDownloadActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.activities.TestActivity" />
+        <activity
+            android:name=".ui.activities.PlaylistTracksActivity"
+            android:label="@string/title_activity_playlist_tracks"></activity>
     </application>
 
 </manifest>

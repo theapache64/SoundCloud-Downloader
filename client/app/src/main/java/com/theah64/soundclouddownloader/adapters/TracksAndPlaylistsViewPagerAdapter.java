@@ -1,12 +1,16 @@
 package com.theah64.soundclouddownloader.adapters;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.theah64.soundclouddownloader.database.Playlists;
 import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.ui.fragments.PlaylistsFragment;
 import com.theah64.soundclouddownloader.ui.fragments.TracksFragment;
+
+import java.util.Locale;
 
 /**
  * Created by theapache64 on 12/12/16.
@@ -14,11 +18,13 @@ import com.theah64.soundclouddownloader.ui.fragments.TracksFragment;
 
 public class TracksAndPlaylistsViewPagerAdapter extends FragmentPagerAdapter {
 
-    private TracksFragment tracksFragment = new TracksFragment();
+    private TracksFragment tracksFragment = TracksFragment.getNewInstance(null);
     private PlaylistsFragment playlistsFragment = new PlaylistsFragment();
+    private final Context context;
 
-    public TracksAndPlaylistsViewPagerAdapter(FragmentManager fm) {
+    public TracksAndPlaylistsViewPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
+        this.context = context;
     }
 
     @Override
@@ -33,6 +39,6 @@ public class TracksAndPlaylistsViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return position == 0 ? "TRACKS" : "PLAYLISTS";
+        return String.format(Locale.getDefault(), "%s (%d)", position == 0 ? "TRACKS" : "PLAYLISTS", position == 0 ? Tracks.getInstance(context).getCount() : Playlists.getInstance(context).getCount());
     }
 }

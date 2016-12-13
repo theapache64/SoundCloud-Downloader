@@ -130,6 +130,9 @@ public class DownloaderService extends Service {
                             String artworkUrl = null;
                             if (joTrack.has(Tracks.COLUMN_ARTWORK_URL)) {
                                 artworkUrl = joTrack.getString(Tracks.COLUMN_ARTWORK_URL);
+                                Log.d(X, title + " has artwork " + artworkUrl);
+                            } else {
+                                Log.e(X, title + " hasn't artwork url ");
                             }
 
                             apiNotification.setContentTitle(getString(R.string.Starting_download));

@@ -3,6 +3,7 @@ package com.theah64.soundclouddownloader.ui.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,19 +11,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.theah64.soundclouddownloader.R;
-import com.theah64.soundclouddownloader.adapters.ImageTitleSubtitleAdapter;
+import com.theah64.soundclouddownloader.adapters.ITSAdapter;
 import com.theah64.soundclouddownloader.database.Playlists;
-import com.theah64.soundclouddownloader.models.ITSNode;
 import com.theah64.soundclouddownloader.models.Playlist;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PlaylistsFragment extends Fragment implements ImageTitleSubtitleAdapter.TracksCallback {
+public class PlaylistsFragment extends Fragment implements ITSAdapter.TracksCallback {
 
+
+    private List<Playlist> playlists;
 
     public PlaylistsFragment() {
         // Required empty public constructor
@@ -35,18 +36,12 @@ public class PlaylistsFragment extends Fragment implements ImageTitleSubtitleAda
         // Inflate the layout for this fragment
         final View row = inflater.inflate(R.layout.fragment_playlists, container, false);
 
-        final RecyclerView rvPlaylists = (RecyclerView) row.findViewById(R.id.rvPlaylists);
-        rvPlaylists.setLayoutManager(new LinearLayoutManager(getContext()));
-        final List<Playlist> playlists = Playlists.getInstance(getContext()).getAll();
+        playlists = Playlists.getInstance(getContext()).getAll();
 
         if (playlists != null) {
-            //Converting to ITS node
-            final List<ITSNode> itsNodes = new ArrayList<>(playlists.size());
-            for (final Playlist playlist : playlists) {
-                itsNodes.add(new ITSNode(playlist.getArtworkUrl(), playlist.getTitle(), "CALC"));
-            }
-
-            final ImageTitleSubtitleAdapter itsAdapter = new ImageTitleSubtitleAdapter(itsNodes, this);
+            final RecyclerView rvPlaylists = (RecyclerView) row.findViewById(R.id.rvPlaylists);
+            rvPlaylists.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+            final ITSAdapter itsAdapter = new ITSAdapter(playlists, this);
             rvPlaylists.setAdapter(itsAdapter);
         } else {
             //showing no tracks downloaded text view.
@@ -60,6 +55,11 @@ public class PlaylistsFragment extends Fragment implements ImageTitleSubtitleAda
 
     @Override
     public void onRowClicked(int position) {
+
+    }
+
+    @Override
+    public void onDownloadButtonClicked(int position) {
 
     }
 }

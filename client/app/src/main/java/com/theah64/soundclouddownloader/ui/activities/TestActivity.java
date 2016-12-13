@@ -13,6 +13,5 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, new TracksFragment()).commit();
     }
 }

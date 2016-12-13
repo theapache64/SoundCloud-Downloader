@@ -3,6 +3,8 @@ package com.theah64.soundclouddownloader.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.theah64.soundclouddownloader.models.Track;
 
@@ -20,6 +22,7 @@ public class Tracks extends BaseTable<Track> {
     private static final String COLUMN_DOWNLOAD_ID = "download_id";
     private static final String TABLE_NAME_TRACKS = "tracks";
     private static final String COLUMN_PLAYLIST_ID = "playlist_id";
+    private static final String X = Tracks.class.getSimpleName();
     private static Tracks instance;
 
     Tracks(Context context) {
@@ -38,6 +41,8 @@ public class Tracks extends BaseTable<Track> {
     @Override
     public long add(Track track) {
 
+        Log.d(X, "Adding new track to database : " + track.toString());
+
         final ContentValues cv = new ContentValues(4);
         cv.put(COLUMN_TITLE, track.getTitle());
         cv.put(COLUMN_SOUNDCLOUD_URL, track.getSoundCloudUrl());
@@ -54,12 +59,13 @@ public class Tracks extends BaseTable<Track> {
         return trackId;
     }
 
-    //artwork_url, title, download_id
-    @Override
-    public List<Track> getAll() {
+
+    public List<Track> getAll(@Nullable final String playlistId) {
         List<Track> trackList = null;
 
-        final Cursor c = this.getReadableDatabase().query(TABLE_NAME_TRACKS, new String[]{COLUMN_ARTWORK_URL, COLUMN_TITLE, COLUMN_DOWNLOAD_ID}, null, null, null, null, COLUMN_ID + " DESC");
+        final Cursor c = this.getReadableDatabase().query(TABLE_NAME_TRACKS, new String[]{COLUMN_ARTWORK_URL, COLUMN_TITLE, COLUMN_DOWNLOAD_ID}, playlistId != null ? "playlist_id = ?" :
+                        null, playlistId != null ? new String[]{playlistId} : null
+                , null, null, COLUMN_ID + " DESC");
         if (c != null && c.moveToFirst()) {
 
             trackList = new ArrayList<>(c.getCount());
@@ -80,4 +86,5 @@ public class Tracks extends BaseTable<Track> {
 
         return trackList;
     }
+
 }

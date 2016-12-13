@@ -17,13 +17,13 @@ import java.util.List;
  * Created by theapache64 on 9/12/16.
  */
 
-public class ImageTitleSubtitleAdapter extends RecyclerView.Adapter<ImageTitleSubtitleAdapter.ViewHolder> {
+public class ITSAdapter extends RecyclerView.Adapter<ITSAdapter.ViewHolder> {
 
-    private final List<ITSNode> itsNodes;
+    private final List<? extends ITSNode> itsNodes;
     private final TracksCallback callback;
     private LayoutInflater inflater;
 
-    public ImageTitleSubtitleAdapter(List<ITSNode> itsNodes, TracksCallback callback) {
+    public ITSAdapter(List<? extends ITSNode> itsNodes, TracksCallback callback) {
         this.itsNodes = itsNodes;
         this.callback = callback;
     }
@@ -35,7 +35,7 @@ public class ImageTitleSubtitleAdapter extends RecyclerView.Adapter<ImageTitleSu
             inflater = LayoutInflater.from(parent.getContext());
         }
 
-        final View row = inflater.inflate(R.layout.image_title_subtitle_row, parent, false);
+        final View row = inflater.inflate(R.layout.its_row, parent, false);
         return new ViewHolder(row);
     }
 
@@ -44,9 +44,17 @@ public class ImageTitleSubtitleAdapter extends RecyclerView.Adapter<ImageTitleSu
 
         final ITSNode itsNode = itsNodes.get(position);
 
-        ImageLoader.getInstance().displayImage(itsNode.getImageUrl(), holder.ivImage);
+        ImageLoader.getInstance().displayImage(itsNode.getArtworkUrl(), holder.ivImage);
         holder.tvTitle.setText(itsNode.getTitle());
-        holder.tvSubtitle.setText(itsNode.getSubtitle());
+
+        if (itsNode.getSubtitle() != null) {
+            holder.tvSubtitle.setVisibility(View.VISIBLE);
+            holder.tvSubtitle.setText(itsNode.getSubtitle());
+        } else {
+            holder.tvSubtitle.setVisibility(View.GONE);
+        }
+
+        holder.ibDownloadButton.setVisibility(itsNode.isDownloadVisible() ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -54,10 +62,11 @@ public class ImageTitleSubtitleAdapter extends RecyclerView.Adapter<ImageTitleSu
         return itsNodes.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final ImageView ivImage;
         private final TextView tvTitle, tvSubtitle;
+        private View ibDownloadButton;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -65,17 +74,30 @@ public class ImageTitleSubtitleAdapter extends RecyclerView.Adapter<ImageTitleSu
             this.ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
             this.tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
             this.tvSubtitle = (TextView) itemView.findViewById(R.id.tvSubtitle);
+            this.ibDownloadButton = itemView.findViewById(R.id.ibDownloadButton);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            itemView.setOnClickListener(this);
+            this.ibDownloadButton.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+
+            switch (view.getId()) {
+                case R.id.ibDownloadButton:
+                    callback.onDownloadButtonClicked(getLayoutPosition());
+                    break;
+
+                default:
                     callback.onRowClicked(getLayoutPosition());
-                }
-            });
+            }
+
         }
     }
 
     public interface TracksCallback {
         void onRowClicked(int position);
+
+        void onDownloadButtonClicked(int position);
     }
 }

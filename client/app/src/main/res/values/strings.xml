@@ -13,4 +13,5 @@
     <string name="sample_track_name">Headhunterz - Dragonborn (Breaux Remix)</string>
     <string name="No_tracks_downloaded">No tracks downloaded</string>
     <string name="No_playlist_downloaded">No playlists downloaded</string>
+    <string name="title_activity_playlist_tracks">PlaylistTracksActivity</string>
 </resources>
