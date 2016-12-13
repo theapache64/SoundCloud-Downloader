@@ -74,6 +74,10 @@ public class DownloaderService extends Service {
 
         Log.d(X, "Download service initialized : " + intent);
 
+        if (intent == null) {
+            throw new IllegalArgumentException("Intent can't be null");
+        }
+
         if (NetworkUtils.isNetwork(this)) {
 
             final String soundCloudUrl = intent.getStringExtra(DownloaderActivity.KEY_SOUNDCLOUD_URL);
@@ -206,7 +210,7 @@ public class DownloaderService extends Service {
         }
 
 
-        return START_REDELIVER_INTENT;
+        return START_STICKY;
     }
 
     private void showErrorNotification(String message, String absFilePath) {
