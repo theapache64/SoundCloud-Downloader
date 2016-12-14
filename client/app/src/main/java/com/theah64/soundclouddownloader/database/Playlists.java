@@ -18,6 +18,9 @@ public class Playlists extends BaseTable<Playlist> {
     public static final String COLUMN_SOUNDCLOUD_URL = "soundcloud_url";
     private static final String COLUMN_TITLE = "title";
     private static final String TABLE_NAME_PLAYLISTS = "playlists";
+    private static final String COLUMN_AS_PLAYLIST_ID = "playlist_id";
+    private static final String COLUMN_AS_TOTAL_TRACKS = "total_tracks";
+    private static final String COLUMN_AS_DOWNLOADED_TRACKS = "downloaded_tracks";
     private static Playlists instance;
 
     private Playlists(Context context) {
@@ -56,16 +59,19 @@ public class Playlists extends BaseTable<Playlist> {
 
         List<Playlist> playlists = null;
 
-        final Cursor c = this.getReadableDatabase().query(TABLE_NAME_PLAYLISTS, new String[]{COLUMN_ARTWORK_URL, COLUMN_TITLE}, null, null, null, null, COLUMN_ID + " DESC");
+        final Cursor c = this.getReadableDatabase().rawQuery("SELECT p.id, p.title, p.artwork_url, COUNT(DISTINCT t.id) AS total_tracks, COUNT(DISTINCT dt.id) AS downloaded_tracks FROM playlists p INNER JOIN tracks t ON t.playlist_id = p.id LEFT JOIN tracks dt ON dt.playlist_id = p.id AND dt.is_downloaded = 1 GROUP BY p.id ORDER BY p.id DESC", null);
         if (c != null && c.moveToFirst()) {
 
             playlists = new ArrayList<>(c.getCount());
 
             do {
-                final String artworkUrl = c.getString(c.getColumnIndex(COLUMN_ARTWORK_URL));
+                final String id = c.getString(c.getColumnIndex(COLUMN_ID));
                 final String title = c.getString(c.getColumnIndex(COLUMN_TITLE));
+                final String artworkUrl = c.getString(c.getColumnIndex(COLUMN_ARTWORK_URL));
+                final int totalTracks = c.getInt(c.getColumnIndex(COLUMN_AS_TOTAL_TRACKS));
+                final int tracksDownloaded = c.getInt(c.getColumnIndex(COLUMN_AS_DOWNLOADED_TRACKS));
 
-                playlists.add(new Playlist(null, title, null, artworkUrl, totalTracks, tracksDownloaded));
+                playlists.add(new Playlist(id, title, null, artworkUrl, totalTracks, tracksDownloaded));
 
             } while (c.moveToNext());
         }
