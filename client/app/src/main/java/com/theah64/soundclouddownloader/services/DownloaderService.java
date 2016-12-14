@@ -24,6 +24,7 @@ import com.theah64.soundclouddownloader.ui.activities.PlaylistDownloadActivity;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.utils.APIRequestBuilder;
 import com.theah64.soundclouddownloader.utils.APIResponse;
+import com.theah64.soundclouddownloader.utils.DownloadUtils;
 import com.theah64.soundclouddownloader.utils.NetworkUtils;
 import com.theah64.soundclouddownloader.utils.OkHttpUtils;
 import com.theah64.soundclouddownloader.utils.Random;
@@ -147,15 +148,18 @@ public class DownloaderService extends Service {
 
                             if (!trackFile.exists()) {
 
+                                final Track track = new Track(null, title, null, artworkUrl, null, soundCloudUrl, null, false, false, trackFile);
+
                                 //Starting download
-                                final long downloadId = addToDownloadQueue(title, downloadUrl, subPath);
+                                final long downloadId = DownloadUtils.addToDownloadQueue(DownloaderService.this, track);
+                                track.setDownloadId(String.valueOf(downloadId));
 
                                 final String trackId = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, soundCloudUrl, Tracks.COLUMN_ID);
 
 
                                 if (trackId == null) {
                                     //Adding track to database -
-                                    tracksTable.add(new Track(null, title, null, null, null, artworkUrl, String.valueOf(downloadId), soundCloudUrl, null, false, false, new File(absFilePath)));
+                                    tracksTable.add(track);
                                 } else {
                                     //Track exist so just updating the download id.
                                     tracksTable.update(Tracks.COLUMN_ID, trackId, Tracks.COLUMN_DOWNLOAD_ID, String.valueOf(downloadId));
@@ -199,22 +203,6 @@ public class DownloaderService extends Service {
                     }
                 }
 
-                private long addToDownloadQueue(final String title, final String downloadUrl, final String subPath) {
-
-                    final DownloadManager.Request downloadRequest = new DownloadManager.Request(Uri.parse(downloadUrl));
-
-                    downloadRequest.setTitle(title);
-                    downloadRequest.setDescription(downloadUrl);
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                        downloadRequest.allowScanningByMediaScanner();
-                        downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                    }
-
-                    downloadRequest.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, subPath);
-                    return ((DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE)).enqueue(downloadRequest);
-
-                }
             });
 
         } else {

@@ -83,7 +83,7 @@ public class Tracks extends BaseTable<Track> {
                 final String soundCloudUrl = c.getString(c.getColumnIndex(COLUMN_SOUNDCLOUD_URL));
                 final boolean isDownloaded = c.getString(c.getColumnIndex(COLUMN_IS_DOWNLOADED)).equals(TRUE);
 
-                trackList.add(new Track(id, title, null, null, null, artworkUrl, null, soundCloudUrl, null, false, isDownloaded, absoluteFilePath != null ? new File(absoluteFilePath) : null));
+                trackList.add(new Track(id, title, null, artworkUrl, null, soundCloudUrl, null, false, isDownloaded, absoluteFilePath != null ? new File(absoluteFilePath) : null));
             } while (c.moveToNext());
         }
 
@@ -106,7 +106,7 @@ public class Tracks extends BaseTable<Track> {
             if (cursor.moveToFirst()) {
                 //track exists
                 final String absFilePath = cursor.getString(cursor.getColumnIndex(COLUMN_ABS_FILE_PATH));
-                track = new Track(null, null, null, null, null, null, null, null, null, false, false, absFilePath != null ? new File(absFilePath) : null);
+                track = new Track(null, null, null, null, null, null, null, false, false, absFilePath != null ? new File(absFilePath) : null);
             }
             cursor.close();
         }

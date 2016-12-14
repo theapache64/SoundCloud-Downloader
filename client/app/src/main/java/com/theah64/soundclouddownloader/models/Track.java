@@ -14,20 +14,18 @@ public class Track implements Serializable, ITSNode {
     public static final String KEY_PLAYLIST_NAME = "playlist_name";
     private String id;
     private final String title;
-    private final String fileName;
     private final String downloadUrl;
     private final String artWorkUrl;
-    private final String downloadId;
+    private String downloadId;
     private final String soundCloudUrl;
     private final String playlistId;
     private boolean isChecked;
     private final boolean isDownloaded;
     private final File file;
 
-    public Track(String id, String title, String fileName, String downloadUrl, String artWorkUrl, String downloadId, String soundCloudUrl, String playlistId, boolean isChecked, boolean isDownloaded, File file) {
+    public Track(String id, String title, String downloadUrl, String artWorkUrl, String downloadId, String soundCloudUrl, String playlistId, boolean isChecked, boolean isDownloaded, File file) {
         this.id = id;
         this.title = title;
-        this.fileName = fileName;
         this.downloadUrl = downloadUrl;
         this.artWorkUrl = artWorkUrl;
         this.downloadId = downloadId;
@@ -108,7 +106,6 @@ public class Track implements Serializable, ITSNode {
         return "Track{" +
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
-                ", fileName='" + fileName + '\'' +
                 ", downloadUrl='" + downloadUrl + '\'' +
                 ", artWorkUrl='" + artWorkUrl + '\'' +
                 ", downloadId='" + downloadId + '\'' +
@@ -122,5 +119,9 @@ public class Track implements Serializable, ITSNode {
 
     public File getFile() {
         return file;
+    }
+
+    public void setDownloadId(String downloadId) {
+        this.downloadId = downloadId;
     }
 }

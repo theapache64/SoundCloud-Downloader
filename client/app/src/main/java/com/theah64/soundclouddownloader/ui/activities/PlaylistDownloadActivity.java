@@ -25,6 +25,7 @@ import com.theah64.soundclouddownloader.database.Playlists;
 import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.Playlist;
 import com.theah64.soundclouddownloader.models.Track;
+import com.theah64.soundclouddownloader.utils.DownloadUtils;
 import com.theah64.soundclouddownloader.utils.NetworkUtils;
 import com.theah64.soundclouddownloader.utils.Random;
 
@@ -50,6 +51,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
     private String playlistName;
     private DownloadManager dm;
     private PlaylistDownloadAdapter adapter;
+    private Tracks tracksTable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +88,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         try {
             final JSONArray jaTracks = new JSONArray(getStringOrThrow(KEY_TRACKS));
 
-            final Tracks tracksTable = Tracks.getInstance(this);
+            tracksTable = Tracks.getInstance(this);
 
             for (int i = 0; i < jaTracks.length(); i++) {
 
@@ -104,7 +106,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
                 final String subPath = "/SoundCloud Downloader/" + playlistName + File.separator + fileName;
                 final String absoluteFilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + subPath;
-                final Track newTrack = new Track(null, title, fileName, downloadUrl, subPath, trackArtWorkUrl, null, trackSoundCloudUrl, playlistId, true, false, new File(absoluteFilePath));
+                final Track newTrack = new Track(null, title, downloadUrl, trackArtWorkUrl, null, trackSoundCloudUrl, playlistId, true, false, new File(absoluteFilePath));
                 final String dbTrackId = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, trackSoundCloudUrl, Tracks.COLUMN_ID);
                 final String id = dbTrackId != null ? dbTrackId : String.valueOf(tracksTable.add(newTrack));
                 newTrack.setId(id);
@@ -168,7 +170,11 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
             if ((track.getFile() == null || !track.getFile().exists()) && track.isChecked()) {
                 //Starting download
-                addToDownloadQueue(track);
+                final long downloadId = DownloadUtils.addToDownloadQueue(this, track);
+                if (!tracksTable.update(Tracks.COLUMN_ID, track.getId(), Tracks.COLUMN_DOWNLOAD_ID, String.valueOf(downloadId))) {
+                    throw new IllegalArgumentException("Failed to set download id");
+                }
+
                 Log.i(X, "Added to download queue");
             } else if (!track.isChecked()) {
                 Log.e(X, "Track unchecked");
@@ -181,22 +187,6 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
         Toast.makeText(this, R.string.download_started, Toast.LENGTH_LONG).show();
         nm.cancel(notifId);
-    }
-
-    private void addToDownloadQueue(final Track track) {
-
-        final DownloadManager.Request downloadRequest = new DownloadManager.Request(Uri.parse(track.getDownloadUrl()));
-
-        downloadRequest.setTitle(track.getTitle());
-        downloadRequest.setDescription(track.getDownloadUrl());
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            downloadRequest.allowScanningByMediaScanner();
-            downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        }
-
-        downloadRequest.setDestinationUri(Uri.fromFile(track.getFile()));
-        dm.enqueue(downloadRequest);
     }
 
     @Override
