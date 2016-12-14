@@ -2,11 +2,11 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:state_pressed="true">
-        <color android:color="@color/black_800_trans_55" />
+        <color android:color="@color/black_800_trans_95" />
     </item>
 
     <item android:state_pressed="false">
-        <color android:color="@color/black_800_trans_95" />
+        <color android:color="@color/black_800_trans_15" />
     </item>
 
 </selector>

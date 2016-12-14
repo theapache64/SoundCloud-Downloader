@@ -61,7 +61,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         playlistName = getStringOrThrow(KEY_PLAYLIST_NAME);
         final String artworkUrl = getIntent().getStringExtra(Playlists.COLUMN_ARTWORK_URL);
 
-        final String playlistId = String.valueOf(Playlists.getInstance(this).add(new Playlist(null, playlistName, soundCloudUrl, artworkUrl)));
+        final String playlistId = String.valueOf(Playlists.getInstance(this).add(new Playlist(null, playlistName, soundCloudUrl, artworkUrl, -1, -1)));
         enableBackNavigation(playlistName);
 
         trackList = new ArrayList<>();

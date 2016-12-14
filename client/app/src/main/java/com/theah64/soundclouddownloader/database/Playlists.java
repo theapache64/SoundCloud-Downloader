@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.theah64.soundclouddownloader.models.Playlist;
-import com.theah64.soundclouddownloader.models.Track;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +65,7 @@ public class Playlists extends BaseTable<Playlist> {
                 final String artworkUrl = c.getString(c.getColumnIndex(COLUMN_ARTWORK_URL));
                 final String title = c.getString(c.getColumnIndex(COLUMN_TITLE));
 
-                playlists.add(new Playlist(null, title, null, artworkUrl));
+                playlists.add(new Playlist(null, title, null, artworkUrl, totalTracks, tracksDownloaded));
 
             } while (c.moveToNext());
         }

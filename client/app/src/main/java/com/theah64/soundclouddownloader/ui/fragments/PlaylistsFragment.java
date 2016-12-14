@@ -1,6 +1,7 @@
 package com.theah64.soundclouddownloader.ui.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,7 +14,9 @@ import android.view.ViewGroup;
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.adapters.ITSAdapter;
 import com.theah64.soundclouddownloader.database.Playlists;
+import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.Playlist;
+import com.theah64.soundclouddownloader.ui.activities.PlaylistTracksActivity;
 
 import java.util.List;
 
@@ -56,6 +59,10 @@ public class PlaylistsFragment extends Fragment implements ITSAdapter.TracksCall
     @Override
     public void onRowClicked(int position) {
 
+        final Playlist playlist = playlists.get(position);
+        final Intent playlistTracksIntent = new Intent(getActivity(), PlaylistTracksActivity.class);
+        playlistTracksIntent.putExtra(Playlist.KEY, playlist);
+        startActivity(playlistTracksIntent);
     }
 
     @Override

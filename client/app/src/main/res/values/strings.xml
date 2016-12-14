@@ -21,10 +21,10 @@
     <string name="Download">Download</string>
     <string name="Share_saved_tracks">Share saved tracks</string>
     <string name="File_not_found">File not found</string>
-    <string name="Download_track_using_soundcloud_downloader_s">Download track using SoundCloud downloader  : %s</string>
     <string name="Share_using">Share using</string>
     <string name="Failed_to_remove">Failed to remove</string>
     <string name="Removed">Removed</string>
     <string name="Play">Play</string>
     <string name="Please_download_the_track">Please download the track</string>
+    <string name="Download_track_using_soundcloud_downloader_s" formatted="false">Download this track using SoundCloud downloader (%s)\n\n %s - %s</string>
 </resources>

@@ -21,7 +21,7 @@ public class Tracks extends BaseTable<Track> {
     public static final String COLUMN_SOUNDCLOUD_URL = "soundcloud_url";
     public static final String COLUMN_DOWNLOAD_ID = "download_id";
     private static final String TABLE_NAME_TRACKS = "tracks";
-    private static final String COLUMN_PLAYLIST_ID = "playlist_id";
+    public static final String COLUMN_PLAYLIST_ID = "playlist_id";
     private static final String X = Tracks.class.getSimpleName();
     private static final String COLUMN_ABS_FILE_PATH = "abs_file_path";
     public static final String COLUMN_IS_DOWNLOADED = "is_downloaded";
@@ -67,7 +67,7 @@ public class Tracks extends BaseTable<Track> {
     public List<Track> getAll(@Nullable final String playlistId) {
         List<Track> trackList = null;
 
-        final Cursor c = this.getReadableDatabase().query(TABLE_NAME_TRACKS, new String[]{COLUMN_ARTWORK_URL, COLUMN_TITLE, COLUMN_DOWNLOAD_ID, COLUMN_ABS_FILE_PATH, COLUMN_IS_DOWNLOADED}, playlistId != null ? "playlist_id = ?" :
+        final Cursor c = this.getReadableDatabase().query(TABLE_NAME_TRACKS, new String[]{COLUMN_ID, COLUMN_ARTWORK_URL, COLUMN_TITLE, COLUMN_DOWNLOAD_ID, COLUMN_SOUNDCLOUD_URL, COLUMN_ABS_FILE_PATH, COLUMN_IS_DOWNLOADED}, playlistId != null ? "playlist_id = ?" :
                         null, playlistId != null ? new String[]{playlistId} : null
                 , null, null, COLUMN_ID + " DESC");
         if (c != null && c.moveToFirst()) {
@@ -75,12 +75,14 @@ public class Tracks extends BaseTable<Track> {
             trackList = new ArrayList<>(c.getCount());
 
             do {
+                final String id = c.getString(c.getColumnIndex(COLUMN_ID));
                 final String artworkUrl = c.getString(c.getColumnIndex(COLUMN_ARTWORK_URL));
                 final String title = c.getString(c.getColumnIndex(COLUMN_TITLE));
                 final String absoluteFilePath = c.getString(c.getColumnIndex(COLUMN_ABS_FILE_PATH));
+                final String soundCloudUrl = c.getString(c.getColumnIndex(COLUMN_SOUNDCLOUD_URL));
                 final boolean isDownloaded = c.getString(c.getColumnIndex(COLUMN_IS_DOWNLOADED)).equals(TRUE);
 
-                trackList.add(new Track(null, title, null, null, null, artworkUrl, null, null, null, false, isDownloaded, absoluteFilePath));
+                trackList.add(new Track(id, title, null, null, null, artworkUrl, null, soundCloudUrl, null, false, isDownloaded, absoluteFilePath));
             } while (c.moveToNext());
         }
 

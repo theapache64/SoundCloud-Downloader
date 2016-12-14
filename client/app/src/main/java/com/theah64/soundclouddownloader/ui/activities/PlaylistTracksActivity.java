@@ -2,6 +2,7 @@ package com.theah64.soundclouddownloader.ui.activities;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 import com.theah64.soundclouddownloader.R;
@@ -16,9 +17,15 @@ public class PlaylistTracksActivity extends BaseAppCompatActivity {
         setContentView(R.layout.activity_playlist_tracks);
 
         final Playlist playlist = (Playlist) getSerializableOrThrow(Playlist.KEY);
-        enableBackNavigation(playlist.getTitle());
+
+        final ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(playlist.getTitle());
+        actionBar.setSubtitle(getResources().getQuantityString(R.plurals.pluralTracks, playlist.getTotalTracks(), playlist.getTotalTracks()));
 
         final TracksFragment tracksFragment = TracksFragment.getNewInstance(playlist.getId());
+        getSupportFragmentManager().beginTransaction().replace(R.id.flPlaylistTracksContainer, tracksFragment).commit();
 
     }
 

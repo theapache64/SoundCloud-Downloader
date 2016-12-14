@@ -21,6 +21,8 @@ import com.theah64.soundclouddownloader.database.Playlists;
 import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.services.DownloaderService;
+import com.theah64.soundclouddownloader.utils.App;
+import com.theah64.soundclouddownloader.utils.CommonUtils;
 
 import java.io.File;
 import java.util.List;
@@ -76,7 +78,9 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
 
     @Override
     public void onRowClicked(int position) {
-        final Track track = trackList.get(position);
+
+        this.position = position;
+        track = trackList.get(position);
 
         if (track.isDownloaded()) {
             //playing track
@@ -123,6 +127,8 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
                 if (file.exists()) {
                     //Opening audio file
                     final Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                    final String mimeType = CommonUtils.getMIMETypeFromUrl(file, "audio/*");
+                    sendIntent.setType(mimeType);
                     sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
                     startActivity(sendIntent);
 
@@ -136,7 +142,7 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
 
                 final Intent shareUrlIntent = new Intent(Intent.ACTION_SEND);
                 shareUrlIntent.setType("text/plain");
-                shareUrlIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.Download_track_using_soundcloud_downloader_s, track.getDownloadUrl()));
+                shareUrlIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.Download_track_using_soundcloud_downloader_s, App.STORE_URL, track.getTitle(), track.getSoundCloudUrl()));
                 startActivity(Intent.createChooser(shareUrlIntent, getString(R.string.Share_using)));
 
                 return true;
@@ -171,6 +177,8 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
     }
 
     private void playTrack() {
+
+        Log.d(X, "Track is " + track);
 
         final File audioFile = new File(track.getAbsoluteFilePath());
         if (audioFile.exists()) {

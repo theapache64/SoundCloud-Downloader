@@ -2,6 +2,7 @@ package com.theah64.soundclouddownloader.utils;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -19,6 +20,7 @@ import com.theah64.soundclouddownloader.R;
 public class App extends Application {
 
     public static final boolean IS_DEBUG_MODE = false;
+    public static final String STORE_URL = "http://play.google.com/store/apps/details?id=com.theah64.soundclouddownloader";
 
     private static void initImageLoader(final Context context) {
 
