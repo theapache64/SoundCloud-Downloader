@@ -69,9 +69,10 @@
             android:name=".ui.activities.PlaylistDownloadActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.activities.TestActivity" />
+
         <activity
             android:name=".ui.activities.PlaylistTracksActivity"
-            android:label="@string/title_activity_playlist_tracks" />
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver
             android:name=".receivers.OnDownloadFinishedReceiver"

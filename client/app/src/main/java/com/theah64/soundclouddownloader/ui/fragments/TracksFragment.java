@@ -163,7 +163,7 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
             case R.id.miDownload:
 
                 final Intent downloadIntent = new Intent(getActivity(), DownloaderService.class);
-                downloadIntent.putExtra(Tracks.COLUMN_SOUNDCLOUD_URL, track.getSoundCloudUrl());
+                downloadIntent.putExtra(Tracks.COLUMN_SOUNDCLOUD_URL, track.getSoundCloudUrl());//TODO: BUG
                 getActivity().startService(downloadIntent);
 
                 Toast.makeText(getActivity(), R.string.initializing_download, Toast.LENGTH_SHORT).show();

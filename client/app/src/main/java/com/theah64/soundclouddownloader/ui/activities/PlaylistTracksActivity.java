@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.models.Playlist;
@@ -16,6 +17,9 @@ public class PlaylistTracksActivity extends BaseAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist_tracks);
 
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         final Playlist playlist = (Playlist) getSerializableOrThrow(Playlist.KEY);
 
         final ActionBar actionBar = getSupportActionBar();
@@ -26,7 +30,6 @@ public class PlaylistTracksActivity extends BaseAppCompatActivity {
 
         final TracksFragment tracksFragment = TracksFragment.getNewInstance(playlist.getId());
         getSupportFragmentManager().beginTransaction().replace(R.id.flPlaylistTracksContainer, tracksFragment).commit();
-
     }
 
 }
