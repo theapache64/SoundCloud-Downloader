@@ -76,7 +76,15 @@ public class Track implements Serializable, ITSNode {
 
     @Override
     public String getSubtitle() {
-        return isDownloaded ? "(Saved)" : null;
+
+        if (isDownloaded && file != null && file.exists()) {
+            return "(Saved)";
+        } else if (isDownloaded && file != null && !file.exists()) {
+            return "(Saved but moved/deleted)";
+        } else {
+            return null;
+        }
+
     }
 
     public String getDownloadUrl() {

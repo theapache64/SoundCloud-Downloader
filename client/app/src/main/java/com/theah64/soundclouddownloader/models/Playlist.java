@@ -1,6 +1,7 @@
 package com.theah64.soundclouddownloader.models;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by theapache64 on 12/12/16.
@@ -11,6 +12,7 @@ public class Playlist implements ITSNode, Serializable {
 
     private final String id, title, url, artworkUrl;
     private final int totalTracks, tracksDownloaded;
+    private List<Track> tracks;
 
 
     public Playlist(String id, String title, String url, String artworkUrl, int totalTracks, int tracksDownloaded) {
@@ -46,5 +48,17 @@ public class Playlist implements ITSNode, Serializable {
 
     public int getTotalTracks() {
         return totalTracks;
+    }
+
+    public boolean isDownloaded() {
+        return tracksDownloaded == totalTracks;
+    }
+
+    public List<Track> getTracks() {
+        return tracks;
+    }
+
+    public void setTracks(List<Track> tracks) {
+        this.tracks = tracks;
     }
 }

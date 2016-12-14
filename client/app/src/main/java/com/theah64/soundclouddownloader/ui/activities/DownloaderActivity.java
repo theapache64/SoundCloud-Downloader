@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.database.Tracks;
+import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.services.DownloaderService;
 
 import java.util.regex.Matcher;
@@ -27,10 +28,20 @@ public class DownloaderActivity extends AppCompatActivity {
         final String url = UrlParser.parse(data);
         if (url != null && url.contains("soundcloud.com/")) {
 
-            final Intent downloadIntent = new Intent(this, DownloaderService.class);
-            downloadIntent.putExtra(Tracks.COLUMN_SOUNDCLOUD_URL, url);
-            startService(downloadIntent);
-            Toast.makeText(this, R.string.initializing_download, Toast.LENGTH_SHORT).show();
+            //Checking if the track contains in the db and track exists
+            final Track track = Tracks.getInstance(this).get(Tracks.COLUMN_SOUNDCLOUD_URL, url);
+
+            if (track != null && track.getFile() != null && track.getFile().exists()) {
+                //Track exist
+                Toast.makeText(this, getString(R.string.Existing_track_s, track.getTitle()), Toast.LENGTH_SHORT).show();
+            } else {
+
+                final Intent downloadIntent = new Intent(this, DownloaderService.class);
+                downloadIntent.putExtra(Tracks.COLUMN_SOUNDCLOUD_URL, url);
+                startService(downloadIntent);
+                Toast.makeText(this, R.string.initializing_download, Toast.LENGTH_SHORT).show();
+            }
+
             finish();
 
         } else {

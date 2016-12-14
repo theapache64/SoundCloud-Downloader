@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <plurals name="pluralTracks">
+    <plurals name="d_tracks">
         <item quantity="one">%d track</item>
         <item quantity="other">%d tracks</item>
     </plurals>
+
+    <plurals name="sharing_d_tracks">
+        <item quantity="one">Sharing %d track</item>
+        <item quantity="other">Sharing %d tracks</item>
+    </plurals>
+
 </resources>

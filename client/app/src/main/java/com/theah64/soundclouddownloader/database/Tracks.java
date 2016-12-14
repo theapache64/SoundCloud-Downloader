@@ -95,4 +95,22 @@ public class Tracks extends BaseTable<Track> {
         return trackList;
     }
 
+    @Override
+    public Track get(String column, String value) {
+
+        Track track = null;
+
+        final Cursor cursor = this.getReadableDatabase().query(TABLE_NAME_TRACKS, new String[]{COLUMN_ABS_FILE_PATH}, column + " = ?", new String[]{value}, null, null, null);
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                //track exists
+                final String absFilePath = cursor.getString(cursor.getColumnIndex(COLUMN_ABS_FILE_PATH));
+                track = new Track(null, null, null, null, null, null, null, null, null, false, false, absFilePath != null ? new File(absFilePath) : null);
+            }
+            cursor.close();
+        }
+
+        return track;
+    }
 }

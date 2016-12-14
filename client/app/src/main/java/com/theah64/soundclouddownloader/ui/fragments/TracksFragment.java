@@ -107,6 +107,7 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
 
         this.position = position;
         track = trackList.get(position);
+
         final PopupMenu trackMenu = new PopupMenu(getActivity(), anchor);
         trackMenu.getMenuInflater().inflate(track.isDownloaded() && track.getFile() != null && track.getFile().exists() ? R.menu.menu_track_downloaded : R.menu.menu_track_not_downloaded, trackMenu.getMenu());
         trackMenu.setOnMenuItemClickListener(this);
