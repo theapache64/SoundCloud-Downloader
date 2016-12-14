@@ -25,6 +25,7 @@ import com.theah64.soundclouddownloader.database.Playlists;
 import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.Playlist;
 import com.theah64.soundclouddownloader.models.Track;
+import com.theah64.soundclouddownloader.utils.App;
 import com.theah64.soundclouddownloader.utils.DownloadUtils;
 import com.theah64.soundclouddownloader.utils.NetworkUtils;
 import com.theah64.soundclouddownloader.utils.Random;
@@ -104,8 +105,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                     trackArtWorkUrl = joTrack.getString(Tracks.COLUMN_ARTWORK_URL);
                 }
 
-                final String subPath = "/SoundCloud Downloader/" + playlistName + File.separator + fileName;
-                final String absoluteFilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + subPath;
+                final String absoluteFilePath = String.format("%s/%s/%s/%s", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), App.FOLDER_NAME, playlistName, fileName);
                 final Track newTrack = new Track(null, title, downloadUrl, trackArtWorkUrl, null, trackSoundCloudUrl, playlistId, true, false, new File(absoluteFilePath));
                 final String dbTrackId = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, trackSoundCloudUrl, Tracks.COLUMN_ID);
                 final String id = dbTrackId != null ? dbTrackId : String.valueOf(tracksTable.add(newTrack));

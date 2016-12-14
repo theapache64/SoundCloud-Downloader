@@ -21,6 +21,7 @@ public class App extends Application {
 
     public static final boolean IS_DEBUG_MODE = false;
     public static final String STORE_URL = "http://play.google.com/store/apps/details?id=com.theah64.soundclouddownloader";
+    public static final String FOLDER_NAME = "SoundCloud Downloader";
 
     private static void initImageLoader(final Context context) {
 

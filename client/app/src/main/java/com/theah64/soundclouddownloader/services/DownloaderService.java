@@ -24,6 +24,7 @@ import com.theah64.soundclouddownloader.ui.activities.PlaylistDownloadActivity;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.utils.APIRequestBuilder;
 import com.theah64.soundclouddownloader.utils.APIResponse;
+import com.theah64.soundclouddownloader.utils.App;
 import com.theah64.soundclouddownloader.utils.DownloadUtils;
 import com.theah64.soundclouddownloader.utils.NetworkUtils;
 import com.theah64.soundclouddownloader.utils.OkHttpUtils;
@@ -142,7 +143,7 @@ public class DownloaderService extends Service {
                             nm.notify(notifId, apiNotification.build());
 
                             //Checking file existence
-                            final String subPath = File.separator + "/SoundCloud Downloader/" + fileName;
+                            final String subPath = File.separator + App.FOLDER_NAME + File.separator + fileName;
                             final String absFilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + subPath;
                             final File trackFile = new File(absFilePath);
 
