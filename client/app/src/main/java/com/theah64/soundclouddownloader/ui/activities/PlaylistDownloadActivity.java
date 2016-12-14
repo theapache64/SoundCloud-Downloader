@@ -93,7 +93,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
                 final String subPath = "/SoundCloud Downloader/" + playlistName + File.separator + fileName;
                 final String absoluteFilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + subPath;
-                final Track newTrack = new Track(null, title, fileName, downloadUrl, subPath, trackArtWorkUrl, null, soundCloudUrl, playlistId, true, false, absoluteFilePath);
+                final Track newTrack = new Track(null, title, fileName, downloadUrl, subPath, trackArtWorkUrl, null, trackSoundCloudUrl, playlistId, true, false, absoluteFilePath);
                 final String dbTrackId = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, trackSoundCloudUrl, Tracks.COLUMN_ID);
                 final String id = dbTrackId != null ? dbTrackId : String.valueOf(tracksTable.add(newTrack));
                 newTrack.setId(id);
