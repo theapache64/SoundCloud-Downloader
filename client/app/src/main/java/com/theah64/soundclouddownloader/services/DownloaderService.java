@@ -96,7 +96,7 @@ public class DownloaderService extends Service {
 
             //Building json download request
             final Request scdRequest = new APIRequestBuilder("/scd/json")
-                    .addParam("sound_cloud_url", soundCloudUrl)
+                    .addParam("soundcloud_url", soundCloudUrl)
                     .build();
 
             //Processing request

@@ -61,7 +61,14 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         playlistName = getStringOrThrow(KEY_PLAYLIST_NAME);
         final String artworkUrl = getIntent().getStringExtra(Playlists.COLUMN_ARTWORK_URL);
 
-        final String playlistId = String.valueOf(Playlists.getInstance(this).add(new Playlist(null, playlistName, soundCloudUrl, artworkUrl, -1, -1)));
+        final Playlists playlistsTable = Playlists.getInstance(this);
+
+        String playlistId = playlistsTable.get(Playlists.COLUMN_SOUNDCLOUD_URL, soundCloudUrl, Playlists.COLUMN_ID);
+
+        if (playlistId == null) {
+            playlistId = String.valueOf(Playlists.getInstance(this).add(new Playlist(null, playlistName, soundCloudUrl, artworkUrl, -1, -1)));
+        }
+
         enableBackNavigation(playlistName);
 
         trackList = new ArrayList<>();
@@ -76,6 +83,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
                 final String title = joTrack.getString(Track.KEY_TITLE);
                 final String fileName = joTrack.getString(Track.KEY_FILENAME);
+                final String trackSoundCloudUrl = joTrack.getString(Tracks.COLUMN_SOUNDCLOUD_URL);
                 final String downloadUrl = joTrack.getString(Track.KEY_DOWNLOAD_URL);
                 String trackArtWorkUrl = null;
 
@@ -86,7 +94,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                 final String subPath = "/SoundCloud Downloader/" + playlistName + File.separator + fileName;
                 final String absoluteFilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + subPath;
                 final Track newTrack = new Track(null, title, fileName, downloadUrl, subPath, trackArtWorkUrl, null, soundCloudUrl, playlistId, true, false, absoluteFilePath);
-                final String dbTrackId = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, downloadUrl, Tracks.COLUMN_ID);
+                final String dbTrackId = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, trackSoundCloudUrl, Tracks.COLUMN_ID);
                 final String id = dbTrackId != null ? dbTrackId : String.valueOf(tracksTable.add(newTrack));
                 newTrack.setId(id);
                 trackList.add(newTrack);
