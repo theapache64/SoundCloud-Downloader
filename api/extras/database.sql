@@ -17,7 +17,7 @@ INSERT INTO users (id,email,api_key) VALUES ('2','shifar.shifz@gmail.com','andro
 CREATE TABLE `requests`(
   id INT(11) NOT NULL AUTO_INCREMENT,
   user_id INT(11) NOT NULL,
-  sound_cloud_url TEXT NOT NULL,
+  soundcloud_url TEXT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(id),
   FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE

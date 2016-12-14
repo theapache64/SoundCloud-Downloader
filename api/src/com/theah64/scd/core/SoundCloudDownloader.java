@@ -1,6 +1,7 @@
 package com.theah64.scd.core;
 
 import com.theah64.scd.database.tables.Preference;
+import com.theah64.scd.database.tables.Requests;
 import com.theah64.scd.models.JSONTracks;
 import com.theah64.scd.models.Track;
 import com.theah64.scd.utils.NetworkHelper;
@@ -26,6 +27,7 @@ public class SoundCloudDownloader {
 
         JSONTracks jTracks = getSoundCloudTracks(soundCloudUrl);
 
+        //Downloading download url
         if (jTracks != null) {
 
             try {
@@ -129,6 +131,7 @@ public class SoundCloudDownloader {
             trackArtworkUrl = joResolvedTrack.getString("artwork_url");
         }
 
+        final String soundCloudUrl = joResolvedTrack.getString("permalink_url");
         final String fileName = String.format(fileNameFormat, title, originalFormat);
 
         final JSONObject joTrack = new JSONObject();
@@ -137,6 +140,7 @@ public class SoundCloudDownloader {
         joTrack.put(Track.KEY_ORIGINAL_FORMAT, originalFormat);
         joTrack.put(Track.KEY_FILENAME, fileName);
         joTrack.put(KEY_ARTWORK_URL, trackArtworkUrl);
+        joTrack.put(Requests.COLUMN_SOUND_CLOUD_URL, soundCloudUrl);
 
         return joTrack;
     }

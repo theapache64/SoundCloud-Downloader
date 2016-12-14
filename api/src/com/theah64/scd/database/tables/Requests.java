@@ -13,7 +13,7 @@ import java.sql.SQLException;
 public class Requests extends BaseTable<Request> {
 
     private static final Requests instance = new Requests();
-    public static final String COLUMN_SOUND_CLOUD_URL = "sound_cloud_url";
+    public static final String COLUMN_SOUND_CLOUD_URL = "soundcloud_url";
 
     private Requests() {
         super("requests");
@@ -27,7 +27,7 @@ public class Requests extends BaseTable<Request> {
     public boolean add(Request request) throws InsertFailedException {
         boolean isAdded = false;
 
-        final String query = "INSERT INTO requests (user_id, sound_cloud_url) VALUES (?,?);";
+        final String query = "INSERT INTO requests (user_id, soundcloud_url) VALUES (?,?);";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
