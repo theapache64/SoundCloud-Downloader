@@ -166,12 +166,9 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
             Log.e(X, "-------------------------------");
             Log.i(X, "Track : " + track);
 
-            final String absFilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + track.getSubPath();
-            final File trackFile = new File(absFilePath);
-
-            if (!trackFile.exists() && track.isChecked()) {
+            if ((track.getFile() == null || !track.getFile().exists()) && track.isChecked()) {
                 //Starting download
-                addToDownloadQueue(track.getTitle(), track.getDownloadUrl(), track.getSubPath());
+                addToDownloadQueue(track);
                 Log.i(X, "Added to download queue");
             } else if (!track.isChecked()) {
                 Log.e(X, "Track unchecked");
@@ -186,19 +183,19 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         nm.cancel(notifId);
     }
 
-    private void addToDownloadQueue(final String title, final String downloadUrl, final String subPath) {
+    private void addToDownloadQueue(final Track track) {
 
-        final DownloadManager.Request downloadRequest = new DownloadManager.Request(Uri.parse(downloadUrl));
+        final DownloadManager.Request downloadRequest = new DownloadManager.Request(Uri.parse(track.getDownloadUrl()));
 
-        downloadRequest.setTitle(title);
-        downloadRequest.setDescription(downloadUrl);
+        downloadRequest.setTitle(track.getTitle());
+        downloadRequest.setDescription(track.getDownloadUrl());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             downloadRequest.allowScanningByMediaScanner();
             downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         }
 
-        downloadRequest.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, subPath);
+        downloadRequest.setDestinationUri(Uri.fromFile(track.getFile()));
         dm.enqueue(downloadRequest);
     }
 

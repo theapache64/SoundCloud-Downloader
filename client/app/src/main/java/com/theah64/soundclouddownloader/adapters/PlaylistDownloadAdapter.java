@@ -43,8 +43,14 @@ public class PlaylistDownloadAdapter extends RecyclerView.Adapter<PlaylistDownlo
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Track track = tracks.get(position);
 
-        holder.cbDownload.setChecked(track.isChecked());
-        holder.tvTrackTitle.setText(track.getTitle());
+
+        if (track.getFile() != null && track.getFile().exists()) {
+            holder.tvTrackTitle.setText(track.getTitle() + " (Saved)");
+            holder.cbDownload.setClickable(false);
+        } else {
+            holder.tvTrackTitle.setText(track.getTitle());
+            holder.cbDownload.setChecked(track.isChecked());
+        }
     }
 
     @Override

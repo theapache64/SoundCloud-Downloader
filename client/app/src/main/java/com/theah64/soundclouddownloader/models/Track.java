@@ -16,7 +16,6 @@ public class Track implements Serializable, ITSNode {
     private final String title;
     private final String fileName;
     private final String downloadUrl;
-    private final String subPath;
     private final String artWorkUrl;
     private final String downloadId;
     private final String soundCloudUrl;
@@ -25,12 +24,11 @@ public class Track implements Serializable, ITSNode {
     private final boolean isDownloaded;
     private final File file;
 
-    public Track(String id, String title, String fileName, String downloadUrl, String subPath, String artWorkUrl, String downloadId, String soundCloudUrl, String playlistId, boolean isChecked, boolean isDownloaded, File file) {
+    public Track(String id, String title, String fileName, String downloadUrl, String artWorkUrl, String downloadId, String soundCloudUrl, String playlistId, boolean isChecked, boolean isDownloaded, File file) {
         this.id = id;
         this.title = title;
         this.fileName = fileName;
         this.downloadUrl = downloadUrl;
-        this.subPath = subPath;
         this.artWorkUrl = artWorkUrl;
         this.downloadId = downloadId;
         this.soundCloudUrl = soundCloudUrl;
@@ -91,9 +89,6 @@ public class Track implements Serializable, ITSNode {
         return downloadUrl;
     }
 
-    public String getSubPath() {
-        return subPath;
-    }
 
     public void setChecked(boolean isChecked) {
         this.isChecked = isChecked;
@@ -115,7 +110,6 @@ public class Track implements Serializable, ITSNode {
                 ", title='" + title + '\'' +
                 ", fileName='" + fileName + '\'' +
                 ", downloadUrl='" + downloadUrl + '\'' +
-                ", subPath='" + subPath + '\'' +
                 ", artWorkUrl='" + artWorkUrl + '\'' +
                 ", downloadId='" + downloadId + '\'' +
                 ", soundCloudUrl='" + soundCloudUrl + '\'' +
