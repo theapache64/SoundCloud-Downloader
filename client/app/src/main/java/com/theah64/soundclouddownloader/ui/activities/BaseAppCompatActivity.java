@@ -6,6 +6,8 @@ import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -22,6 +24,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     protected static final String FATAL_ERROR_FORGOT_TO_HANDLE = "Forgot to handle";
     private static final String FATAL_ERROR_S_IS_MISSING = "%s is missing";
     private static final String X = BaseAppCompatActivity.class.getSimpleName();
+    public Menu menu;
 
 
     @Override
@@ -92,6 +95,9 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     //Enabling back navigation
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        Log.d(X, "Back button pressed");
+
         if (item.getItemId() == android.R.id.home) {
             //Close this activity
             finish();

@@ -88,14 +88,14 @@ public class ITSAdapter extends RecyclerView.Adapter<ITSAdapter.ViewHolder> {
                     break;
 
                 default:
-                    callback.onRowClicked(getLayoutPosition());
+                    callback.onRowClicked(getLayoutPosition(), ibShowPopUpuMenu);
             }
 
         }
     }
 
     public interface TracksCallback {
-        void onRowClicked(int position);
+        void onRowClicked(int position, final View popUpAnchor);
 
         void onPopUpMenuClicked(final View anchor, int position);
     }

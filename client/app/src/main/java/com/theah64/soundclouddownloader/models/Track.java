@@ -1,5 +1,6 @@
 package com.theah64.soundclouddownloader.models;
 
+import java.io.File;
 import java.io.Serializable;
 
 /**
@@ -22,9 +23,9 @@ public class Track implements Serializable, ITSNode {
     private final String playlistId;
     private boolean isChecked;
     private final boolean isDownloaded;
-    private final String absoluteFilePath;
+    private final File file;
 
-    public Track(String id, String title, String fileName, String downloadUrl, String subPath, String artWorkUrl, String downloadId, String soundCloudUrl, String playlistId, boolean isChecked, boolean isDownloaded, String absoluteFilePath) {
+    public Track(String id, String title, String fileName, String downloadUrl, String subPath, String artWorkUrl, String downloadId, String soundCloudUrl, String playlistId, boolean isChecked, boolean isDownloaded, File file) {
         this.id = id;
         this.title = title;
         this.fileName = fileName;
@@ -36,7 +37,7 @@ public class Track implements Serializable, ITSNode {
         this.playlistId = playlistId;
         this.isChecked = isChecked;
         this.isDownloaded = isDownloaded;
-        this.absoluteFilePath = absoluteFilePath;
+        this.file = file;
     }
 
     public String getId() {
@@ -75,12 +76,7 @@ public class Track implements Serializable, ITSNode {
 
     @Override
     public String getSubtitle() {
-        return null;
-    }
-
-
-    public String getFileName() {
-        return fileName;
+        return isDownloaded ? "(Saved)" : null;
     }
 
     public String getDownloadUrl() {
@@ -99,14 +95,10 @@ public class Track implements Serializable, ITSNode {
         this.id = id;
     }
 
-
     public boolean isDownloaded() {
         return isDownloaded;
     }
 
-    public String getAbsoluteFilePath() {
-        return absoluteFilePath;
-    }
 
     @Override
     public String toString() {
@@ -122,7 +114,11 @@ public class Track implements Serializable, ITSNode {
                 ", playlistId='" + playlistId + '\'' +
                 ", isChecked=" + isChecked +
                 ", isDownloaded=" + isDownloaded +
-                ", absoluteFilePath='" + absoluteFilePath + '\'' +
+                ", file=" + file +
                 '}';
+    }
+
+    public File getFile() {
+        return file;
     }
 }

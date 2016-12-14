@@ -57,12 +57,13 @@ public class PlaylistsFragment extends Fragment implements ITSAdapter.TracksCall
 
 
     @Override
-    public void onRowClicked(int position) {
+    public void onRowClicked(int position, View popUpAnchor) {
 
         final Playlist playlist = playlists.get(position);
         final Intent playlistTracksIntent = new Intent(getActivity(), PlaylistTracksActivity.class);
         playlistTracksIntent.putExtra(Playlist.KEY, playlist);
         startActivity(playlistTracksIntent);
+
     }
 
     @Override

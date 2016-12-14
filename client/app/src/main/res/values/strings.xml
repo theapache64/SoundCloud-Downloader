@@ -27,4 +27,6 @@
     <string name="Play">Play</string>
     <string name="Please_download_the_track">Please download the track</string>
     <string name="Download_track_using_soundcloud_downloader_s" formatted="false">Download this track using SoundCloud downloader (%s)\n\n %s - %s</string>
+    <string name="Check_all_tracks">Check all tracks</string>
+    <string name="miUnCheckAllTracks">Uncheck all tracks</string>
 </resources>

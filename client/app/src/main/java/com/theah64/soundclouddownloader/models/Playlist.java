@@ -37,7 +37,7 @@ public class Playlist implements ITSNode, Serializable {
 
     @Override
     public String getSubtitle() {
-        return null;
+        return tracksDownloaded + " (saved) /" + totalTracks + " (total)";
     }
 
     public String getSoundCloudUrl() {

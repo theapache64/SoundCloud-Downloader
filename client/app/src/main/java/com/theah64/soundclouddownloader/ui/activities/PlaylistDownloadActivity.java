@@ -14,6 +14,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -42,12 +44,12 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
     private List<Track> trackList;
     private FloatingActionButton fabDownloadPlaylist;
 
-
     private int notifId;
     private NotificationManager nm;
     private NotificationCompat.Builder apiNotification;
     private String playlistName;
     private DownloadManager dm;
+    private PlaylistDownloadAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +59,18 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final String soundCloudUrl = getStringOrThrow(Playlists.COLUMN_SOUNDCLOUD_URL);
         playlistName = getStringOrThrow(KEY_PLAYLIST_NAME);
+        enableBackNavigation(playlistName);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        final String soundCloudUrl = getStringOrThrow(Playlists.COLUMN_SOUNDCLOUD_URL);
+
         final String artworkUrl = getIntent().getStringExtra(Playlists.COLUMN_ARTWORK_URL);
 
         final Playlists playlistsTable = Playlists.getInstance(this);
@@ -69,7 +81,6 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
             playlistId = String.valueOf(Playlists.getInstance(this).add(new Playlist(null, playlistName, soundCloudUrl, artworkUrl, -1, -1)));
         }
 
-        enableBackNavigation(playlistName);
 
         trackList = new ArrayList<>();
         try {
@@ -93,7 +104,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
                 final String subPath = "/SoundCloud Downloader/" + playlistName + File.separator + fileName;
                 final String absoluteFilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + subPath;
-                final Track newTrack = new Track(null, title, fileName, downloadUrl, subPath, trackArtWorkUrl, null, trackSoundCloudUrl, playlistId, true, false, absoluteFilePath);
+                final Track newTrack = new Track(null, title, fileName, downloadUrl, subPath, trackArtWorkUrl, null, trackSoundCloudUrl, playlistId, true, false, new File(absoluteFilePath));
                 final String dbTrackId = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, trackSoundCloudUrl, Tracks.COLUMN_ID);
                 final String id = dbTrackId != null ? dbTrackId : String.valueOf(tracksTable.add(newTrack));
                 newTrack.setId(id);
@@ -112,7 +123,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         rvPlaylist.setLayoutManager(new LinearLayoutManager(this));
 
         //noinspection unchecked
-        final PlaylistDownloadAdapter adapter = new PlaylistDownloadAdapter(trackList, this);
+        adapter = new PlaylistDownloadAdapter(trackList, this);
         rvPlaylist.setAdapter(adapter);
 
         nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -196,6 +207,23 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         Log.i(X, "Checked: " + trackList.get(position));
         trackList.get(position).setChecked(true);
         refreshDownloadButton();
+
+        if (menu != null) {
+
+            final MenuItem miUnCheckAllTracks = menu.findItem(R.id.miUnCheckAllTracks);
+
+            boolean isFullTicked = true;
+            for (final Track track : trackList) {
+                if (!track.isChecked()) {
+                    isFullTicked = false;
+                }
+            }
+
+            if (!miUnCheckAllTracks.isVisible() && isFullTicked) {
+                miUnCheckAllTracks.setVisible(true);
+                menu.findItem(R.id.miCheckAllTracks).setVisible(false);
+            }
+        }
     }
 
     private void refreshDownloadButton() {
@@ -213,5 +241,66 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         Log.e(X, "Unchecked: " + trackList.get(position));
         trackList.get(position).setChecked(false);
         refreshDownloadButton();
+
+        if (menu != null) {
+
+            boolean isFullTicked = false;
+            for (final Track track : trackList) {
+                if (track.isChecked()) {
+                    isFullTicked = true;
+                }
+            }
+
+            final MenuItem miCheckAllTracks = menu.findItem(R.id.miCheckAllTracks);
+            if (!miCheckAllTracks.isVisible() || !isFullTicked) {
+                miCheckAllTracks.setVisible(true);
+                menu.findItem(R.id.miUnCheckAllTracks).setVisible(false);
+            }
+        }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_playlist_tracks, menu);
+        this.menu = menu;
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.miCheckAllTracks:
+
+                for (final Track track : trackList) {
+                    track.setChecked(true);
+                }
+                adapter.notifyDataSetChanged();
+                refreshDownloadButton();
+
+                menu.findItem(R.id.miCheckAllTracks).setVisible(false);
+                menu.findItem(R.id.miUnCheckAllTracks).setVisible(true);
+
+                return true;
+
+            case R.id.miUnCheckAllTracks:
+
+                for (final Track track : trackList) {
+                    track.setChecked(false);
+                }
+
+                adapter.notifyDataSetChanged();
+                refreshDownloadButton();
+
+                menu.findItem(R.id.miCheckAllTracks).setVisible(true);
+                menu.findItem(R.id.miUnCheckAllTracks).setVisible(false);
+
+                return true;
+
+            default:
+                return false;
+        }
     }
 }

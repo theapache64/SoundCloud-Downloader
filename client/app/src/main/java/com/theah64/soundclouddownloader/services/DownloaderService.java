@@ -79,6 +79,8 @@ public class DownloaderService extends Service {
 
         if (NetworkUtils.isNetwork(this)) {
 
+            final Tracks tracksTable = Tracks.getInstance(this);
+
             final String soundCloudUrl = intent.getStringExtra(Tracks.COLUMN_SOUNDCLOUD_URL);
 
             apiNotification = new NotificationCompat.Builder(this)
@@ -148,8 +150,16 @@ public class DownloaderService extends Service {
                                 //Starting download
                                 final long downloadId = addToDownloadQueue(title, downloadUrl, subPath);
 
-                                //Adding track to database -
-                                Tracks.getInstance(DownloaderService.this).add(new Track(null, title, null, null, null, artworkUrl, String.valueOf(downloadId), soundCloudUrl, null, false, false, absFilePath));
+                                final String trackId = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, soundCloudUrl, Tracks.COLUMN_ID);
+
+
+                                if (trackId == null) {
+                                    //Adding track to database -
+                                    tracksTable.add(new Track(null, title, null, null, null, artworkUrl, String.valueOf(downloadId), soundCloudUrl, null, false, false, new File(absFilePath)));
+                                } else {
+                                    //Track exist so just updating the download id.
+                                    tracksTable.update(Tracks.COLUMN_ID, trackId, Tracks.COLUMN_DOWNLOAD_ID, String.valueOf(downloadId));
+                                }
 
                                 nm.cancel(notifId);
                                 showToast("Download started");

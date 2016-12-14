@@ -39,6 +39,8 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
     private ITSAdapter itsAdapter;
     private Track track;
     private int position;
+    private String playlistId;
+    private View row;
 
     public TracksFragment() {
         // Required empty public constructor
@@ -49,11 +51,22 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View row = inflater.inflate(R.layout.fragment_tracks, container, false);
+        row = inflater.inflate(R.layout.fragment_tracks, container, false);
 
-        final String playlistId = getArguments().getString(Playlists.COLUMN_ID);
+        playlistId = getArguments().getString(Playlists.COLUMN_ID);
 
         tracksTable = Tracks.getInstance(getActivity());
+
+
+        return row;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Log.d(X, "TracksFragment resumed");
+
         trackList = tracksTable.getAll(playlistId);
 
         if (trackList != null) {
@@ -71,13 +84,10 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
             row.findViewById(R.id.tvNoTracksDownloaded).setVisibility(View.VISIBLE);
         }
 
-
-        return row;
     }
 
-
     @Override
-    public void onRowClicked(int position) {
+    public void onRowClicked(int position, View popUpAnchor) {
 
         this.position = position;
         track = trackList.get(position);
@@ -86,6 +96,7 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
             //playing track
             playTrack();
         } else {
+            onPopUpMenuClicked(popUpAnchor, position);
             Toast.makeText(getActivity(), R.string.Please_download_the_track, Toast.LENGTH_SHORT).show();
         }
 
@@ -97,7 +108,7 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
         this.position = position;
         track = trackList.get(position);
         final PopupMenu trackMenu = new PopupMenu(getActivity(), anchor);
-        trackMenu.getMenuInflater().inflate(track.isDownloaded() ? R.menu.menu_track_downloaded : R.menu.menu_track_not_downloaded, trackMenu.getMenu());
+        trackMenu.getMenuInflater().inflate(track.isDownloaded() && track.getFile() != null && track.getFile().exists() ? R.menu.menu_track_downloaded : R.menu.menu_track_not_downloaded, trackMenu.getMenu());
         trackMenu.setOnMenuItemClickListener(this);
 
         trackMenu.show();
@@ -123,13 +134,12 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
 
             case R.id.miShareFile:
 
-                final File file = new File(track.getAbsoluteFilePath());
-                if (file.exists()) {
+                if (track.getFile().exists()) {
                     //Opening audio file
                     final Intent sendIntent = new Intent(Intent.ACTION_SEND);
-                    final String mimeType = CommonUtils.getMIMETypeFromUrl(file, "audio/*");
+                    final String mimeType = CommonUtils.getMIMETypeFromUrl(track.getFile(), "audio/*");
                     sendIntent.setType(mimeType);
-                    sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+                    sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(track.getFile()));
                     startActivity(sendIntent);
 
                 } else {
@@ -180,11 +190,10 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
 
         Log.d(X, "Track is " + track);
 
-        final File audioFile = new File(track.getAbsoluteFilePath());
-        if (audioFile.exists()) {
+        if (track.getFile().exists()) {
             //Opening audio file
             final Intent playIntent = new Intent(Intent.ACTION_VIEW);
-            playIntent.setDataAndType(Uri.fromFile(audioFile), "audio/*");
+            playIntent.setDataAndType(Uri.fromFile(track.getFile()), "audio/*");
             startActivity(playIntent);
 
         } else {

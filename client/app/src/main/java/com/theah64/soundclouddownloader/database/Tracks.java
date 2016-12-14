@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.theah64.soundclouddownloader.models.Track;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class Tracks extends BaseTable<Track> {
         cv.put(COLUMN_DOWNLOAD_ID, track.getDownloadId());
         cv.put(COLUMN_ARTWORK_URL, track.getArtWorkUrl());
         cv.put(COLUMN_PLAYLIST_ID, track.getPlaylistId());
-        cv.put(COLUMN_ABS_FILE_PATH, track.getAbsoluteFilePath());
+        cv.put(COLUMN_ABS_FILE_PATH, track.getFile().getAbsolutePath());
         cv.put(COLUMN_IS_DOWNLOADED, track.isDownloaded());
 
         final long trackId = this.getWritableDatabase().insert(TABLE_NAME_TRACKS, null, cv);
@@ -82,7 +83,7 @@ public class Tracks extends BaseTable<Track> {
                 final String soundCloudUrl = c.getString(c.getColumnIndex(COLUMN_SOUNDCLOUD_URL));
                 final boolean isDownloaded = c.getString(c.getColumnIndex(COLUMN_IS_DOWNLOADED)).equals(TRUE);
 
-                trackList.add(new Track(id, title, null, null, null, artworkUrl, null, soundCloudUrl, null, false, isDownloaded, absoluteFilePath));
+                trackList.add(new Track(id, title, null, null, null, artworkUrl, null, soundCloudUrl, null, false, isDownloaded, absoluteFilePath != null ? new File(absoluteFilePath) : null));
             } while (c.moveToNext());
         }
 
