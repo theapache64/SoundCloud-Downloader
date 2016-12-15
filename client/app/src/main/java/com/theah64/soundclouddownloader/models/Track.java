@@ -21,7 +21,7 @@ public class Track implements Serializable, ITSNode {
     private final String playlistId;
     private boolean isChecked;
     private final boolean isDownloaded;
-    private final File file;
+    private File file;
 
     public Track(String id, String title, String downloadUrl, String artWorkUrl, String downloadId, String soundCloudUrl, String playlistId, boolean isChecked, boolean isDownloaded, File file) {
         this.id = id;
@@ -123,5 +123,9 @@ public class Track implements Serializable, ITSNode {
 
     public void setDownloadId(String downloadId) {
         this.downloadId = downloadId;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
     }
 }
