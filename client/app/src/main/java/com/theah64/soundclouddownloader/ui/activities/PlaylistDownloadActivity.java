@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -58,7 +59,12 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         setSupportActionBar(toolbar);
 
         final String playlistName = getStringOrThrow(KEY_PLAYLIST_NAME);
-        enableBackNavigation(playlistName);
+
+        final ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        actionBar.setTitle(playlistName);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +117,8 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
                 trackList.add(newTrack);
             }
+            
+            actionBar.setSubtitle(getResources().getQuantityString(R.plurals.d_tracks, trackList.size(), trackList.size()));
 
         } catch (JSONException e) {
             e.printStackTrace();
