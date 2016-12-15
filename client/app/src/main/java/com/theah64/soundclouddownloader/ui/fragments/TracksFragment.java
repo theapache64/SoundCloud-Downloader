@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.R;
@@ -24,7 +25,6 @@ import com.theah64.soundclouddownloader.services.DownloaderService;
 import com.theah64.soundclouddownloader.utils.App;
 import com.theah64.soundclouddownloader.utils.CommonUtils;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -40,7 +40,7 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
     private Track track;
     private int position;
     private String playlistId;
-    private View row;
+    private View layout;
 
     public TracksFragment() {
         // Required empty public constructor
@@ -51,14 +51,13 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        row = inflater.inflate(R.layout.fragment_tracks, container, false);
+        layout = inflater.inflate(R.layout.fragment_tracks, container, false);
 
         playlistId = getArguments().getString(Playlists.COLUMN_ID);
 
         tracksTable = Tracks.getInstance(getActivity());
 
-
-        return row;
+        return layout;
     }
 
     @Override
@@ -72,7 +71,7 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
         if (trackList != null) {
 
             itsAdapter = new ITSAdapter(trackList, this);
-            final RecyclerView rvTracks = (RecyclerView) row.findViewById(R.id.rvTracks);
+            final RecyclerView rvTracks = (RecyclerView) layout.findViewById(R.id.rvTracks);
             rvTracks.setLayoutManager(new LinearLayoutManager(getActivity()));
             rvTracks.setAdapter(itsAdapter);
 
@@ -81,7 +80,16 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
             Log.d(X, "No tracks found");
 
             //showing no tracks downloaded text view.
-            row.findViewById(R.id.tvNoTracksDownloaded).setVisibility(View.VISIBLE);
+            layout.findViewById(R.id.llNoTracksFound).setVisibility(View.VISIBLE);
+            layout.findViewById(R.id.bOpenSoundCloud).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final Intent soundCloudIntent = new Intent(Intent.ACTION_VIEW);
+                    soundCloudIntent.setData(Uri.parse("http://soundcloud.com"));
+                    startActivity(soundCloudIntent);
+                }
+            });
+
         }
 
     }
@@ -201,5 +209,9 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
             Toast.makeText(getActivity(), R.string.File_not_found, Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    public boolean isSoundCloudAppExist() {
+        return false;
     }
 }

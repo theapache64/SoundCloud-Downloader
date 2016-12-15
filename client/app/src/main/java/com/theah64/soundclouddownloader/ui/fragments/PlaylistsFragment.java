@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PlaylistsFragment extends Fragment implements ITSAdapter.TracksCallback, PopupMenu.OnMenuItemClickListener {
+public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.TracksCallback, PopupMenu.OnMenuItemClickListener {
 
 
     private List<Playlist> playlists;
@@ -38,6 +38,7 @@ public class PlaylistsFragment extends Fragment implements ITSAdapter.TracksCall
     private Playlist playlist;
     private Playlists playlistsTable;
     private Tracks tracksTable;
+    private View layout;
 
     public PlaylistsFragment() {
         // Required empty public constructor
@@ -48,27 +49,40 @@ public class PlaylistsFragment extends Fragment implements ITSAdapter.TracksCall
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View row = inflater.inflate(R.layout.fragment_playlists, container, false);
-
+        layout = inflater.inflate(R.layout.fragment_playlists, container, false);
         playlistsTable = Playlists.getInstance(getContext());
         tracksTable = Tracks.getInstance(getContext());
+
+
+        return layout;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         playlists = playlistsTable.getAll();
 
         if (playlists != null) {
-            final RecyclerView rvPlaylists = (RecyclerView) row.findViewById(R.id.rvPlaylists);
+            final RecyclerView rvPlaylists = (RecyclerView) layout.findViewById(R.id.rvPlaylists);
             rvPlaylists.setLayoutManager(new LinearLayoutManager(getActivity()));
             final ITSAdapter itsAdapter = new ITSAdapter(playlists, this);
             rvPlaylists.setAdapter(itsAdapter);
         } else {
+
             //showing no tracks downloaded text view.
-            row.findViewById(R.id.tvNoPlaylistDownloaded).setVisibility(View.VISIBLE);
+            layout.findViewById(R.id.llNoPlaylistsFound).setVisibility(View.VISIBLE);
+            layout.findViewById(R.id.bOpenSoundCloud).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final Intent soundCloudIntent = new Intent(Intent.ACTION_VIEW);
+                    soundCloudIntent.setData(Uri.parse("http://soundcloud.com"));
+                    startActivity(soundCloudIntent);
+                }
+            });
         }
 
-
-        return row;
     }
-
 
     @Override
     public void onRowClicked(int position, View popUpAnchor) {

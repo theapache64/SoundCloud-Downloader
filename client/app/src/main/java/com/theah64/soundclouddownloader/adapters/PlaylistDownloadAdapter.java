@@ -56,10 +56,7 @@ public class PlaylistDownloadAdapter extends RecyclerView.Adapter<PlaylistDownlo
             final File trackFile = track.getFile();
 
             final String trackName = trackFile.getName();
-            final String parentName = trackFile.getParent();
             final String parentFileName = trackFile.getParentFile().getName();
-
-            Log.d(X, String.format("trackName:%s\nparentName:%s\nparentFileName:%s", trackName, parentName, parentFileName));
 
             holder.tvSubtitle.setText(context.getString(R.string.Existing_track_s_s, parentFileName, trackName));
         } else {
