@@ -7,6 +7,7 @@ import android.app.Service;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.RequiresApi;
@@ -67,7 +68,9 @@ public class ClipboardWatchIgniterService extends Service implements ClipboardMa
             final NotificationCompat.Builder notBuilder = new NotificationCompat.Builder(this)
                     .setPriority(NotificationCompat.PRIORITY_MAX)
                     .setTicker(title)
-                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setTicker(title)
+                    .setStyle(new NotificationCompat.BigTextStyle())
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.logo))
                     .setContentTitle(title)
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setAutoCancel(true)
