@@ -149,7 +149,7 @@ public class DownloaderService extends Service {
 
                             if (!trackFile.exists()) {
 
-                                final Track track = new Track(null, title, null, artworkUrl, null, soundCloudUrl, null, false, false, trackFile);
+                                final Track track = new Track(null, title, downloadUrl, artworkUrl, null, soundCloudUrl, null, false, false, trackFile);
 
                                 //Starting download
                                 final long downloadId = DownloadUtils.addToDownloadQueue(DownloaderService.this, track);
