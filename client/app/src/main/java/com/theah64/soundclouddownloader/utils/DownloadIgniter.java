@@ -10,6 +10,10 @@ import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.services.DownloaderService;
 import com.theah64.soundclouddownloader.ui.activities.DownloaderActivity;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,7 +47,7 @@ public class DownloadIgniter {
         }
     }
 
-    private static class UrlParser {
+    public static class UrlParser {
 
         // Pattern for recognizing a URL, based off RFC 3986
         private static final Pattern urlPattern = Pattern.compile(
@@ -65,5 +69,19 @@ public class DownloadIgniter {
             return null;
         }
 
+        public static Set<String> parseUrls(String data) {
+            final Matcher matcher = urlPattern.matcher(data);
+            Set<String> urls = null;
+            if (matcher.find()) {
+                urls = new HashSet<>();
+                do {
+                    int matchStart = matcher.start(1);
+                    int matchEnd = matcher.end();
+                    urls.add(data.substring(matchStart, matchEnd));
+                } while (matcher.find());
+            }
+
+            return urls;
+        }
     }
 }

@@ -31,7 +31,7 @@ public class InputDialogUtils {
     }
 
     public void showInputDialog(@StringRes int title, @StringRes int subTitle, @StringRes int placeHolder, final @StringRes int errorMessage,
-                                final BasicInputCallback inputCallback, int maxLength, final String regEx, int inputType) {
+                                final BasicInputCallback inputCallback, int maxLength, final String regEx, int inputType, String preText) {
 
         if (inflater == null) {
             inflater = LayoutInflater.from(context);
@@ -44,6 +44,7 @@ public class InputDialogUtils {
         final ValidTextInputLayout vtilInput = (ValidTextInputLayout) inputLayout.findViewById(R.id.vtilInput);
         vtilInput.setErrorMessage(errorMessage);
         vtilInput.setRegEx(regEx);
+        vtilInput.setText(preText);
         vtilInput.setHint(context.getString(placeHolder));
 
         //Setting input length
