@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TracksFragment extends Fragment implements ITSAdapter.TracksCallback, PopupMenu.OnMenuItemClickListener {
+public class TracksFragment extends BaseMusicFragment implements ITSAdapter.TracksCallback, PopupMenu.OnMenuItemClickListener {
 
 
     private static final String X = TracksFragment.class.getSimpleName();
@@ -52,9 +52,7 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         layout = inflater.inflate(R.layout.fragment_tracks, container, false);
-
         playlistId = getArguments().getString(Playlists.COLUMN_ID);
-
         tracksTable = Tracks.getInstance(getActivity());
 
         return layout;
@@ -84,9 +82,7 @@ public class TracksFragment extends Fragment implements ITSAdapter.TracksCallbac
             layout.findViewById(R.id.bOpenSoundCloud).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    final Intent soundCloudIntent = new Intent(Intent.ACTION_VIEW);
-                    soundCloudIntent.setData(Uri.parse("http://soundcloud.com"));
-                    startActivity(soundCloudIntent);
+                    openSoundCloud();
                 }
             });
 

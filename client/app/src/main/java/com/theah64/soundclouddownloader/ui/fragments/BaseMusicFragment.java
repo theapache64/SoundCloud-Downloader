@@ -1,5 +1,7 @@
 package com.theah64.soundclouddownloader.ui.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 
 /**
@@ -7,4 +9,11 @@ import android.support.v4.app.Fragment;
  */
 
 public class BaseMusicFragment extends Fragment {
+
+    protected void openSoundCloud() {
+        final Intent soundCloudIntent = new Intent(Intent.ACTION_VIEW);
+        soundCloudIntent.setData(Uri.parse("http://soundcloud.com"));
+        startActivity(soundCloudIntent);
+    }
+
 }

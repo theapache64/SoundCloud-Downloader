@@ -53,7 +53,6 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
         playlistsTable = Playlists.getInstance(getContext());
         tracksTable = Tracks.getInstance(getContext());
 
-
         return layout;
     }
 
@@ -75,14 +74,14 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
             layout.findViewById(R.id.bOpenSoundCloud).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    final Intent soundCloudIntent = new Intent(Intent.ACTION_VIEW);
-                    soundCloudIntent.setData(Uri.parse("http://soundcloud.com"));
-                    startActivity(soundCloudIntent);
+                    openSoundCloud();
                 }
             });
         }
 
     }
+
+
 
     @Override
     public void onRowClicked(int position, View popUpAnchor) {
