@@ -73,6 +73,8 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
             rvTracks.setLayoutManager(new LinearLayoutManager(getActivity()));
             rvTracks.setAdapter(itsAdapter);
 
+            layout.findViewById(R.id.llNoTracksFound).setVisibility(View.GONE);
+
         } else {
 
             Log.d(X, "No tracks found");

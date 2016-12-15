@@ -8,7 +8,7 @@ import android.support.v4.app.Fragment;
  * Created by theapache64 on 15/12/16.
  */
 
-public class BaseMusicFragment extends Fragment {
+public abstract class BaseMusicFragment extends Fragment {
 
     protected void openSoundCloud() {
         final Intent soundCloudIntent = new Intent(Intent.ACTION_VIEW);

@@ -67,6 +67,8 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
             rvPlaylists.setLayoutManager(new LinearLayoutManager(getActivity()));
             final ITSAdapter itsAdapter = new ITSAdapter(playlists, this);
             rvPlaylists.setAdapter(itsAdapter);
+
+            layout.findViewById(R.id.llNoPlaylistsFound).setVisibility(View.GONE);
         } else {
 
             //showing no tracks downloaded text view.
@@ -80,7 +82,6 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
         }
 
     }
-
 
 
     @Override
