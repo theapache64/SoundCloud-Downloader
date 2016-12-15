@@ -1,6 +1,10 @@
 package com.theah64.soundclouddownloader.utils;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import java.io.File;
@@ -10,6 +14,8 @@ import java.io.File;
  */
 
 public class CommonUtils {
+
+    private static final String X = CommonUtils.class.getSimpleName();
 
     public static String getMIMETypeFromUrl(final File file, final String defaultValue) {
 
@@ -23,5 +29,18 @@ public class CommonUtils {
         }
 
         return defaultValue;
+    }
+
+    public static boolean isMyServiceRunning(final Context context, Class<?> serviceClass) {
+        final ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : am.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                Log.i(X, "Service running : " + serviceClass.getName());
+                return true;
+            }
+        }
+
+        Log.e(X, "Service not running : " + serviceClass.getName());
+        return false;
     }
 }

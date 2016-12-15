@@ -15,6 +15,8 @@ import android.view.View;
 
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.adapters.TracksAndPlaylistsViewPagerAdapter;
+import com.theah64.soundclouddownloader.services.ClipboardWatchIgniterService;
+import com.theah64.soundclouddownloader.utils.ClipboardUtils;
 import com.theah64.soundclouddownloader.utils.CommonUtils;
 import com.theah64.soundclouddownloader.utils.DownloadIgniter;
 import com.theah64.soundclouddownloader.utils.InputDialogUtils;
@@ -29,13 +31,19 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity {
 
 
-    private static final String SOUNDCLOUD_URL_REGEX = ".*(?:http|https):\\/\\/soundcloud\\.com\\/(?:.+)\\/(?:.+).*";
     private static final String X = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        //TODO: DEBUG
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && !CommonUtils.isMyServiceRunning(this, ClipboardWatchIgniterService.class)) {
+            //Supports clipboard listener
+            startService(new Intent(this, ClipboardWatchIgniterService.class));
+        }
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -52,35 +60,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                final String clipboardData;
-                String soundCloudUrl = null;
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                    final ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                    clipboardData = clipboardManager.getPrimaryClip().getItemAt(0).getText().toString();
-                } else {
-                    clipboardData = ((android.text.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE)).getText().toString();
-                }
-
-                System.out.println("Clipboard: " + clipboardData);
-
-                final Set<String> urls = DownloadIgniter.UrlParser.parseUrls(clipboardData);
-                if (urls != null) {
-                    for (final String url : urls) {
-                        if (url.matches(SOUNDCLOUD_URL_REGEX)) {
-                            soundCloudUrl = url;
-                            Log.d(X, "SoundCloud URL: " + url);
-                            break;
-                        }
-                    }
-                }
 
                 inputDialogUtils.showInputDialog(R.string.Download_track_playlist, R.string.Enter_soundcloud_url, R.string.Enter_soundcloud_url, R.string.Invalid_soundcloud_URL, new InputDialogUtils.BasicInputCallback() {
                     @Override
                     public void onValidInput(String inputTex) {
                         DownloadIgniter.ignite(MainActivity.this, inputTex);
                     }
-                }, InputDialogUtils.MAX_LENGTH_INFINITE, SOUNDCLOUD_URL_REGEX, InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS, soundCloudUrl);
+                }, InputDialogUtils.MAX_LENGTH_INFINITE, ClipboardUtils.SOUNDCLOUD_URL_REGEX, InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS, ClipboardUtils.getSoundCloudUrl(MainActivity.this));
 
             }
         });

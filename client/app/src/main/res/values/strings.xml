@@ -39,4 +39,7 @@
     <string name="Empty">Empty!</string>
     <string name="Download_track_playlist">Download track/playlist</string>
     <string name="Enter_soundcloud_url">Enter SoundCloud URL</string>
+    <string name="Do_you_want_to_download_this_s">Do you want to download this %s ?</string>
+    <string name="YES">YES</string>
+    <string name="NO">NO</string>
 </resources>
