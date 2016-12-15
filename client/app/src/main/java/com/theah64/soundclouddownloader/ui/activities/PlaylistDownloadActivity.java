@@ -1,11 +1,8 @@
 package com.theah64.soundclouddownloader.ui.activities;
 
-import android.app.DownloadManager;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
@@ -49,8 +46,6 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
     private int notifId;
     private NotificationManager nm;
     private NotificationCompat.Builder apiNotification;
-    private String playlistName;
-    private DownloadManager dm;
     private PlaylistDownloadAdapter adapter;
     private Tracks tracksTable;
 
@@ -62,7 +57,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        playlistName = getStringOrThrow(KEY_PLAYLIST_NAME);
+        final String playlistName = getStringOrThrow(KEY_PLAYLIST_NAME);
         enableBackNavigation(playlistName);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -129,7 +124,6 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         rvPlaylist.setAdapter(adapter);
 
         nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        dm = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
 
         apiNotification = new NotificationCompat.Builder(this)
                 .setContentTitle(getString(R.string.initializing_download))

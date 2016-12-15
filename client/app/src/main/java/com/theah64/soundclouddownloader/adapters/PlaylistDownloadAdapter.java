@@ -43,14 +43,8 @@ public class PlaylistDownloadAdapter extends RecyclerView.Adapter<PlaylistDownlo
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Track track = tracks.get(position);
 
-
-        if (track.getFile() != null && track.getFile().exists()) {
-            holder.tvTrackTitle.setText(track.getTitle() + " (Saved)");
-            holder.cbDownload.setClickable(false);
-        } else {
-            holder.tvTrackTitle.setText(track.getTitle());
-            holder.cbDownload.setChecked(track.isChecked());
-        }
+        holder.tvTrackTitle.setText(track.getTitle());
+        holder.cbDownload.setChecked(track.isChecked());
     }
 
     @Override
@@ -58,12 +52,12 @@ public class PlaylistDownloadAdapter extends RecyclerView.Adapter<PlaylistDownlo
         return tracks.size();
     }
 
-    protected class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
-        protected final CheckBox cbDownload;
-        protected final TextView tvTrackTitle;
+        final CheckBox cbDownload;
+        final TextView tvTrackTitle;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
 
 
