@@ -163,11 +163,12 @@ public class DownloaderService extends Service {
                                     tracksTable.add(track);
                                 } else {
 
+                                    track.setId(trackId);
                                     track.setDownloadId(String.valueOf(downloadId));
                                     track.setFile(trackFile);
 
                                     //Track exist so just updating the download id.
-                                    tracksTable.update(track); //TODO: Write method to update track with new download id and new path
+                                    tracksTable.update(track);
                                 }
 
                                 nm.cancel(notifId);

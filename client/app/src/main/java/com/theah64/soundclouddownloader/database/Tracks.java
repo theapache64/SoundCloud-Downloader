@@ -22,13 +22,13 @@ public class Tracks extends BaseTable<Track> {
     public static final String COLUMN_SOUNDCLOUD_URL = "soundcloud_url";
     public static final String COLUMN_DOWNLOAD_ID = "download_id";
     private static final String TABLE_NAME_TRACKS = "tracks";
-    public static final String COLUMN_PLAYLIST_ID = "playlist_id";
+    private static final String COLUMN_PLAYLIST_ID = "playlist_id";
     private static final String X = Tracks.class.getSimpleName();
     private static final String COLUMN_ABS_FILE_PATH = "abs_file_path";
     public static final String COLUMN_IS_DOWNLOADED = "is_downloaded";
     private static Tracks instance;
 
-    Tracks(Context context) {
+    private Tracks(Context context) {
         super(context, TABLE_NAME_TRACKS);
     }
 
@@ -111,5 +111,14 @@ public class Tracks extends BaseTable<Track> {
         }
 
         return track;
+    }
+
+    @Override
+    public boolean update(Track track) {
+        final ContentValues cv = new ContentValues(1);
+        cv.put(COLUMN_DOWNLOAD_ID, track.getDownloadId());
+        cv.put(COLUMN_ABS_FILE_PATH, track.getFile().getAbsolutePath());
+
+        return this.getWritableDatabase().update(TABLE_NAME_TRACKS, cv, COLUMN_ID + " = ?", new String[]{track.getId()}) > 0;
     }
 }

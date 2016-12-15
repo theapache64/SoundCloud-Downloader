@@ -114,6 +114,10 @@ public class BaseTable<T> extends SQLiteOpenHelper {
     }
 
 
+    public boolean update(T t) {
+        throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
+    }
+
     public T get(final String column1, final String value1, final String column2, final String value2) {
         throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
     }
