@@ -115,7 +115,7 @@ public class PlaylistsFragment extends Fragment implements ITSAdapter.TracksCall
                 }
 
                 final Intent shareTracksIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-                shareTracksIntent.putExtra(Intent.EXTRA_SUBJECT, playlist.getTitle()); //TOOD: Modify sub
+                shareTracksIntent.putExtra(Intent.EXTRA_TEXT, String.format("Downloaded via SoundCloud Downloader (%s)  Playlist: %s ", App.STORE_URL, playlist.getTitle())); //TOOD: Modify sub
                 shareTracksIntent.setType("audio/*");
                 shareTracksIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, existingTracks);
                 startActivity(shareTracksIntent);
@@ -136,36 +136,14 @@ public class PlaylistsFragment extends Fragment implements ITSAdapter.TracksCall
 
             case R.id.miDownloadPlaylist:
 
-                boolean isAllTrackSaved = true;
+                //Launching downloader service
+                final Intent downloadIntent = new Intent(getActivity(), DownloaderService.class);
+                downloadIntent.putExtra(Tracks.COLUMN_SOUNDCLOUD_URL, playlist.getSoundCloudUrl());
 
-                List<Track> tracks = playlist.getTracks();
+                getActivity().startService(downloadIntent);
 
-                if (tracks == null) {
-                    tracks = tracksTable.getAll(playlist.getId());
-                    playlist.setTracks(tracks);
-                }
+                Toast.makeText(getActivity(), R.string.initializing_download, Toast.LENGTH_SHORT).show();
 
-                for (final Track track : tracks) {
-                    if (track.getFile() == null || !track.getFile().exists()) {
-                        isAllTrackSaved = false;
-                        break;
-                    }
-                }
-
-
-                if (!isAllTrackSaved) {
-
-                    //Launching downloader service
-                    final Intent downloadIntent = new Intent(getActivity(), DownloaderService.class);
-                    downloadIntent.putExtra(Tracks.COLUMN_SOUNDCLOUD_URL, playlist.getSoundCloudUrl());
-
-                    getActivity().startService(downloadIntent);
-
-                    Toast.makeText(getActivity(), R.string.initializing_download, Toast.LENGTH_SHORT).show();
-
-                } else {
-                    Toast.makeText(getActivity(), R.string.All_tracks_are_downloaded, Toast.LENGTH_SHORT).show();
-                }
 
                 return true;
 

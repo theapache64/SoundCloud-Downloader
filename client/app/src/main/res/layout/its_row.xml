@@ -33,6 +33,7 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
                 android:maxLines="2"
                 android:text="@string/sample_track_name"
                 android:textSize="17sp" />
@@ -43,6 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
+                android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@string/sample_track_name"
                 android:textColor="@color/black_700"

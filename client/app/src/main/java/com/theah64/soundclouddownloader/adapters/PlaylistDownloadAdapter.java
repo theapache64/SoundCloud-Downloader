@@ -1,6 +1,8 @@
 package com.theah64.soundclouddownloader.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.models.Track;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -19,11 +22,14 @@ import java.util.List;
 
 public class PlaylistDownloadAdapter extends RecyclerView.Adapter<PlaylistDownloadAdapter.ViewHolder> {
 
+    private static final String X = PlaylistDownloadAdapter.class.getSimpleName();
     private final List<Track> tracks;
     private LayoutInflater inflater;
     private final PlaylistListener callback;
+    private final Context context;
 
-    public PlaylistDownloadAdapter(List<Track> tracks, PlaylistListener callback) {
+    public PlaylistDownloadAdapter(Context context, List<Track> tracks, PlaylistListener callback) {
+        this.context = context;
         this.tracks = tracks;
         this.callback = callback;
     }
@@ -45,6 +51,20 @@ public class PlaylistDownloadAdapter extends RecyclerView.Adapter<PlaylistDownlo
 
         holder.tvTrackTitle.setText(track.getTitle());
         holder.cbDownload.setChecked(track.isChecked());
+
+        if (track.getFile() != null && track.getFile().exists()) {
+            final File trackFile = track.getFile();
+
+            final String trackName = trackFile.getName();
+            final String parentName = trackFile.getParent();
+            final String parentFileName = trackFile.getParentFile().getName();
+
+            Log.d(X, String.format("trackName:%s\nparentName:%s\nparentFileName:%s", trackName, parentName, parentFileName));
+
+            holder.tvSubtitle.setText(context.getString(R.string.Existing_track_s_s, parentFileName, trackName));
+        } else {
+            holder.tvSubtitle.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -55,7 +75,7 @@ public class PlaylistDownloadAdapter extends RecyclerView.Adapter<PlaylistDownlo
     class ViewHolder extends RecyclerView.ViewHolder {
 
         final CheckBox cbDownload;
-        final TextView tvTrackTitle;
+        final TextView tvTrackTitle, tvSubtitle;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -63,6 +83,7 @@ public class PlaylistDownloadAdapter extends RecyclerView.Adapter<PlaylistDownlo
 
             this.cbDownload = (CheckBox) itemView.findViewById(R.id.cbDownload);
             this.tvTrackTitle = (TextView) itemView.findViewById(R.id.tvTrackTitle);
+            this.tvSubtitle = (TextView) itemView.findViewById(R.id.tvSubtitle);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

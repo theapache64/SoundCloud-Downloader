@@ -12,12 +12,34 @@
         android:layout_height="wrap_content"
         android:padding="5dp" />
 
-    <TextView
-        android:id="@+id/tvTrackTitle"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:text="I am sorry - Justine Beiber"
-        android:textSize="18sp" />
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/tvTrackTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@string/sample_track_name"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/tvSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/sample_track_name"
+            android:textColor="@color/black_700"
+            android:textSize="15sp" />
+
+
+    </LinearLayout>
 
 </LinearLayout>

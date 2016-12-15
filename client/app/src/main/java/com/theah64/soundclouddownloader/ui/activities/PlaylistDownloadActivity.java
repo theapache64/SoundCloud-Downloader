@@ -104,7 +104,11 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                 final Track newTrack = new Track(null, title, downloadUrl, trackArtWorkUrl, null, trackSoundCloudUrl, playlistId, true, false, new File(absoluteFilePath));
                 final String dbTrackId = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, trackSoundCloudUrl, Tracks.COLUMN_ID);
                 final String id = dbTrackId != null ? dbTrackId : String.valueOf(tracksTable.add(newTrack));
+
                 newTrack.setId(id);
+                //Uncheck if file exists
+                newTrack.setChecked(!newTrack.getFile().exists());
+
                 trackList.add(newTrack);
             }
 
@@ -120,7 +124,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         rvPlaylist.setLayoutManager(new LinearLayoutManager(this));
 
         //noinspection unchecked
-        adapter = new PlaylistDownloadAdapter(trackList, this);
+        adapter = new PlaylistDownloadAdapter(this, trackList, this);
         rvPlaylist.setAdapter(adapter);
 
         nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -149,6 +153,9 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                 }
             }
         });
+
+        refreshDownloadButton();
+
     }
 
     private void startDownload() {
@@ -245,6 +252,20 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_playlist_tracks, menu);
         this.menu = menu;
+
+        boolean isEveryTrackUnChecked = true;
+        for (final Track track : trackList) {
+            if (track.isChecked()) {
+                isEveryTrackUnChecked = false;
+                break;
+            }
+        }
+
+        if (isEveryTrackUnChecked) {
+            menu.findItem(R.id.miUnCheckAllTracks).setVisible(false);
+            menu.findItem(R.id.miCheckAllTracks).setVisible(true);
+        }
+
         return true;
     }
 

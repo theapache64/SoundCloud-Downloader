@@ -143,8 +143,9 @@ public class DownloaderService extends Service {
                             nm.notify(notifId, apiNotification.build());
 
                             //Checking file existence
-                            final String subPath = File.separator + App.FOLDER_NAME + File.separator + fileName;
-                            final String absFilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + subPath;
+                            final String absFilePath = String.format("%s/%s/%s", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), App.FOLDER_NAME, fileName);
+                            Log.d(X, "New file : " + absFilePath);
+
                             final File trackFile = new File(absFilePath);
 
                             if (!trackFile.exists()) {

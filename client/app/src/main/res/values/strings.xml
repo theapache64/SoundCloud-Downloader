@@ -31,6 +31,7 @@
     <string name="Check_all_tracks">Check all tracks</string>
     <string name="miUnCheckAllTracks">Uncheck all tracks</string>
     <string name="Existing_track_s">Existing track %s</string>
+    <string name="Existing_track_s_s" formatted="false">Existing track %s/%s</string>
     <string name="Share_tracks">Share tracks</string>
     <string name="Share_playlist_URL">Share playlist URL</string>
     <string name="All_tracks_are_downloaded">All tracks are downloaded</string>

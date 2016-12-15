@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/miDownloadPlaylist"
+        android:title="@string/Download" />
+
+    <item
         android:id="@+id/miShareTracks"
         android:title="@string/Share_tracks" />
     <item
