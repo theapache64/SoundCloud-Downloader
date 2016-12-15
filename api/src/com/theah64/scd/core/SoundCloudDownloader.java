@@ -1,9 +1,11 @@
 package com.theah64.scd.core;
 
+import com.theah64.scd.database.Connection;
 import com.theah64.scd.database.tables.Preference;
 import com.theah64.scd.database.tables.Requests;
 import com.theah64.scd.models.JSONTracks;
 import com.theah64.scd.models.Track;
+import com.theah64.scd.utils.FileNameUtils;
 import com.theah64.scd.utils.NetworkHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,6 +59,12 @@ public class SoundCloudDownloader {
 
     private static String getSoundCloudDownloadUrl(String trackId) {
 
+
+        if (true) {
+            //TODO: Until production
+            return (Connection.isDebugMode() ? "http://192.168.43.234:8080/" : "http://theapache64.xyz:8080/scd/") + "jaan_kesi.mp3";
+        }
+
         final String trackDownloadUrl = String.format(STREAM_TRACK_URL_FORMAT, trackId);
         final String downloadTrackResp = new NetworkHelper(trackDownloadUrl).getResponse();
 
@@ -87,9 +95,17 @@ public class SoundCloudDownloader {
 
                 String playlistName = null, playlistArtworkUrl = null;
 
+
+                final String fileNameFormat = Preference.getInstance().getString(Preference.KEY_FILENAME_FORMAT);
+
                 if (joResolve.has("playlist_type")) {
 
                     playlistName = joResolve.getString("title");
+
+                    if (playlistName != null) {
+                        playlistName = FileNameUtils.getSanitizedName(playlistName);
+                    }
+
 
                     if (joResolve.has(KEY_ARTWORK_URL) && !joResolve.isNull(KEY_ARTWORK_URL)) {
                         playlistArtworkUrl = joResolve.getString(KEY_ARTWORK_URL);
@@ -99,11 +115,11 @@ public class SoundCloudDownloader {
                     final JSONArray jaResolvedTracks = joResolve.getJSONArray(JSONTracks.KEY_TRACKS);
 
                     for (int i = 0; i < jaResolvedTracks.length(); i++) {
-                        jaTracks.put(getResolvedTrack(jaResolvedTracks.getJSONObject(i)));
+                        jaTracks.put(getResolvedTrack(jaResolvedTracks.getJSONObject(i), fileNameFormat));
                     }
 
                 } else {
-                    jaTracks.put(getResolvedTrack(joResolve));
+                    jaTracks.put(getResolvedTrack(joResolve, fileNameFormat));
                 }
 
                 return new JSONTracks(playlistName, playlistArtworkUrl, jaTracks);
@@ -117,9 +133,7 @@ public class SoundCloudDownloader {
     }
 
 
-    private static JSONObject getResolvedTrack(JSONObject joResolvedTrack) throws JSONException {
-
-        final String fileNameFormat = Preference.getInstance().getString(Preference.KEY_FILENAME_FORMAT);
+    private static JSONObject getResolvedTrack(JSONObject joResolvedTrack, String fileNameFormat) throws JSONException {
 
         //Url is a single track
         final String id = String.valueOf(joResolvedTrack.getInt("id"));
@@ -132,7 +146,7 @@ public class SoundCloudDownloader {
         }
 
         final String soundCloudUrl = joResolvedTrack.getString("permalink_url");
-        final String fileName = String.format(fileNameFormat, title, originalFormat);
+        final String fileName = String.format(fileNameFormat, FileNameUtils.getSanitizedName(title), originalFormat);
 
         final JSONObject joTrack = new JSONObject();
         joTrack.put(Track.KEY_ID, id);
