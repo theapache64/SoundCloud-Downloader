@@ -158,7 +158,9 @@ public class PlaylistsFragment extends Fragment implements ITSAdapter.TracksCall
                     //Launching downloader service
                     final Intent downloadIntent = new Intent(getActivity(), DownloaderService.class);
                     downloadIntent.putExtra(Tracks.COLUMN_SOUNDCLOUD_URL, playlist.getSoundCloudUrl());
+
                     getActivity().startService(downloadIntent);
+
                     Toast.makeText(getActivity(), R.string.initializing_download, Toast.LENGTH_SHORT).show();
 
                 } else {

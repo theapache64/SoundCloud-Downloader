@@ -59,7 +59,7 @@ public class Playlists extends BaseTable<Playlist> {
 
         List<Playlist> playlists = null;
 
-        final Cursor c = this.getReadableDatabase().rawQuery("SELECT p.id, p.title, p.artwork_url, COUNT(DISTINCT t.id) AS total_tracks, COUNT(DISTINCT dt.id) AS downloaded_tracks FROM playlists p INNER JOIN tracks t ON t.playlist_id = p.id LEFT JOIN tracks dt ON dt.playlist_id = p.id AND dt.is_downloaded = 1 GROUP BY p.id ORDER BY p.id DESC", null);
+        final Cursor c = this.getReadableDatabase().rawQuery("SELECT p.id, p.title,p.soundcloud_url, p.artwork_url, COUNT(DISTINCT t.id) AS total_tracks, COUNT(DISTINCT dt.id) AS downloaded_tracks FROM playlists p INNER JOIN tracks t ON t.playlist_id = p.id LEFT JOIN tracks dt ON dt.playlist_id = p.id AND dt.is_downloaded = 1 GROUP BY p.id ORDER BY p.id DESC", null);
         if (c != null && c.moveToFirst()) {
 
             playlists = new ArrayList<>(c.getCount());
@@ -70,8 +70,9 @@ public class Playlists extends BaseTable<Playlist> {
                 final String artworkUrl = c.getString(c.getColumnIndex(COLUMN_ARTWORK_URL));
                 final int totalTracks = c.getInt(c.getColumnIndex(COLUMN_AS_TOTAL_TRACKS));
                 final int tracksDownloaded = c.getInt(c.getColumnIndex(COLUMN_AS_DOWNLOADED_TRACKS));
+                final String soundCloudUrl = c.getString(c.getColumnIndex(COLUMN_SOUNDCLOUD_URL));
 
-                playlists.add(new Playlist(id, title, null, artworkUrl, totalTracks, tracksDownloaded));
+                playlists.add(new Playlist(id, title, soundCloudUrl, artworkUrl, totalTracks, tracksDownloaded));
 
             } while (c.moveToNext());
         }
