@@ -61,7 +61,7 @@ public class ClipboardWatchIgniterService extends Service implements ClipboardMa
             yesIntent.putExtra(Tracks.COLUMN_SOUNDCLOUD_URL, soundCloudUrl);
             yesIntent.putExtra(DownloaderService.KEY_NOTIFICATION_ID, notifId);
 
-            final PendingIntent downloadIntent = PendingIntent.getService(this, 1, yesIntent, PendingIntent.FLAG_ONE_SHOT);
+            final PendingIntent downloadIntent = PendingIntent.getService(this, 1, yesIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             final PendingIntent dismissIntent = DownloaderService.getDismissIntent(notifId, this);
 
             final NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -69,6 +69,7 @@ public class ClipboardWatchIgniterService extends Service implements ClipboardMa
                     .setPriority(NotificationCompat.PRIORITY_MAX)
                     .setTicker(title)
                     .setTicker(title)
+                    .setSmallIcon(R.drawable.logo)
                     .setStyle(new NotificationCompat.BigTextStyle())
                     .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.logo))
                     .setContentTitle(title)

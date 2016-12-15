@@ -34,7 +34,7 @@ public class Tracks extends BaseTable<Track> {
 
     public static Tracks getInstance(final Context context) {
         if (instance == null) {
-            instance = new Tracks(context);
+            instance = new Tracks(context.getApplicationContext());
         }
         return instance;
     }

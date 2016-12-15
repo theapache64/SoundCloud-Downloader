@@ -29,7 +29,7 @@ public class Playlists extends BaseTable<Playlist> {
 
     public static Playlists getInstance(Context context) {
         if (instance == null) {
-            instance = new Playlists(context);
+            instance = new Playlists(context.getApplicationContext());
         }
 
         return instance;
