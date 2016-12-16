@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/miUnCheckAllTracks"
-        android:icon="@drawable/ic_check_box_white_24dp"
+        android:icon="@drawable/ic_check_box_orange_24dp"
         android:title="@string/Check_all_tracks"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/miCheckAllTracks"
-        android:icon="@drawable/ic_check_box_outline_blank_white_24dp"
+        android:icon="@drawable/ic_check_box_outline_orange_24dp"
         android:title="@string/miUnCheckAllTracks"
         android:visible="false"
         app:showAsAction="ifRoom" />
