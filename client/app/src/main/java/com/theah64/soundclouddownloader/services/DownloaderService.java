@@ -104,11 +104,11 @@ public class DownloaderService extends Service {
                 apiNotification = new NotificationCompat.Builder(this)
                         .setContentTitle(getString(R.string.initializing_download))
                         .setContentText(soundCloudUrl)
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_stat_logo_white)
                         .setProgress(100, 0, true)
                         .setAutoCancel(false)
                         .setTicker(getString(R.string.initializing_download))
-                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
+                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_logo_color_24dp));
 
                 notifId = Random.getRandomInt();
                 nm.notify(notifId, apiNotification.build());

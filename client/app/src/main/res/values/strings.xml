@@ -42,4 +42,5 @@
     <string name="Do_you_want_to_download_this_s">Do you want to download this %s ?</string>
     <string name="YES">YES</string>
     <string name="NO">NO</string>
+    <string name="Downloading_playlist">Download playlist</string>
 </resources>

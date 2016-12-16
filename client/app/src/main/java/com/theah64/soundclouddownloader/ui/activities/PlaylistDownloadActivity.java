@@ -117,7 +117,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
                 trackList.add(newTrack);
             }
-            
+
             actionBar.setSubtitle(getResources().getQuantityString(R.plurals.d_tracks, trackList.size(), trackList.size()));
 
         } catch (JSONException e) {
@@ -139,12 +139,12 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
         apiNotification = new NotificationCompat.Builder(this)
                 .setContentTitle(getString(R.string.initializing_download))
-                .setContentText("Downloading playlist")
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentText(getString(R.string.Downloading_playlist))
+                .setSmallIcon(R.drawable.ic_stat_logo_white)
                 .setProgress(100, 0, true)
                 .setAutoCancel(false)
                 .setTicker(getString(R.string.initializing_download))
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_logo_color_24dp));
 
         notifId = Random.getRandomInt();
 
