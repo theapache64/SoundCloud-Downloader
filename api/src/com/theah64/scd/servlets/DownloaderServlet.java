@@ -59,6 +59,7 @@ public class DownloaderServlet extends AdvancedBaseServlet {
 
             if (jTracks.getPlaylistName() != null) {
                 joTrack.put(Track.KEY_PLAYLIST_NAME, jTracks.getPlaylistName());
+                joTrack.put(Track.KEY_USERNAME, jTracks.getUsername());
 
                 //Playlist cover
                 joTrack.put(Track.KEY_ARTWORK_URL, jTracks.getArtworkUrl());

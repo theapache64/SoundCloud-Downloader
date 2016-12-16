@@ -93,8 +93,7 @@ public class SoundCloudDownloader {
                 final JSONObject joResolve = new JSONObject(resolveTrackResp);
                 final JSONArray jaTracks = new JSONArray();
 
-                String playlistName = null, playlistArtworkUrl = null;
-
+                String playlistName = null, username = null, playlistArtworkUrl = null;
 
                 final String fileNameFormat = Preference.getInstance().getString(Preference.KEY_FILENAME_FORMAT);
 
@@ -106,6 +105,7 @@ public class SoundCloudDownloader {
                         playlistName = FileNameUtils.getSanitizedName(playlistName);
                     }
 
+                    username = joResolve.getJSONObject("user").getString("username");
 
                     if (joResolve.has(KEY_ARTWORK_URL) && !joResolve.isNull(KEY_ARTWORK_URL)) {
                         playlistArtworkUrl = joResolve.getString(KEY_ARTWORK_URL);
@@ -122,7 +122,7 @@ public class SoundCloudDownloader {
                     jaTracks.put(getResolvedTrack(joResolve, fileNameFormat));
                 }
 
-                return new JSONTracks(playlistName, playlistArtworkUrl, jaTracks);
+                return new JSONTracks(playlistName, username, playlistArtworkUrl, jaTracks);
 
             } catch (JSONException e) {
                 e.printStackTrace();

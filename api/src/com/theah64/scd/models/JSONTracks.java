@@ -9,11 +9,12 @@ public class JSONTracks {
 
     public static final String KEY_TRACKS = "tracks";
 
-    private final String playlistName, artworkUrl;
+    private final String playlistName, username, artworkUrl;
     private final JSONArray jaTracks;
 
-    public JSONTracks(String playlistName, String artworkUrl, JSONArray jaTracks) {
+    public JSONTracks(String playlistName, String username, String artworkUrl, JSONArray jaTracks) {
         this.playlistName = playlistName;
+        this.username = username;
         this.artworkUrl = artworkUrl;
         this.jaTracks = jaTracks;
     }
@@ -28,5 +29,9 @@ public class JSONTracks {
 
     public JSONArray getJSONArrayTracks() {
         return jaTracks;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }
