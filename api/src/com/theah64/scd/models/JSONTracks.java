@@ -1,5 +1,6 @@
 package com.theah64.scd.models;
 
+import com.theah64.scd.utils.FileNameUtils;
 import org.json.JSONArray;
 
 /**
@@ -19,12 +20,12 @@ public class JSONTracks {
         this.jaTracks = jaTracks;
     }
 
-    public String getArtworkUrl() {
-        return artworkUrl;
-    }
-
     public String getPlaylistName() {
         return playlistName;
+    }
+
+    public String getArtworkUrl() {
+        return artworkUrl;
     }
 
     public JSONArray getJSONArrayTracks() {

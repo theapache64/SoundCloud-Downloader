@@ -100,11 +100,6 @@ public class SoundCloudDownloader {
                 if (joResolve.has("playlist_type")) {
 
                     playlistName = joResolve.getString("title");
-
-                    if (playlistName != null) {
-                        playlistName = FileNameUtils.getSanitizedName(playlistName);
-                    }
-
                     username = joResolve.getJSONObject("user").getString("username");
 
                     if (joResolve.has(KEY_ARTWORK_URL) && !joResolve.isNull(KEY_ARTWORK_URL)) {

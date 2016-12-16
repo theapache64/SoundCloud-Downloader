@@ -8,7 +8,6 @@ import com.theah64.scd.models.JSONTracks;
 import com.theah64.scd.models.Track;
 import com.theah64.scd.utils.APIResponse;
 import com.theah64.scd.utils.Request;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
