@@ -196,7 +196,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
     }
 
     @Override
-    public void onTrackDownloaded(Track track) {
+    public void onTrackUpdated(Track track) {
 
         if (track.getPlaylistId() == null) {
             Log.w(X, "Track is not from a currentPlaylist");

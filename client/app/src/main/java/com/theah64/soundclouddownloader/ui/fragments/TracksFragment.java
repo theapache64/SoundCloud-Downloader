@@ -220,8 +220,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
     }
 
     @Override
-    public void onTrackDownloaded(Track downloadedTrack) {
-
+    public void onTrackUpdated(Track downloadedTrack) {
         for (int i = 0; i < trackList.size(); i++) {
 
             final Track track = trackList.get(i);

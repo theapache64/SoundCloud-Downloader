@@ -1,7 +1,5 @@
 package com.theah64.soundclouddownloader.ui.activities;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -107,10 +105,10 @@ public class MainActivity extends AppCompatActivity implements TrackListener {
     }
 
     @Override
-    public void onTrackDownloaded(final Track track) {
+    public void onTrackUpdated(final Track track) {
         Log.d(X, "MainActivity says: TRACK DOWNLOADED " + track);
 
-        playlistsFragment.onTrackDownloaded(track);
-        tracksFragment.onTrackDownloaded(track);
+        playlistsFragment.onTrackUpdated(track);
+        tracksFragment.onTrackUpdated(track);
     }
 }

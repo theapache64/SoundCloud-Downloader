@@ -105,6 +105,14 @@ public class BaseTable<T> extends SQLiteOpenHelper {
         return valueToReturn;
     }
 
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        if (!db.isReadOnly()) {
+            // Enable foreign key constraints
+            db.execSQL("PRAGMA foreign_keys=ON;");
+        }
+    }
 
     public boolean update(String whereColumn, String whereColumnValue, String columnToUpdate, String valueToUpdate) {
         final SQLiteDatabase db = this.getWritableDatabase();

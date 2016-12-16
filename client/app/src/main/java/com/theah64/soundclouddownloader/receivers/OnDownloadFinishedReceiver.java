@@ -4,13 +4,11 @@ import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.util.Log;
 
 import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.interfaces.TrackListener;
 import com.theah64.soundclouddownloader.models.Track;
-import com.theah64.soundclouddownloader.ui.activities.MainActivity;
 import com.theah64.soundclouddownloader.utils.App;
 
 public class OnDownloadFinishedReceiver extends BroadcastReceiver {
@@ -56,11 +54,11 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
         final Track track = tracksTable.get(Tracks.COLUMN_DOWNLOAD_ID, downloadId);
 
         if (mainTrackListener != null) {
-            mainTrackListener.onTrackDownloaded(track);
+            mainTrackListener.onTrackUpdated(track);
         }
 
         if (playlistTrackListener != null) {
-            playlistTrackListener.onTrackDownloaded(track);
+            playlistTrackListener.onTrackUpdated(track);
         }
 
 

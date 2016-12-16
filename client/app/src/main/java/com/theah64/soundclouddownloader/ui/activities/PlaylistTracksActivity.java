@@ -56,9 +56,9 @@ public class PlaylistTracksActivity extends BaseAppCompatActivity implements Tra
     }
 
     @Override
-    public void onTrackDownloaded(final Track track) {
+    public void onTrackUpdated(final Track track) {
         Log.d(X, "MainActivity says: TRACK DOWNLOADED " + track);
-        tracksFragment.onTrackDownloaded(track);
+        tracksFragment.onTrackUpdated(track);
     }
 
 }

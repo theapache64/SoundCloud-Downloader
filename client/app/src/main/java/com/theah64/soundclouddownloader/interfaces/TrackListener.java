@@ -7,5 +7,9 @@ import com.theah64.soundclouddownloader.models.Track;
  */
 
 public interface TrackListener {
-    void onTrackDownloaded(Track track);
+    void onNewTrack(Track newTrack);
+
+    void onTrackRemoved(Track removedTrack);
+
+    void onTrackUpdated(Track updatedTrack);
 }
