@@ -58,6 +58,14 @@ public class MainActivity extends AppCompatActivity {
         vpTracksAndPlaylists.setAdapter(new TracksAndPlaylistsViewPagerAdapter(getSupportFragmentManager(), this, tracksFragment, playlistsFragment));
 
         final TabLayout tlTracksAndPlaylists = (TabLayout) findViewById(R.id.tlTracksAndPlaylists);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            tlTracksAndPlaylists.setTabTextColors(getColor(R.color.black_800), getColor(R.color.deep_orange_500));
+        } else {
+            //noinspection deprecation
+            tlTracksAndPlaylists.setTabTextColors(getResources().getColor(R.color.black_800), getResources().getColor(R.color.deep_orange_500));
+        }
+
         tlTracksAndPlaylists.setupWithViewPager(vpTracksAndPlaylists);
 
         final InputDialogUtils inputDialogUtils = new InputDialogUtils(this);

@@ -4,13 +4,23 @@
     <style name="AppTheme" parent="Theme.AppCompat">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/grey_300</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorButtonNormal">@color/colorAccent</item>
+        <item name="colorControlNormal">@color/black_400</item>
+        <item name="colorControlActivated">@color/deep_orange_500</item>
+        <item name="colorControlHighlight">@color/deep_orange_500</item>
+        <item name="colorButtonNormal">@color/deep_orange_500</item>
+        <item name="android:textColorPrimary">@color/black_800</item>
         <item name="buttonStyle">@style/themedButtonStyle</item>
         <item name="alertDialogTheme">@style/themedDialogStyle</item>
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:textColor">@color/black_800</item>
+        <item name="popupMenuStyle">@style/PopupMenu</item>
+    </style>
+
+
+    <style name="PopupMenu" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:popupBackground">@android:color/white</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -24,7 +34,7 @@
     </style>
 
     <style name="themedDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/deep_orange_500</item>
     </style>
 
 
@@ -32,4 +42,5 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <color name="grey_300">#E0E0E0</color>
 </resources>

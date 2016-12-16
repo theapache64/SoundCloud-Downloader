@@ -47,12 +47,10 @@ public class ITSAdapter extends RecyclerView.Adapter<ITSAdapter.ViewHolder> {
         ImageLoader.getInstance().displayImage(itsNode.getArtworkUrl(), holder.ivArtwork);
         holder.tvTitle.setText(itsNode.getTitle());
 
-        if (itsNode.getSubtitle() != null) {
-            holder.tvSubtitle.setVisibility(View.VISIBLE);
-            holder.tvSubtitle.setText(itsNode.getSubtitle());
-        } else {
-            holder.tvSubtitle.setVisibility(View.GONE);
-        }
+        holder.tvSubtitle1.setText(itsNode.getSubtitle1());
+        holder.tvSubtitle2.setText(itsNode.getSubtitle2());
+        holder.tvSubtitle3.setText(itsNode.getSubtitle3());
+
 
     }
 
@@ -64,15 +62,19 @@ public class ITSAdapter extends RecyclerView.Adapter<ITSAdapter.ViewHolder> {
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final ImageView ivArtwork;
-        private final TextView tvTitle, tvSubtitle;
+        private final TextView tvTitle, tvSubtitle1, tvSubtitle2, tvSubtitle3;
         private View ibShowPopUpuMenu;
 
         ViewHolder(View itemView) {
             super(itemView);
 
             this.ivArtwork = (ImageView) itemView.findViewById(R.id.ivArtwork);
+
             this.tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
-            this.tvSubtitle = (TextView) itemView.findViewById(R.id.tvSubtitle);
+            this.tvSubtitle1 = (TextView) itemView.findViewById(R.id.tvSubtitle1);
+            this.tvSubtitle2 = (TextView) itemView.findViewById(R.id.tvSubtitle2);
+            this.tvSubtitle3 = (TextView) itemView.findViewById(R.id.tvSubtitle3);
+
             this.ibShowPopUpuMenu = itemView.findViewById(R.id.ibShowPopUpuMenu);
 
             itemView.setOnClickListener(this);

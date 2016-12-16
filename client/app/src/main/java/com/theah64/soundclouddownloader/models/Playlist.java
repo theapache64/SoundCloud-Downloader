@@ -38,9 +38,22 @@ public class Playlist implements ITSNode, Serializable {
     }
 
     @Override
-    public String getSubtitle() {
+    public String getSubtitle1() {
+        //TODO
+        return "The Chainsmokers";
+    }
+
+    @Override
+    public String getSubtitle2() {
+        //TODO
+        return "59:62";
+    }
+
+    @Override
+    public String getSubtitle3() {
         return tracksDownloaded + " (saved) /" + totalTracks + " (total)";
     }
+
 
     public String getSoundCloudUrl() {
         return url;

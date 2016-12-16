@@ -10,5 +10,9 @@ public interface ITSNode {
 
     String getTitle();
 
-    String getSubtitle();
+    String getSubtitle1();
+
+    String getSubtitle2();
+
+    String getSubtitle3();
 }

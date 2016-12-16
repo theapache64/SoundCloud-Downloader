@@ -71,7 +71,19 @@ public class Track implements Serializable, ITSNode {
     }
 
     @Override
-    public String getSubtitle() {
+    public String getSubtitle1() {
+        //TODO
+        return "The Chainsmokers";
+    }
+
+    @Override
+    public String getSubtitle2() {
+        //TODO
+        return "03:48";
+    }
+
+    @Override
+    public String getSubtitle3() {
 
         if (isDownloaded && file != null && file.exists()) {
             return "(Saved)";
@@ -80,8 +92,8 @@ public class Track implements Serializable, ITSNode {
         } else {
             return null;
         }
-
     }
+
 
     public String getDownloadUrl() {
         return downloadUrl;
