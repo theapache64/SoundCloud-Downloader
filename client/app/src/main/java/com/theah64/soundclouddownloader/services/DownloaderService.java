@@ -1,14 +1,11 @@
 package com.theah64.soundclouddownloader.services;
 
-import android.app.DownloadManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
@@ -21,6 +18,7 @@ import android.widget.Toast;
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.database.Playlists;
 import com.theah64.soundclouddownloader.database.Tracks;
+import com.theah64.soundclouddownloader.models.Playlist;
 import com.theah64.soundclouddownloader.ui.activities.PlaylistDownloadActivity;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.utils.APIRequestBuilder;
@@ -163,7 +161,10 @@ public class DownloaderService extends Service {
 
                                     if (!trackFile.exists()) {
 
-                                        final Track track = new Track(null, title, downloadUrl, artworkUrl, null, soundCloudUrl, null, false, false, trackFile);
+                                        final String username = joTrack.getString(Tracks.COLUMN_USERNAME);
+                                        final long duration = joTrack.getLong(Tracks.COLUMN_DURATION);
+
+                                        final Track track = new Track(null, title, username, downloadUrl, artworkUrl, null, soundCloudUrl, null, false, false, trackFile, duration);
 
                                         //Starting download
                                         final long downloadId = DownloadUtils.addToDownloadQueue(DownloaderService.this, track);
@@ -196,6 +197,9 @@ public class DownloaderService extends Service {
                                     //It's a playlist
                                     showToast("Playlist ready!");
 
+                                    final String playlistName = joData.getString("playlist_name");
+                                    final String username = joData.getString("username");
+
                                     String artworkUrl = null;
                                     if (joData.has(Playlists.COLUMN_ARTWORK_URL)) {
                                         artworkUrl = joData.getString(Playlists.COLUMN_ARTWORK_URL);
@@ -203,10 +207,9 @@ public class DownloaderService extends Service {
 
                                     final Intent playListDownloadIntent = new Intent(DownloaderService.this, PlaylistDownloadActivity.class);
 
-                                    playListDownloadIntent.putExtra(Track.KEY_PLAYLIST_NAME, joData.getString(Track.KEY_PLAYLIST_NAME));
+                                    playListDownloadIntent.putExtra(Playlist.KEY, new Playlist(null, playlistName, username, soundCloudUrl, artworkUrl, -1, -1, -1));
                                     playListDownloadIntent.putExtra(PlaylistDownloadActivity.KEY_TRACKS, jaTracks.toString());
-                                    playListDownloadIntent.putExtra(Playlists.COLUMN_SOUNDCLOUD_URL, soundCloudUrl);
-                                    playListDownloadIntent.putExtra(Playlists.COLUMN_ARTWORK_URL, artworkUrl);
+
 
                                     playListDownloadIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 

@@ -40,7 +40,6 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
     public static final String KEY_TRACKS = "tracks";
     private static final String X = PlaylistDownloadActivity.class.getSimpleName();
-    private static final String KEY_PLAYLIST_NAME = "playlist_name";
     private List<Track> trackList;
     private FloatingActionButton fabDownloadPlaylist;
 
@@ -57,15 +56,6 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        final String playlistName = getStringOrThrow(KEY_PLAYLIST_NAME);
-
-        final ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
-        actionBar.setTitle(playlistName);
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,18 +63,20 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
             }
         });
 
-        final String soundCloudUrl = getStringOrThrow(Playlists.COLUMN_SOUNDCLOUD_URL);
 
-        final String artworkUrl = getIntent().getStringExtra(Playlists.COLUMN_ARTWORK_URL);
+        final ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        final Playlist playlist = (Playlist) getSerializableOrThrow(Playlist.KEY);
+        actionBar.setTitle(playlist.getTitle());
 
         final Playlists playlistsTable = Playlists.getInstance(this);
 
-        String playlistId = playlistsTable.get(Playlists.COLUMN_SOUNDCLOUD_URL, soundCloudUrl, Playlists.COLUMN_ID);
-
-        if (playlistId == null) {
-            playlistId = String.valueOf(Playlists.getInstance(this).add(new Playlist(null, playlistName, soundCloudUrl, artworkUrl, -1, -1)));
+        if (playlist.getId() == null) {
+            final String playlistId = String.valueOf(playlistsTable.add(playlist));
+            playlist.setId(playlistId);
         }
-
 
         trackList = new ArrayList<>();
         try {
@@ -106,8 +98,11 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                     trackArtWorkUrl = joTrack.getString(Tracks.COLUMN_ARTWORK_URL);
                 }
 
-                final String absoluteFilePath = String.format("%s/%s/%s/%s", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), App.FOLDER_NAME, playlistName, fileName);
-                final Track newTrack = new Track(null, title, downloadUrl, trackArtWorkUrl, null, trackSoundCloudUrl, playlistId, true, false, new File(absoluteFilePath));
+                final String username = joTrack.getString(Tracks.COLUMN_USERNAME);
+                final long duration = joTrack.getLong(Tracks.COLUMN_DURATION);
+
+                final String absoluteFilePath = String.format("%s/%s/%s/%s", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), App.FOLDER_NAME, playlist.getSanitizedTitle(), fileName);
+                final Track newTrack = new Track(null, title, username, downloadUrl, trackArtWorkUrl, null, trackSoundCloudUrl, playlist.getId(), true, false, new File(absoluteFilePath), duration);
                 final String dbTrackId = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, trackSoundCloudUrl, Tracks.COLUMN_ID);
                 final String id = dbTrackId != null ? dbTrackId : String.valueOf(tracksTable.add(newTrack));
 

@@ -43,4 +43,8 @@ public class CommonUtils {
         Log.e(X, "Service not running : " + serviceClass.getName());
         return false;
     }
+
+    public static String getSanitizedName(final String fileName) {
+        return fileName.replaceAll("[^\\w]", "_").replaceAll("[_]{2,}", "_");
+    }
 }

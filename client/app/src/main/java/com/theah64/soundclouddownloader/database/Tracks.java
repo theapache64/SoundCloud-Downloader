@@ -12,6 +12,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.R.attr.duration;
+
 /**
  * Created by theapache64 on 9/12/16.
  */
@@ -26,6 +28,8 @@ public class Tracks extends BaseTable<Track> {
     private static final String X = Tracks.class.getSimpleName();
     private static final String COLUMN_ABS_FILE_PATH = "abs_file_path";
     public static final String COLUMN_IS_DOWNLOADED = "is_downloaded";
+    public static final String COLUMN_USERNAME = "username";
+    public static final String COLUMN_DURATION = "duration";
     private static Tracks instance;
 
     private Tracks(Context context) {
@@ -51,9 +55,12 @@ public class Tracks extends BaseTable<Track> {
         cv.put(COLUMN_SOUNDCLOUD_URL, track.getSoundCloudUrl());
         cv.put(COLUMN_DOWNLOAD_ID, track.getDownloadId());
         cv.put(COLUMN_ARTWORK_URL, track.getArtWorkUrl());
+        cv.put(COLUMN_DURATION, track.getDuration());
+        cv.put(COLUMN_USERNAME, track.getUsername());
         cv.put(COLUMN_PLAYLIST_ID, track.getPlaylistId());
         cv.put(COLUMN_ABS_FILE_PATH, track.getFile().getAbsolutePath());
         cv.put(COLUMN_IS_DOWNLOADED, track.isDownloaded());
+
 
         final long trackId = this.getWritableDatabase().insert(TABLE_NAME_TRACKS, null, cv);
 
@@ -68,7 +75,7 @@ public class Tracks extends BaseTable<Track> {
     public List<Track> getAll(@Nullable final String playlistId) {
         List<Track> trackList = null;
 
-        final Cursor c = this.getReadableDatabase().query(TABLE_NAME_TRACKS, new String[]{COLUMN_ID, COLUMN_DOWNLOAD_ID, COLUMN_ARTWORK_URL, COLUMN_TITLE, COLUMN_DOWNLOAD_ID, COLUMN_SOUNDCLOUD_URL, COLUMN_ABS_FILE_PATH, COLUMN_IS_DOWNLOADED}, playlistId != null ? "playlist_id = ?" :
+        final Cursor c = this.getReadableDatabase().query(TABLE_NAME_TRACKS, new String[]{COLUMN_ID, COLUMN_USERNAME, COLUMN_DURATION, COLUMN_DOWNLOAD_ID, COLUMN_ARTWORK_URL, COLUMN_TITLE, COLUMN_DOWNLOAD_ID, COLUMN_SOUNDCLOUD_URL, COLUMN_ABS_FILE_PATH, COLUMN_IS_DOWNLOADED}, playlistId != null ? "playlist_id = ?" :
                         null, playlistId != null ? new String[]{playlistId} : null
                 , null, null, COLUMN_ID + " DESC");
         if (c != null && c.moveToFirst()) {
@@ -83,8 +90,11 @@ public class Tracks extends BaseTable<Track> {
                 final String absoluteFilePath = c.getString(c.getColumnIndex(COLUMN_ABS_FILE_PATH));
                 final String soundCloudUrl = c.getString(c.getColumnIndex(COLUMN_SOUNDCLOUD_URL));
                 final boolean isDownloaded = c.getString(c.getColumnIndex(COLUMN_IS_DOWNLOADED)).equals(TRUE);
+                final long duration = c.getLong(c.getColumnIndex(COLUMN_DURATION));
+                final String username = c.getString(c.getColumnIndex(COLUMN_USERNAME));
 
-                trackList.add(new Track(id, title, null, artworkUrl, downloadId, soundCloudUrl, null, false, isDownloaded, absoluteFilePath != null ? new File(absoluteFilePath) : null));
+
+                trackList.add(new Track(id, title, username, null, artworkUrl, downloadId, soundCloudUrl, null, false, isDownloaded, absoluteFilePath != null ? new File(absoluteFilePath) : null, duration));
             } while (c.moveToNext());
         }
 
@@ -101,7 +111,7 @@ public class Tracks extends BaseTable<Track> {
 
         Track track = null;
 
-        final Cursor c = this.getReadableDatabase().query(TABLE_NAME_TRACKS, new String[]{COLUMN_ID, COLUMN_DOWNLOAD_ID, COLUMN_ARTWORK_URL, COLUMN_TITLE, COLUMN_DOWNLOAD_ID, COLUMN_SOUNDCLOUD_URL, COLUMN_ABS_FILE_PATH, COLUMN_IS_DOWNLOADED, COLUMN_PLAYLIST_ID}, column + " = ?", new String[]{value}, null, null, null);
+        final Cursor c = this.getReadableDatabase().query(TABLE_NAME_TRACKS, new String[]{COLUMN_ID, COLUMN_DOWNLOAD_ID, COLUMN_USERNAME, COLUMN_DURATION, COLUMN_ARTWORK_URL, COLUMN_TITLE, COLUMN_DOWNLOAD_ID, COLUMN_SOUNDCLOUD_URL, COLUMN_ABS_FILE_PATH, COLUMN_IS_DOWNLOADED, COLUMN_PLAYLIST_ID}, column + " = ?", new String[]{value}, null, null, null);
 
         if (c != null) {
             if (c.moveToFirst()) {
@@ -115,7 +125,10 @@ public class Tracks extends BaseTable<Track> {
                 final boolean isDownloaded = c.getString(c.getColumnIndex(COLUMN_IS_DOWNLOADED)).equals(TRUE);
                 final String playlistId = c.getString(c.getColumnIndex(COLUMN_PLAYLIST_ID));
 
-                track = new Track(id, title, null, artworkUrl, downloadId, soundCloudUrl, playlistId, false, isDownloaded, absoluteFilePath != null ? new File(absoluteFilePath) : null);
+                final long duration = c.getLong(c.getColumnIndex(COLUMN_DURATION));
+                final String username = c.getString(c.getColumnIndex(COLUMN_USERNAME));
+
+                track = new Track(id, title, username, null, artworkUrl, downloadId, soundCloudUrl, playlistId, false, isDownloaded, absoluteFilePath != null ? new File(absoluteFilePath) : null, duration);
             }
             c.close();
         }
