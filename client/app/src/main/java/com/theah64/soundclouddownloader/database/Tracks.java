@@ -24,7 +24,7 @@ public class Tracks extends BaseTable<Track> {
     public static final String COLUMN_SOUNDCLOUD_URL = "soundcloud_url";
     public static final String COLUMN_DOWNLOAD_ID = "download_id";
     private static final String TABLE_NAME_TRACKS = "tracks";
-    private static final String COLUMN_PLAYLIST_ID = "playlist_id";
+    public static final String COLUMN_PLAYLIST_ID = "playlist_id";
     private static final String X = Tracks.class.getSimpleName();
     private static final String COLUMN_ABS_FILE_PATH = "abs_file_path";
     public static final String COLUMN_IS_DOWNLOADED = "is_downloaded";

@@ -103,10 +103,20 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
                 final String absoluteFilePath = String.format("%s/%s/%s/%s", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), App.FOLDER_NAME, playlist.getSanitizedTitle(), fileName);
                 final Track newTrack = new Track(null, title, username, downloadUrl, trackArtWorkUrl, null, trackSoundCloudUrl, playlist.getId(), true, false, new File(absoluteFilePath), duration);
-                final String dbTrackId = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, trackSoundCloudUrl, Tracks.COLUMN_ID);
-                final String id = dbTrackId != null ? dbTrackId : String.valueOf(tracksTable.add(newTrack));
+                String dbTrackId = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, trackSoundCloudUrl, Tracks.COLUMN_ID);
 
-                newTrack.setId(id);
+                if (dbTrackId != null) {
+                    //Track exist in db,so updating playlist id
+                    if (!tracksTable.update(Tracks.COLUMN_ID, dbTrackId, Tracks.COLUMN_PLAYLIST_ID, playlist.getId())) {
+                        throw new IllegalArgumentException("Failed to update playlist id");
+                    }
+
+                } else {
+                    dbTrackId = String.valueOf(tracksTable.add(newTrack));
+                }
+
+
+                newTrack.setId(dbTrackId);
                 //Uncheck if file exists
                 newTrack.setChecked(!newTrack.getFile().exists());
 
