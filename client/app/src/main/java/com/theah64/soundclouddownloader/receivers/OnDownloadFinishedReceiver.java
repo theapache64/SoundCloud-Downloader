@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.util.Log;
 
 import com.theah64.soundclouddownloader.database.Tracks;
+import com.theah64.soundclouddownloader.interfaces.TrackListener;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.ui.activities.MainActivity;
 import com.theah64.soundclouddownloader.utils.App;
@@ -48,12 +49,20 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
             throw new IllegalArgumentException("Failed to update download status");
         }
 
-        MainActivity mainActivity = ((App) context.getApplicationContext()).getMainActivity();
+        final App app = ((App) context.getApplicationContext());
+        TrackListener mainTrackListener = app.getMainTrackListener();
+        TrackListener playlistTrackListener = app.getPlaylistTrackListener();
 
-        if (mainActivity != null) {
-            final Track track = tracksTable.get(Tracks.COLUMN_DOWNLOAD_ID, downloadId);
-            mainActivity.onTrackDownloaded(track);
+        final Track track = tracksTable.get(Tracks.COLUMN_DOWNLOAD_ID, downloadId);
+
+        if (mainTrackListener != null) {
+            mainTrackListener.onTrackDownloaded(track);
         }
+
+        if (playlistTrackListener != null) {
+            playlistTrackListener.onTrackDownloaded(track);
+        }
+
 
     }
 }

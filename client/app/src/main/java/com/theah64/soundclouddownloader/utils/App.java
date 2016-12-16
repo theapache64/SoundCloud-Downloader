@@ -61,14 +61,21 @@ public class App extends Application {
         initImageLoader(this);
     }
 
-    private TrackListener trackListener = null;
+    private TrackListener mainTrackListener = null, playlistTrackListener;
 
-    public MainActivity getMainActivity() {
-        return mainActivity;
+    public TrackListener getMainTrackListener() {
+        return mainTrackListener;
     }
 
-    public void setMainActivity(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
+    public void setMainTrackListener(TrackListener mainTrackListener) {
+        this.mainTrackListener = mainTrackListener;
     }
 
+    public TrackListener getPlaylistTrackListener() {
+        return playlistTrackListener;
+    }
+
+    public void setPlaylistTrackListener(TrackListener playlistTrackListener) {
+        this.playlistTrackListener = playlistTrackListener;
+    }
 }

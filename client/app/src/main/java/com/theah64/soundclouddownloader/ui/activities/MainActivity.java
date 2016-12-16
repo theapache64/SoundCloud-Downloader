@@ -15,6 +15,7 @@ import android.view.View;
 
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.adapters.TracksAndPlaylistsViewPagerAdapter;
+import com.theah64.soundclouddownloader.interfaces.TrackListener;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.services.ClipboardWatchIgniterService;
 import com.theah64.soundclouddownloader.ui.fragments.PlaylistsFragment;
@@ -29,7 +30,7 @@ import com.theah64.soundclouddownloader.utils.InputDialogUtils;
  * TRACK MODEL : https://soundcloud.com/moxet-khan/kuch-khaas-khumariyaan-2-0
  * PLAYLIST MODEL : https://soundcloud.com/abdulwahab849/sets/more
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TrackListener {
 
 
     private TracksFragment tracksFragment = TracksFragment.getNewInstance(null);
@@ -92,20 +93,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        app.setMainActivity(this);
+        app.setMainTrackListener(this);
     }
 
     @Override
     protected void onDestroy() {
-        final MainActivity mainActivity = app.getMainActivity();
-
-        if (this.equals(mainActivity)) {
-            app.setMainActivity(null);
+        final TrackListener trackListener = app.getMainTrackListener();
+        if (this.equals(trackListener)) {
+            app.setMainTrackListener(null);
         }
 
         super.onDestroy();
     }
 
+    @Override
     public void onTrackDownloaded(final Track track) {
         Log.d(X, "MainActivity says: TRACK DOWNLOADED " + track);
 
