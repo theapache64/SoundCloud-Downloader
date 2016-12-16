@@ -8,9 +8,7 @@ import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.services.DownloaderService;
-import com.theah64.soundclouddownloader.ui.activities.DownloaderActivity;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

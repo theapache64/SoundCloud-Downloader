@@ -1,6 +1,6 @@
 package com.theah64.soundclouddownloader.ui.activities;
 
-import android.content.ClipboardManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -15,14 +15,15 @@ import android.view.View;
 
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.adapters.TracksAndPlaylistsViewPagerAdapter;
+import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.services.ClipboardWatchIgniterService;
+import com.theah64.soundclouddownloader.ui.fragments.PlaylistsFragment;
+import com.theah64.soundclouddownloader.ui.fragments.TracksFragment;
+import com.theah64.soundclouddownloader.utils.App;
 import com.theah64.soundclouddownloader.utils.ClipboardUtils;
 import com.theah64.soundclouddownloader.utils.CommonUtils;
 import com.theah64.soundclouddownloader.utils.DownloadIgniter;
 import com.theah64.soundclouddownloader.utils.InputDialogUtils;
-
-import java.util.List;
-import java.util.Set;
 
 /**
  * TRACK MODEL : https://soundcloud.com/moxet-khan/kuch-khaas-khumariyaan-2-0
@@ -31,7 +32,12 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity {
 
 
+    private TracksFragment tracksFragment = TracksFragment.getNewInstance(null);
+    private PlaylistsFragment playlistsFragment = new PlaylistsFragment();
+
     private static final String X = MainActivity.class.getSimpleName();
+
+    protected App app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,17 +55,17 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         final ViewPager vpTracksAndPlaylists = (ViewPager) findViewById(R.id.vpTracksAndPlaylists);
-        vpTracksAndPlaylists.setAdapter(new TracksAndPlaylistsViewPagerAdapter(getSupportFragmentManager(), this));
+        vpTracksAndPlaylists.setAdapter(new TracksAndPlaylistsViewPagerAdapter(getSupportFragmentManager(), this, tracksFragment, playlistsFragment));
 
         final TabLayout tlTracksAndPlaylists = (TabLayout) findViewById(R.id.tlTracksAndPlaylists);
         tlTracksAndPlaylists.setupWithViewPager(vpTracksAndPlaylists);
 
         final InputDialogUtils inputDialogUtils = new InputDialogUtils(this);
 
+        //Add soundcloud url dialog.
         findViewById(R.id.fabAdd).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
 
                 inputDialogUtils.showInputDialog(R.string.Download_track_playlist, R.string.Enter_soundcloud_url, R.string.Enter_soundcloud_url, R.string.Invalid_soundcloud_URL, new InputDialogUtils.BasicInputCallback() {
                     @Override
@@ -70,7 +76,32 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        //Adding download listener
+        app = (App) this.getApplicationContext();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        app.setMainActivity(this);
+    }
 
+    @Override
+    protected void onDestroy() {
+        final MainActivity mainActivity = app.getMainActivity();
+
+        if (this.equals(mainActivity)) {
+            app.setMainActivity(null);
+        }
+
+        super.onDestroy();
+    }
+
+    public void onTrackDownloaded(final Track track) {
+        Log.d(X, "MainActivity says: TRACK DOWNLOADED " + track);
+
+        playlistsFragment.onTrackDownloaded(track);
+        tracksFragment.onTrackDownloaded(track);
+    }
 }

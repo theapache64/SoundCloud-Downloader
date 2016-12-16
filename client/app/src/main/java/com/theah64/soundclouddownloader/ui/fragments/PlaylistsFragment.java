@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.adapters.ITSAdapter;
 import com.theah64.soundclouddownloader.database.Playlists;
 import com.theah64.soundclouddownloader.database.Tracks;
+import com.theah64.soundclouddownloader.interfaces.TrackListener;
 import com.theah64.soundclouddownloader.models.Playlist;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.services.DownloaderService;
@@ -30,15 +32,15 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.TracksCallback, PopupMenu.OnMenuItemClickListener {
+public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.TracksCallback, PopupMenu.OnMenuItemClickListener, TrackListener {
 
 
+    private static final String X = PlaylistsFragment.class.getSimpleName();
     private List<Playlist> playlists;
-    private int position;
     private Playlist playlist;
     private Playlists playlistsTable;
     private Tracks tracksTable;
-    private View layout;
+    private ITSAdapter itsAdapter;
 
     public PlaylistsFragment() {
         // Required empty public constructor
@@ -49,23 +51,16 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        layout = inflater.inflate(R.layout.fragment_playlists, container, false);
+        View layout = inflater.inflate(R.layout.fragment_playlists, container, false);
         playlistsTable = Playlists.getInstance(getContext());
         tracksTable = Tracks.getInstance(getContext());
-
-        return layout;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
 
         playlists = playlistsTable.getAll();
 
         if (playlists != null) {
             final RecyclerView rvPlaylists = (RecyclerView) layout.findViewById(R.id.rvPlaylists);
             rvPlaylists.setLayoutManager(new LinearLayoutManager(getActivity()));
-            final ITSAdapter itsAdapter = new ITSAdapter(playlists, this);
+            itsAdapter = new ITSAdapter(playlists, this);
             rvPlaylists.setAdapter(itsAdapter);
 
             layout.findViewById(R.id.llNoPlaylistsFound).setVisibility(View.GONE);
@@ -81,6 +76,8 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
             });
         }
 
+
+        return layout;
     }
 
 
@@ -95,7 +92,6 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
     @Override
     public void onPopUpMenuClicked(View anchor, int position) {
 
-        this.position = position;
         playlist = playlists.get(position);
 
         final PopupMenu playlistMenu = new PopupMenu(getActivity(), anchor);
@@ -164,5 +160,33 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
             default:
                 return false;
         }
+    }
+
+    @Override
+    public void onTrackDownloaded(Track track) {
+
+        if (track.getPlaylistId() == null) {
+            Log.w(X, "Track is not from a playlist");
+            return;
+        }
+
+        //Finding the updated track
+        for (int i = 0; i < playlists.size(); i++) {
+
+            final Playlist playlist = playlists.get(i);
+
+            if (playlist.getId().equals(track.getPlaylistId())) {
+                Log.d(X, "Found updated playlist : " + playlist);
+
+                playlists.remove(i);
+                playlists.add(i, playlistsTable.get(Playlists.COLUMN_ID, playlist.getId()));
+                itsAdapter.notifyItemChanged(i);
+                return;
+            }
+        }
+
+
+        throw new IllegalArgumentException("Couldn't find the playlist");
+
     }
 }

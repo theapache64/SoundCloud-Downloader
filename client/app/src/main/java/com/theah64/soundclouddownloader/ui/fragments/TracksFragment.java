@@ -20,6 +20,7 @@ import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.adapters.ITSAdapter;
 import com.theah64.soundclouddownloader.database.Playlists;
 import com.theah64.soundclouddownloader.database.Tracks;
+import com.theah64.soundclouddownloader.interfaces.TrackListener;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.services.DownloaderService;
 import com.theah64.soundclouddownloader.utils.App;
@@ -30,7 +31,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TracksFragment extends BaseMusicFragment implements ITSAdapter.TracksCallback, PopupMenu.OnMenuItemClickListener {
+public class TracksFragment extends BaseMusicFragment implements ITSAdapter.TracksCallback, PopupMenu.OnMenuItemClickListener, TrackListener {
 
 
     private static final String X = TracksFragment.class.getSimpleName();
@@ -54,13 +55,6 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
         layout = inflater.inflate(R.layout.fragment_tracks, container, false);
         playlistId = getArguments().getString(Playlists.COLUMN_ID);
         tracksTable = Tracks.getInstance(getActivity());
-
-        return layout;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
 
         Log.d(X, "TracksFragment resumed");
 
@@ -90,6 +84,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
 
         }
 
+        return layout;
     }
 
     @Override
@@ -209,7 +204,24 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
 
     }
 
-    public boolean isSoundCloudAppExist() {
-        return false;
+    @Override
+    public void onTrackDownloaded(Track downloadedTrack) {
+
+        for (int i = 0; i < trackList.size(); i++) {
+
+            final Track track = trackList.get(i);
+
+            if (track.getId().equals(downloadedTrack.getId())) {
+                Log.d(X, "Downloaded track found : " + track);
+
+                //Removing the old track
+                trackList.remove(i);
+                trackList.add(i, downloadedTrack);
+                itsAdapter.notifyItemChanged(i);
+                return;
+            }
+        }
+
+        throw new IllegalArgumentException("Couldn't find the downloaded track");
     }
 }

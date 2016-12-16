@@ -12,6 +12,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.theah64.soundclouddownloader.R;
+import com.theah64.soundclouddownloader.ui.activities.MainActivity;
 
 /**
  * Created by theapache64 on 9/12/16.
@@ -58,4 +59,15 @@ public class App extends Application {
         super.onCreate();
         initImageLoader(this);
     }
+
+    private MainActivity mainActivity = null;
+
+    public MainActivity getMainActivity() {
+        return mainActivity;
+    }
+
+    public void setMainActivity(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+    }
+
 }

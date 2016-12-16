@@ -18,13 +18,14 @@ import java.util.Locale;
 
 public class TracksAndPlaylistsViewPagerAdapter extends FragmentPagerAdapter {
 
-    private TracksFragment tracksFragment = TracksFragment.getNewInstance(null);
-    private PlaylistsFragment playlistsFragment = new PlaylistsFragment();
     private final Context context;
+    private final Fragment tracksFragment, playlistsFragment;
 
-    public TracksAndPlaylistsViewPagerAdapter(FragmentManager fm, Context context) {
+    public TracksAndPlaylistsViewPagerAdapter(FragmentManager fm, Context context, Fragment tracksFragment, Fragment playlistsFragment) {
         super(fm);
         this.context = context;
+        this.tracksFragment = tracksFragment;
+        this.playlistsFragment = playlistsFragment;
     }
 
     @Override

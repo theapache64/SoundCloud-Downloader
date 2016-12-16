@@ -9,6 +9,8 @@ import android.util.Log;
 
 import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.Track;
+import com.theah64.soundclouddownloader.ui.activities.MainActivity;
+import com.theah64.soundclouddownloader.utils.App;
 
 public class OnDownloadFinishedReceiver extends BroadcastReceiver {
 
@@ -19,10 +21,10 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        final long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+        final String downloadId = String.valueOf(intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1));
         Log.d(X, "Download finished :  id : " + downloadId);
 
-        DownloadManager.Query query = new DownloadManager.Query();
+/*        DownloadManager.Query query = new DownloadManager.Query();
         query.setFilterById(downloadId);
 
         final DownloadManager dm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
@@ -38,10 +40,19 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
             }
 
             cursor.close();
+        }*/
+
+        final Tracks tracksTable = Tracks.getInstance(context);
+
+        if (!tracksTable.update(Tracks.COLUMN_DOWNLOAD_ID, downloadId, Tracks.COLUMN_IS_DOWNLOADED, Tracks.TRUE)) {
+            throw new IllegalArgumentException("Failed to update download status");
         }
 
-        if (!Tracks.getInstance(context).update(Tracks.COLUMN_DOWNLOAD_ID, downloadId + "", Tracks.COLUMN_IS_DOWNLOADED, Tracks.TRUE)) {
-            throw new IllegalArgumentException("Failed to update download status");
+        MainActivity mainActivity = ((App) context.getApplicationContext()).getMainActivity();
+
+        if (mainActivity != null) {
+            final Track track = tracksTable.get(Tracks.COLUMN_DOWNLOAD_ID, downloadId);
+            mainActivity.onTrackDownloaded(track);
         }
 
     }

@@ -84,4 +84,26 @@ public class Playlists extends BaseTable<Playlist> {
         return playlists;
 
     }
+
+    @Override
+    public Playlist get(String column, String value) {
+        Playlist playlist = null;
+        final Cursor c = this.getReadableDatabase().rawQuery(String.format("SELECT p.id, p.title,p.soundcloud_url, p.artwork_url, COUNT(DISTINCT t.id) AS total_tracks, COUNT(DISTINCT dt.id) AS downloaded_tracks FROM playlists p INNER JOIN tracks t ON t.playlist_id = p.id LEFT JOIN tracks dt ON dt.playlist_id = p.id AND dt.is_downloaded = 1 WHERE p.%s = ? GROUP BY p.id ORDER BY p.id DESC", column), new String[]{value});
+        if (c != null) {
+
+            if (c.moveToFirst()) {
+                final String id = c.getString(c.getColumnIndex(COLUMN_ID));
+                final String title = c.getString(c.getColumnIndex(COLUMN_TITLE));
+                final String artworkUrl = c.getString(c.getColumnIndex(COLUMN_ARTWORK_URL));
+                final int totalTracks = c.getInt(c.getColumnIndex(COLUMN_AS_TOTAL_TRACKS));
+                final int tracksDownloaded = c.getInt(c.getColumnIndex(COLUMN_AS_DOWNLOADED_TRACKS));
+                final String soundCloudUrl = c.getString(c.getColumnIndex(COLUMN_SOUNDCLOUD_URL));
+
+                playlist = new Playlist(id, title, soundCloudUrl, artworkUrl, totalTracks, tracksDownloaded);
+            }
+
+            c.close();
+        }
+        return playlist;
+    }
 }
