@@ -4,6 +4,7 @@ package com.theah64.soundclouddownloader.ui.fragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -25,6 +26,7 @@ import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.services.DownloaderService;
 import com.theah64.soundclouddownloader.ui.activities.PlaylistTracksActivity;
 import com.theah64.soundclouddownloader.utils.App;
+import com.theah64.soundclouddownloader.widgets.ThemedSnackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +39,12 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
 
     private static final String X = PlaylistsFragment.class.getSimpleName();
     private List<Playlist> playlists;
-    private Playlist playlist;
+    private Playlist currentPlaylist;
     private Playlists playlistsTable;
     private Tracks tracksTable;
     private ITSAdapter itsAdapter;
+    private int currentPosition;
+    private View layout;
 
     public PlaylistsFragment() {
         // Required empty public constructor
@@ -51,14 +55,14 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View layout = inflater.inflate(R.layout.fragment_playlists, container, false);
+        layout = inflater.inflate(R.layout.fragment_playlists, container, false);
         playlistsTable = Playlists.getInstance(getContext());
         tracksTable = Tracks.getInstance(getContext());
 
         playlists = playlistsTable.getAll();
 
         if (playlists != null) {
-            final RecyclerView rvPlaylists = (RecyclerView) layout.findViewById(R.id.rvPlaylists);
+            RecyclerView rvPlaylists = (RecyclerView) layout.findViewById(R.id.rvPlaylists);
             rvPlaylists.setLayoutManager(new LinearLayoutManager(getActivity()));
             itsAdapter = new ITSAdapter(playlists, this);
             rvPlaylists.setAdapter(itsAdapter);
@@ -84,18 +88,23 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
     @Override
     public void onRowClicked(int position, View popUpAnchor) {
         final Playlist playlist = playlists.get(position);
-        final Intent playlistTracksIntent = new Intent(getActivity(), PlaylistTracksActivity.class);
-        playlistTracksIntent.putExtra(Playlist.KEY, playlist);
-        startActivity(playlistTracksIntent);
+        if (playlist.getTotalTracks() > 0) {
+            final Intent playlistTracksIntent = new Intent(getActivity(), PlaylistTracksActivity.class);
+            playlistTracksIntent.putExtra(Playlist.KEY, playlist);
+            startActivity(playlistTracksIntent);
+        } else {
+            Toast.makeText(getActivity(), R.string.Empty_playlist, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void onPopUpMenuClicked(View anchor, int position) {
 
-        playlist = playlists.get(position);
+        currentPlaylist = playlists.get(position);
+        currentPosition = position;
 
         final PopupMenu playlistMenu = new PopupMenu(getActivity(), anchor);
-        playlistMenu.getMenuInflater().inflate(playlist.isDownloaded() ? R.menu.menu_playlist_downloaded : R.menu.menu_playlist_not_downloaded, playlistMenu.getMenu());
+        playlistMenu.getMenuInflater().inflate(currentPlaylist.isDownloaded() ? R.menu.menu_playlist_downloaded : R.menu.menu_playlist_not_downloaded, playlistMenu.getMenu());
         playlistMenu.setOnMenuItemClickListener(this);
 
         playlistMenu.show();
@@ -109,11 +118,11 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
             case R.id.miShareSavedTracks:
             case R.id.miShareTracks:
 
-                List<Track> trackList = playlist.getTracks();
+                List<Track> trackList = currentPlaylist.getTracks();
 
                 if (trackList == null) {
-                    trackList = tracksTable.getAll(playlist.getId());
-                    playlist.setTracks(trackList);
+                    trackList = tracksTable.getAll(currentPlaylist.getId());
+                    currentPlaylist.setTracks(trackList);
                 }
 
 
@@ -125,7 +134,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
                 }
 
                 final Intent shareTracksIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-                shareTracksIntent.putExtra(Intent.EXTRA_TEXT, String.format("Downloaded via SoundCloud Downloader (%s)  Playlist: %s ", App.STORE_URL, playlist.getTitle())); //TOOD: Modify sub
+                shareTracksIntent.putExtra(Intent.EXTRA_TEXT, String.format("Downloaded via SoundCloud Downloader (%s)  Playlist: %s ", App.STORE_URL, currentPlaylist.getTitle())); //TOOD: Modify sub
                 shareTracksIntent.setType("audio/*");
                 shareTracksIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, existingTracks);
                 startActivity(shareTracksIntent);
@@ -138,7 +147,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
 
                 final Intent sharePlaylistUrlIntent = new Intent(Intent.ACTION_SEND);
                 sharePlaylistUrlIntent.setType("text/plain");
-                sharePlaylistUrlIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.Download_track_using_soundcloud_downloader_s, App.STORE_URL, playlist.getTitle(), playlist.getSoundCloudUrl()));
+                sharePlaylistUrlIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.Download_track_using_soundcloud_downloader_s, App.STORE_URL, currentPlaylist.getTitle(), currentPlaylist.getSoundCloudUrl()));
                 startActivity(Intent.createChooser(sharePlaylistUrlIntent, getString(R.string.Share_using)));
 
                 return true;
@@ -148,12 +157,36 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
 
                 //Launching downloader service
                 final Intent downloadIntent = new Intent(getActivity(), DownloaderService.class);
-                downloadIntent.putExtra(Tracks.COLUMN_SOUNDCLOUD_URL, playlist.getSoundCloudUrl());
+                downloadIntent.putExtra(Tracks.COLUMN_SOUNDCLOUD_URL, currentPlaylist.getSoundCloudUrl());
 
                 getActivity().startService(downloadIntent);
 
                 Toast.makeText(getActivity(), R.string.initializing_download, Toast.LENGTH_SHORT).show();
 
+
+                return true;
+
+
+            case R.id.miRemovePlaylist:
+
+                //Showing confirmation
+                ThemedSnackbar.make(getActivity(), getActivity().findViewById(android.R.id.content), R.string.Tracks_under_this, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.CONTINUE, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                //Deleting currentPlaylist
+                                playlistsTable.delete(Playlists.COLUMN_ID, currentPlaylist.getId());
+                                playlists.remove(currentPosition);
+                                itsAdapter.notifyItemRemoved(currentPosition);
+
+                                if (playlists.isEmpty()) {
+                                    //showing no tracks downloaded text view.
+                                    layout.findViewById(R.id.llNoPlaylistsFound).setVisibility(View.VISIBLE);
+                                }
+
+                            }
+                        })
+                        .show();
 
                 return true;
 
@@ -166,7 +199,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
     public void onTrackDownloaded(Track track) {
 
         if (track.getPlaylistId() == null) {
-            Log.w(X, "Track is not from a playlist");
+            Log.w(X, "Track is not from a currentPlaylist");
             return;
         }
 
@@ -176,7 +209,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
             final Playlist playlist = playlists.get(i);
 
             if (playlist.getId().equals(track.getPlaylistId())) {
-                Log.d(X, "Found updated playlist : " + playlist);
+                Log.d(X, "Found updated currentPlaylist : " + playlist);
 
                 playlists.remove(i);
                 playlists.add(i, playlistsTable.get(Playlists.COLUMN_ID, playlist.getId()));
@@ -186,7 +219,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
         }
 
 
-        throw new IllegalArgumentException("Couldn't find the playlist");
+        throw new IllegalArgumentException("Couldn't find the currentPlaylist");
 
     }
 }

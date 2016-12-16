@@ -4,6 +4,7 @@ package com.theah64.soundclouddownloader.ui.fragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -25,6 +26,7 @@ import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.services.DownloaderService;
 import com.theah64.soundclouddownloader.utils.App;
 import com.theah64.soundclouddownloader.utils.CommonUtils;
+import com.theah64.soundclouddownloader.widgets.ThemedSnackbar;
 
 import java.util.List;
 
@@ -40,7 +42,6 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
     private ITSAdapter itsAdapter;
     private Track track;
     private int position;
-    private String playlistId;
     private View layout;
 
     public TracksFragment() {
@@ -53,7 +54,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         layout = inflater.inflate(R.layout.fragment_tracks, container, false);
-        playlistId = getArguments().getString(Playlists.COLUMN_ID);
+        final String playlistId = getArguments().getString(Playlists.COLUMN_ID);
         tracksTable = Tracks.getInstance(getActivity());
 
         Log.d(X, "TracksFragment resumed");
@@ -75,14 +76,15 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
 
             //showing no tracks downloaded text view.
             layout.findViewById(R.id.llNoTracksFound).setVisibility(View.VISIBLE);
-            layout.findViewById(R.id.bOpenSoundCloud).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    openSoundCloud();
-                }
-            });
 
         }
+
+        layout.findViewById(R.id.bOpenSoundCloud).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openSoundCloud();
+            }
+        });
 
         return layout;
     }
@@ -161,14 +163,27 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
 
             case R.id.miRemove:
 
-                if (tracksTable.delete(Tracks.COLUMN_ID, track.getId())) {
-                    trackList.remove(position);
-                    itsAdapter.notifyItemRemoved(position);
+                ThemedSnackbar.make(getActivity(), getActivity().findViewById(android.R.id.content), R.string.Do_you_really, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.YES, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
 
-                    Toast.makeText(getActivity(), R.string.Removed, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity(), R.string.Failed_to_remove, Toast.LENGTH_SHORT).show();
-                }
+                                if (tracksTable.delete(Tracks.COLUMN_ID, track.getId())) {
+                                    trackList.remove(position);
+                                    itsAdapter.notifyItemRemoved(position);
+
+                                    Toast.makeText(getActivity(), R.string.Removed, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getActivity(), R.string.Failed_to_remove, Toast.LENGTH_SHORT).show();
+                                }
+
+                                if (trackList.isEmpty()) {
+                                    //showing no tracks downloaded text view.
+                                    layout.findViewById(R.id.llNoTracksFound).setVisibility(View.VISIBLE);
+                                }
+
+                            }
+                        }).show();
 
                 return true;
 

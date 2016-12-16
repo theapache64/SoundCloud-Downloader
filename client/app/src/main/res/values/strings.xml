@@ -43,4 +43,8 @@
     <string name="YES">YES</string>
     <string name="NO">NO</string>
     <string name="Downloading_playlist">Download playlist</string>
+    <string name="Tracks_under_this">Tracks under this playlist will be also removed</string>
+    <string name="CONTINUE">CONTINUE</string>
+    <string name="Do_you_really">Do you really want to delete this track ?</string>
+    <string name="Empty_playlist">Empty playlist!</string>
 </resources>

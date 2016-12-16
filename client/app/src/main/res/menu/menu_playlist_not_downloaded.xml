@@ -9,4 +9,8 @@
         android:id="@+id/miShareSavedTracks"
         android:title="@string/Share_saved_tracks" />
 
+    <item
+        android:id="@+id/miRemovePlaylist"
+        android:title="@string/Remove" />
+
 </menu>
