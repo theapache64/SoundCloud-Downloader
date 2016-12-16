@@ -9,6 +9,8 @@
         <item name="colorButtonNormal">@color/colorAccent</item>
         <item name="buttonStyle">@style/themedButtonStyle</item>
         <item name="alertDialogTheme">@style/themedDialogStyle</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:textColor">@color/black_800</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
