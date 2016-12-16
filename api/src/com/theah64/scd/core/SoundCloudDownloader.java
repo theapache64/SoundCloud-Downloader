@@ -15,7 +15,7 @@ import static com.theah64.scd.models.Track.KEY_ARTWORK_URL;
 
 /**
  * Created by theapache64 on 8/12/16.
- * Track resolve example : https://api.soundcloud.com/resolve.json?url=https://soundcloud.com/mr-sidhu/kala-chashma-amar-arshi-neha-kakkar-badsha-by-sidhu&client_id=a3e059563d7fd3372b49b37f00a00bcf
+ * Track resolve example : https://api.soundcloud.com/resolve.json?url=https://soundcloud.com/theapache64/tomorrowland-2014-ultra-festival-2014-ringtone&client_id=a3e059563d7fd3372b49b37f00a00bcf
  * Playlist resolve example : https://api.soundcloud.com/resolve.json?url=https://soundcloud.com/theapache64/sets/twinkewinkle&client_id=a3e059563d7fd3372b49b37f00a00bcf
  */
 public class SoundCloudDownloader {
@@ -145,6 +145,9 @@ public class SoundCloudDownloader {
             trackArtworkUrl = joResolvedTrack.getString("artwork_url");
         }
 
+        final long duration = joResolvedTrack.getLong("duration");
+        final String username = joResolvedTrack.getJSONObject("user").getString("username");
+
         final String soundCloudUrl = joResolvedTrack.getString("permalink_url");
         final String fileName = String.format(fileNameFormat, FileNameUtils.getSanitizedName(title), originalFormat);
 
@@ -154,6 +157,8 @@ public class SoundCloudDownloader {
         joTrack.put(Track.KEY_ORIGINAL_FORMAT, originalFormat);
         joTrack.put(Track.KEY_FILENAME, fileName);
         joTrack.put(KEY_ARTWORK_URL, trackArtworkUrl);
+        joTrack.put("duration", duration);
+        joTrack.put("username", username);
         joTrack.put(Requests.COLUMN_SOUND_CLOUD_URL, soundCloudUrl);
 
         return joTrack;
