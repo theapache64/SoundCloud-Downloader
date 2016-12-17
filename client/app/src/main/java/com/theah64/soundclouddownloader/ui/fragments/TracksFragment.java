@@ -1,6 +1,7 @@
 package com.theah64.soundclouddownloader.ui.fragments;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.R;
@@ -43,11 +43,34 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
     private Track track;
     private int position;
     private View layout;
+    private App app;
 
     public TracksFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        app = (App) context.getApplicationContext();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        app.setTrackListener(this);
+    }
+
+    @Override
+    public void onDestroy() {
+
+        final TrackListener trackListener = app.getTrackListener();
+        if (this.equals(trackListener)) {
+            app.setTrackListener(null);
+        }
+
+        super.onDestroy();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -219,6 +242,17 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
 
     }
 
+
+    @Override
+    public void onNewTrack(Track newTrack) {
+
+    }
+
+    @Override
+    public void onTrackRemoved(Track removedTrack) {
+
+    }
+
     @Override
     public void onTrackUpdated(Track downloadedTrack) {
         for (int i = 0; i < trackList.size(); i++) {
@@ -237,5 +271,21 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
         }
 
         throw new IllegalArgumentException("Couldn't find the downloaded track");
+    }
+
+    public void onPlaylistRemoved(String removedPlaylistId) {
+        for (int i = 0; i < trackList.size(); i++) {
+            final Track track = trackList.get(i);
+
+            if (track.getPlaylistId() != null && track.getPlaylistId().equals(removedPlaylistId)) {
+                trackList.remove(i);
+            }
+        }
+
+        itsAdapter.notifyDataSetChanged();
+    }
+
+    public int getTracksCount() {
+        return trackList != null ? trackList.size() : 0;
     }
 }

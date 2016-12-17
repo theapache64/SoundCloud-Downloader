@@ -7,9 +7,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.theah64.soundclouddownloader.utils.App;
 import com.theah64.soundclouddownloader.utils.FileUtils;
 
 import org.json.JSONObject;
@@ -37,13 +39,18 @@ public class BaseTable<T> extends SQLiteOpenHelper {
 
     private final Context context;
     private final String tableName;
+    private App app;
 
     BaseTable(final Context context, String tableName) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
         this.tableName = tableName;
+        this.app = (App) context.getApplicationContext();
     }
 
+    public App getApp() {
+        return app;
+    }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -77,18 +84,11 @@ public class BaseTable<T> extends SQLiteOpenHelper {
         throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
     }
 
-    public boolean add(@Nullable final String userId, final JSONObject jsonObject) {
+
+    public long add(T newInstance, @Nullable Handler handler) {
         throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
     }
 
-
-    public long add(T newInstance) {
-        throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
-    }
-
-    public void addv2(T newInstance) throws RuntimeException {
-        throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
-    }
 
     public String get(final String whereColumn, final String whereColumnValue, final String columnToReturn) {
 
@@ -114,7 +114,8 @@ public class BaseTable<T> extends SQLiteOpenHelper {
         }
     }
 
-    public boolean update(String whereColumn, String whereColumnValue, String columnToUpdate, String valueToUpdate) {
+
+    protected boolean update(String whereColumn, String whereColumnValue, String columnToUpdate, String valueToUpdate) {
         final SQLiteDatabase db = this.getWritableDatabase();
         final ContentValues cv = new ContentValues(1);
         cv.put(columnToUpdate, valueToUpdate);
@@ -122,7 +123,7 @@ public class BaseTable<T> extends SQLiteOpenHelper {
     }
 
 
-    public boolean update(T t) {
+    public boolean update(T t, @Nullable Handler handler) {
         throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
     }
 

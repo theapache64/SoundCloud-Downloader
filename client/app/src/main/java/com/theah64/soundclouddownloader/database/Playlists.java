@@ -3,6 +3,8 @@ package com.theah64.soundclouddownloader.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Handler;
+import android.support.annotation.Nullable;
 
 import com.theah64.soundclouddownloader.models.Playlist;
 
@@ -40,7 +42,7 @@ public class Playlists extends BaseTable<Playlist> {
 
     //null, playlistName, soundCloudUrl, artworkUrl)
     @Override
-    public long add(Playlist playlist) {
+    public long add(final Playlist playlist, @Nullable Handler handler) {
 
         final ContentValues cv = new ContentValues(3);
         cv.put(COLUMN_TITLE, playlist.getTitle());
@@ -52,6 +54,23 @@ public class Playlists extends BaseTable<Playlist> {
 
         if (playlistId == -1) {
             throw new IllegalArgumentException("Failed to add new playlist");
+        }
+
+        if (handler != null) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (getApp().getPlaylistListener() != null) {
+                        playlist.setId(String.valueOf(playlistId));
+                        getApp().getPlaylistListener().onNewPlaylist(playlist);
+                    }
+                }
+            });
+        } else {
+            if (getApp().getPlaylistListener() != null) {
+                playlist.setId(String.valueOf(playlistId));
+                getApp().getPlaylistListener().onNewPlaylist(playlist);
+            }
         }
 
         return playlistId;

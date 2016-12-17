@@ -4,6 +4,8 @@ import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.theah64.soundclouddownloader.database.Tracks;
@@ -17,6 +19,8 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
 
     public OnDownloadFinishedReceiver() {
     }
+
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -43,24 +47,8 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
 
         final Tracks tracksTable = Tracks.getInstance(context);
 
-        if (!tracksTable.update(Tracks.COLUMN_DOWNLOAD_ID, downloadId, Tracks.COLUMN_IS_DOWNLOADED, Tracks.TRUE)) {
+        if (!tracksTable.update(Tracks.COLUMN_DOWNLOAD_ID, downloadId, Tracks.COLUMN_IS_DOWNLOADED, Tracks.TRUE, handler)) {
             throw new IllegalArgumentException("Failed to update download status");
         }
-
-        final App app = ((App) context.getApplicationContext());
-        TrackListener mainTrackListener = app.getMainTrackListener();
-        TrackListener playlistTrackListener = app.getPlaylistTrackListener();
-
-        final Track track = tracksTable.get(Tracks.COLUMN_DOWNLOAD_ID, downloadId);
-
-        if (mainTrackListener != null) {
-            mainTrackListener.onTrackUpdated(track);
-        }
-
-        if (playlistTrackListener != null) {
-            playlistTrackListener.onTrackUpdated(track);
-        }
-
-
     }
 }

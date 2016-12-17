@@ -1,6 +1,7 @@
 package com.theah64.soundclouddownloader.ui.fragments;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.adapters.ITSAdapter;
 import com.theah64.soundclouddownloader.database.Playlists;
 import com.theah64.soundclouddownloader.database.Tracks;
+import com.theah64.soundclouddownloader.interfaces.PlaylistListener;
 import com.theah64.soundclouddownloader.interfaces.TrackListener;
 import com.theah64.soundclouddownloader.models.Playlist;
 import com.theah64.soundclouddownloader.models.Track;
@@ -34,7 +36,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.TracksCallback, PopupMenu.OnMenuItemClickListener, TrackListener {
+public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.TracksCallback, PopupMenu.OnMenuItemClickListener, PlaylistListener {
 
 
     private static final String X = PlaylistsFragment.class.getSimpleName();
@@ -45,9 +47,34 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
     private ITSAdapter itsAdapter;
     private int currentPosition;
     private View layout;
+    private App app;
 
     public PlaylistsFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        app = (App) context.getApplicationContext();
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        app.setPlaylistListener(this);
+    }
+
+    @Override
+    public void onDestroy() {
+
+        final PlaylistListener playlistListener = app.getPlaylistListener();
+        if (this.equals(playlistListener)) {
+            app.setPlaylistListener(null);
+        }
+
+        super.onDestroy();
     }
 
 
@@ -196,19 +223,14 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
     }
 
     @Override
-    public void onTrackUpdated(Track track) {
-
-        if (track.getPlaylistId() == null) {
-            Log.w(X, "Track is not from a currentPlaylist");
-            return;
-        }
+    public void onPlaylistUpdated(String playlistId) {
 
         //Finding the updated track
         for (int i = 0; i < playlists.size(); i++) {
 
             final Playlist playlist = playlists.get(i);
 
-            if (playlist.getId().equals(track.getPlaylistId())) {
+            if (playlist.getId().equals(playlistId)) {
                 Log.d(X, "Found updated currentPlaylist : " + playlist);
 
                 playlists.remove(i);
@@ -219,7 +241,17 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
         }
 
 
-        throw new IllegalArgumentException("Couldn't find the currentPlaylist");
+        throw new IllegalArgumentException("Couldn't find the playlist. Playlist doesn't added to playlistList");
 
+    }
+
+
+    @Override
+    public void onNewPlaylist(Playlist playlist) {
+
+    }
+
+    public int getPlaylistsCount() {
+        return playlists != null ? playlists.size() : 0;
     }
 }

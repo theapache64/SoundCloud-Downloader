@@ -12,11 +12,9 @@ import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.ui.fragments.TracksFragment;
 import com.theah64.soundclouddownloader.utils.App;
 
-public class PlaylistTracksActivity extends BaseAppCompatActivity implements TrackListener {
+public class PlaylistTracksActivity extends BaseAppCompatActivity {
 
     private static final String X = PlaylistTracksActivity.class.getSimpleName();
-    protected App app;
-    private TracksFragment tracksFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,31 +32,9 @@ public class PlaylistTracksActivity extends BaseAppCompatActivity implements Tra
         actionBar.setTitle(playlist.getTitle());
         actionBar.setSubtitle(getResources().getQuantityString(R.plurals.d_tracks, playlist.getTotalTracks(), playlist.getTotalTracks()));
 
-        tracksFragment = TracksFragment.getNewInstance(playlist.getId());
+        final TracksFragment tracksFragment = TracksFragment.getNewInstance(playlist.getId());
         getSupportFragmentManager().beginTransaction().replace(R.id.flPlaylistTracksContainer, tracksFragment).commit();
-        app = (App) getApplicationContext();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        app.setPlaylistTrackListener(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        final TrackListener trackListener = app.getPlaylistTrackListener();
-        if (this.equals(trackListener)) {
-            app.setPlaylistTrackListener(null);
-        }
-
-        super.onDestroy();
-    }
-
-    @Override
-    public void onTrackUpdated(final Track track) {
-        Log.d(X, "MainActivity says: TRACK DOWNLOADED " + track);
-        tracksFragment.onTrackUpdated(track);
-    }
 
 }

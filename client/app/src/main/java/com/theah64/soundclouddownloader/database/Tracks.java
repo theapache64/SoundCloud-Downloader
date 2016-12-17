@@ -3,6 +3,8 @@ package com.theah64.soundclouddownloader.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -11,8 +13,6 @@ import com.theah64.soundclouddownloader.models.Track;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.R.attr.duration;
 
 /**
  * Created by theapache64 on 9/12/16.
@@ -26,7 +26,7 @@ public class Tracks extends BaseTable<Track> {
     private static final String TABLE_NAME_TRACKS = "tracks";
     public static final String COLUMN_PLAYLIST_ID = "playlist_id";
     private static final String X = Tracks.class.getSimpleName();
-    private static final String COLUMN_ABS_FILE_PATH = "abs_file_path";
+    public static final String COLUMN_ABS_FILE_PATH = "abs_file_path";
     public static final String COLUMN_IS_DOWNLOADED = "is_downloaded";
     public static final String COLUMN_USERNAME = "username";
     public static final String COLUMN_DURATION = "duration";
@@ -46,7 +46,7 @@ public class Tracks extends BaseTable<Track> {
 
     //title, url, download_id, artwork_url
     @Override
-    public long add(Track track) {
+    public long add(final Track track, @Nullable Handler handler) {
 
         Log.d(X, "Adding new track to database : " + track.toString());
 
@@ -68,7 +68,34 @@ public class Tracks extends BaseTable<Track> {
             throw new IllegalArgumentException("Failed to insert new track");
         }
 
+        //Setting id to track
+        track.setId(String.valueOf(trackId));
+
+        if (handler != null) {
+
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    onNewTrack(track);
+                }
+            });
+        } else {
+            onNewTrack(track);
+        }
+
         return trackId;
+    }
+
+    private void onNewTrack(final Track track) {
+
+        if (getApp().getTrackListener() != null) {
+            getApp().getTrackListener().onNewTrack(track);
+        }
+
+        if (track.getPlaylistId() != null && getApp().getPlaylistListener() != null) {
+            getApp().getPlaylistListener().onPlaylistUpdated(track.getPlaylistId());
+        }
+
     }
 
 
@@ -136,12 +163,82 @@ public class Tracks extends BaseTable<Track> {
         return track;
     }
 
+    public boolean update(String whereColumn, String whereColumnValue, String columnToUpdate, String valueToUpdate, @Nullable Handler handler) {
+
+        final boolean isUpdated = super.update(whereColumn, whereColumnValue, columnToUpdate, valueToUpdate);
+
+        if (!isUpdated) {
+            throw new IllegalArgumentException("Failed to update the track");
+        }
+
+        final Track track = get(whereColumn, whereColumnValue);
+        if (track != null) {
+
+            if (handler != null) {
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        onTrackUpdated(track);
+                    }
+                });
+
+
+            } else {
+                onTrackUpdated(track);
+            }
+        } else {
+            throw new IllegalArgumentException("Couldn't find track with column " + whereColumn + ", value " + whereColumnValue);
+        }
+
+        return true;
+    }
+
+    private void onTrackUpdated(Track track) {
+        //Track updated, so alerting the listeners
+        if (getApp().getTrackListener() != null) {
+            getApp().getTrackListener().onTrackUpdated(track);
+        }
+
+        if (track.getPlaylistId() != null && getApp().getPlaylistListener() != null) {
+
+            //The track is from a playlist and we've playlist track listener
+            getApp().getPlaylistListener().onPlaylistUpdated(track.getPlaylistId());
+
+        }
+    }
+
     @Override
-    public boolean update(Track track) {
+    public boolean update(final Track track, @Nullable Handler handler) {
         final ContentValues cv = new ContentValues(1);
         cv.put(COLUMN_DOWNLOAD_ID, track.getDownloadId());
         cv.put(COLUMN_ABS_FILE_PATH, track.getFile().getAbsolutePath());
 
-        return this.getWritableDatabase().update(TABLE_NAME_TRACKS, cv, COLUMN_ID + " = ?", new String[]{track.getId()}) > 0;
+        final boolean isUpdated = this.getWritableDatabase().update(TABLE_NAME_TRACKS, cv, COLUMN_ID + " = ?", new String[]{track.getId()}) > 0;
+
+        if (!isUpdated) {
+            throw new IllegalArgumentException("Failed to update the track");
+        }
+
+        if (handler != null) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    //Track updated, so alerting the listeners
+                    if (getApp().getTrackListener() != null) {
+                        getApp().getTrackListener().onTrackUpdated(track);
+                    }
+
+                    if (track.getPlaylistId() != null && getApp().getPlaylistListener() != null) {
+
+                        //The track is from a playlist and we've playlist track listener
+                        getApp().getPlaylistListener().onPlaylistUpdated(track.getPlaylistId());
+
+                    }
+                }
+            });
+        }
+
+        return true;
     }
 }

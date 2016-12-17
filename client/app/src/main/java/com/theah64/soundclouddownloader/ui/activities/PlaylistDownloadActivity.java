@@ -73,10 +73,12 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
         final Playlists playlistsTable = Playlists.getInstance(this);
 
+
         if (playlist.getId() == null) {
-            final String playlistId = String.valueOf(playlistsTable.add(playlist));
+            final String playlistId = String.valueOf(playlistsTable.add(playlist, null));
             playlist.setId(playlistId);
         }
+
 
         trackList = new ArrayList<>();
         try {
@@ -107,12 +109,12 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
                 if (dbTrackId != null) {
                     //Track exist in db,so updating playlist id
-                    if (!tracksTable.update(Tracks.COLUMN_ID, dbTrackId, Tracks.COLUMN_PLAYLIST_ID, playlist.getId())) {
+                    if (!tracksTable.update(Tracks.COLUMN_ID, dbTrackId, Tracks.COLUMN_PLAYLIST_ID, playlist.getId(), null)) {
                         throw new IllegalArgumentException("Failed to update playlist id");
                     }
 
                 } else {
-                    dbTrackId = String.valueOf(tracksTable.add(newTrack));
+                    dbTrackId = String.valueOf(tracksTable.add(newTrack, null));
                 }
 
 
@@ -185,7 +187,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
             if ((track.getFile() == null || !track.getFile().exists()) && track.isChecked()) {
                 //Starting download
                 final long downloadId = DownloadUtils.addToDownloadQueue(this, track);
-                if (!tracksTable.update(Tracks.COLUMN_ID, track.getId(), Tracks.COLUMN_DOWNLOAD_ID, String.valueOf(downloadId))) {
+                if (!tracksTable.update(Tracks.COLUMN_ID, track.getId(), Tracks.COLUMN_DOWNLOAD_ID, String.valueOf(downloadId), null)) {
                     throw new IllegalArgumentException("Failed to set download id");
                 }
 

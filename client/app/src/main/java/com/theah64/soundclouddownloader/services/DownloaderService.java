@@ -50,6 +50,7 @@ public class DownloaderService extends Service {
     private int notifId;
     private NotificationManager nm;
     private NotificationCompat.Builder apiNotification;
+    private App app;
 
     public DownloaderService() {
     }
@@ -159,6 +160,7 @@ public class DownloaderService extends Service {
 
                                     final File trackFile = new File(absFilePath);
 
+
                                     if (!trackFile.exists()) {
 
                                         final String username = joTrack.getString(Tracks.COLUMN_USERNAME);
@@ -170,12 +172,15 @@ public class DownloaderService extends Service {
                                         final long downloadId = DownloadUtils.addToDownloadQueue(DownloaderService.this, track);
                                         track.setDownloadId(String.valueOf(downloadId));
 
-                                        final String trackId = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, soundCloudUrl, Tracks.COLUMN_ID);
 
+                                        app = (App) getApplicationContext();
+
+                                        final String trackId = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, soundCloudUrl, Tracks.COLUMN_ID);
 
                                         if (trackId == null) {
                                             //Adding track to database -
-                                            tracksTable.add(track);
+                                            tracksTable.add(track, handler);
+
                                         } else {
 
                                             track.setId(trackId);
@@ -183,13 +188,16 @@ public class DownloaderService extends Service {
                                             track.setFile(trackFile);
 
                                             //Track exist so just updating the download id.
-                                            tracksTable.update(track);
+                                            tracksTable.update(track, handler);
                                         }
 
                                         nm.cancel(notifId);
                                         showToast("Download started");
 
                                     } else {
+
+                                        tracksTable.update(Tracks.COLUMN_SOUNDCLOUD_URL, soundCloudUrl, Tracks.COLUMN_IS_DOWNLOADED, Tracks.TRUE, handler);
+                                        tracksTable.update(Tracks.COLUMN_SOUNDCLOUD_URL, soundCloudUrl, Tracks.COLUMN_ABS_FILE_PATH, absFilePath, handler);
                                         showErrorNotification("Existing track :" + title + "", absFilePath);
                                     }
 

@@ -2,7 +2,6 @@ package com.theah64.soundclouddownloader.utils;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -12,8 +11,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.theah64.soundclouddownloader.R;
+import com.theah64.soundclouddownloader.interfaces.PlaylistListener;
 import com.theah64.soundclouddownloader.interfaces.TrackListener;
-import com.theah64.soundclouddownloader.ui.activities.MainActivity;
 
 /**
  * Created by theapache64 on 9/12/16.
@@ -61,21 +60,22 @@ public class App extends Application {
         initImageLoader(this);
     }
 
-    private TrackListener mainTrackListener = null, playlistTrackListener;
+    private TrackListener trackListener = null;
+    private PlaylistListener playlistListener = null;
 
-    public TrackListener getMainTrackListener() {
-        return mainTrackListener;
+    public TrackListener getTrackListener() {
+        return trackListener;
     }
 
-    public void setMainTrackListener(TrackListener mainTrackListener) {
-        this.mainTrackListener = mainTrackListener;
+    public void setTrackListener(TrackListener trackListener) {
+        this.trackListener = trackListener;
     }
 
-    public TrackListener getPlaylistTrackListener() {
-        return playlistTrackListener;
+    public PlaylistListener getPlaylistListener() {
+        return playlistListener;
     }
 
-    public void setPlaylistTrackListener(TrackListener playlistTrackListener) {
-        this.playlistTrackListener = playlistTrackListener;
+    public void setPlaylistListener(PlaylistListener playlistListener) {
+        this.playlistListener = playlistListener;
     }
 }

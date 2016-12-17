@@ -13,6 +13,9 @@ import android.view.View;
 
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.adapters.TracksAndPlaylistsViewPagerAdapter;
+import com.theah64.soundclouddownloader.database.Playlists;
+import com.theah64.soundclouddownloader.database.Tracks;
+import com.theah64.soundclouddownloader.interfaces.MainActivityCallback;
 import com.theah64.soundclouddownloader.interfaces.TrackListener;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.services.ClipboardWatchIgniterService;
@@ -24,19 +27,20 @@ import com.theah64.soundclouddownloader.utils.CommonUtils;
 import com.theah64.soundclouddownloader.utils.DownloadIgniter;
 import com.theah64.soundclouddownloader.utils.InputDialogUtils;
 
+import java.util.Locale;
+
 /**
  * TRACK MODEL : https://soundcloud.com/moxet-khan/kuch-khaas-khumariyaan-2-0
  * PLAYLIST MODEL : https://soundcloud.com/abdulwahab849/sets/more
  */
-public class MainActivity extends AppCompatActivity implements TrackListener {
+public class MainActivity extends AppCompatActivity implements MainActivityCallback {
 
 
     private TracksFragment tracksFragment = TracksFragment.getNewInstance(null);
     private PlaylistsFragment playlistsFragment = new PlaylistsFragment();
 
     private static final String X = MainActivity.class.getSimpleName();
-
-    protected App app;
+    private TabLayout.Tab tracksTab, playlistsTab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements TrackListener {
         vpTracksAndPlaylists.setAdapter(new TracksAndPlaylistsViewPagerAdapter(getSupportFragmentManager(), this, tracksFragment, playlistsFragment));
 
         final TabLayout tlTracksAndPlaylists = (TabLayout) findViewById(R.id.tlTracksAndPlaylists);
+        tracksTab = tlTracksAndPlaylists.getTabAt(0);
+        playlistsTab = tlTracksAndPlaylists.getTabAt(1);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             tlTracksAndPlaylists.setTabTextColors(getColor(R.color.black_800), getColor(R.color.deep_orange_500));
@@ -83,32 +89,22 @@ public class MainActivity extends AppCompatActivity implements TrackListener {
 
             }
         });
-
-        //Adding download listener
-        app = (App) this.getApplicationContext();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        app.setMainTrackListener(this);
+    public void onRemovePlaylistTrack(String playlistId) {
+        playlistsFragment.onPlaylistUpdated(playlistId);
+        updateTabTitle();
     }
 
     @Override
-    protected void onDestroy() {
-        final TrackListener trackListener = app.getMainTrackListener();
-        if (this.equals(trackListener)) {
-            app.setMainTrackListener(null);
-        }
-
-        super.onDestroy();
+    public void onRemovePlaylist(String playlistId) {
+        tracksFragment.onPlaylistRemoved(playlistId);
+        updateTabTitle();
     }
 
-    @Override
-    public void onTrackUpdated(final Track track) {
-        Log.d(X, "MainActivity says: TRACK DOWNLOADED " + track);
-
-        playlistsFragment.onTrackUpdated(track);
-        tracksFragment.onTrackUpdated(track);
+    private void updateTabTitle() {
+        tracksTab.setText(String.format(Locale.getDefault(), "TRACKS (%d)", tracksFragment.getTracksCount()));
+        playlistsTab.setText(String.format(Locale.getDefault(), "PLAYLISTS (%d)", playlistsFragment.getPlaylistsCount()));
     }
 }
