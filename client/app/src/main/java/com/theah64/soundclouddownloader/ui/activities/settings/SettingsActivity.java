@@ -3,6 +3,7 @@ package com.theah64.soundclouddownloader.ui.activities.settings;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -12,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.ui.activities.BaseAppCompatActivity;
@@ -124,13 +126,15 @@ public class SettingsActivity extends BaseAppCompatActivity {
 
             switch (preference.getKey()) {
 
-                /*
-                TODO
                 case KEY_STORAGE_LOCATION:
-                    final Intent storageIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                    storageIntent.setType("file*//*");
-                    startActivityForResult(Intent.createChooser(storageIntent, getString(R.string.Choose_file_browser)), RQ_CODE_STORAGE_LOCATION);
-                    return true;*/
+                    final Intent storageIntent = new Intent(Intent.ACTION_VIEW);
+                    storageIntent.setDataAndType(Uri.parse(preference.getSummary().toString()), "resource/folder");
+                    if (storageIntent.resolveActivityInfo(getActivity().getPackageManager(), 0) != null) {
+                        startActivity(storageIntent);
+                    } else {
+                        Toast.makeText(getActivity(), R.string.No_file_browser_found, Toast.LENGTH_SHORT).show();
+                    }
+                    return true;
 
                 default:
                     //Log.d(X, "No custom management found for recently clicked preference");
