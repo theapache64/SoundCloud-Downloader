@@ -6,13 +6,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.theah64.soundclouddownloader.R;
+import com.theah64.soundclouddownloader.interfaces.MainActivityCallback;
 import com.theah64.soundclouddownloader.interfaces.TrackListener;
 import com.theah64.soundclouddownloader.models.Playlist;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.ui.fragments.TracksFragment;
 import com.theah64.soundclouddownloader.utils.App;
 
-public class PlaylistTracksActivity extends BaseAppCompatActivity {
+public class PlaylistTracksActivity extends BaseAppCompatActivity implements MainActivityCallback {
 
     private static final String X = PlaylistTracksActivity.class.getSimpleName();
 
@@ -37,4 +38,13 @@ public class PlaylistTracksActivity extends BaseAppCompatActivity {
     }
 
 
+    @Override
+    public void onRemovePlaylistTrack(String playlistId) {
+
+    }
+
+    @Override
+    public void onRemovePlaylist(String playlistId) {
+
+    }
 }

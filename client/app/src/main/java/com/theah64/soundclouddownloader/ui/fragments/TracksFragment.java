@@ -21,6 +21,7 @@ import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.adapters.ITSAdapter;
 import com.theah64.soundclouddownloader.database.Playlists;
 import com.theah64.soundclouddownloader.database.Tracks;
+import com.theah64.soundclouddownloader.interfaces.MainActivityCallback;
 import com.theah64.soundclouddownloader.interfaces.TrackListener;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.services.DownloaderService;
@@ -28,6 +29,7 @@ import com.theah64.soundclouddownloader.utils.App;
 import com.theah64.soundclouddownloader.utils.CommonUtils;
 import com.theah64.soundclouddownloader.widgets.ThemedSnackbar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,6 +46,8 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
     private int position;
     private View layout;
     private App app;
+    private MainActivityCallback callback;
+
 
     public TracksFragment() {
         // Required empty public constructor
@@ -53,6 +57,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
     public void onAttach(Context context) {
         super.onAttach(context);
         app = (App) context.getApplicationContext();
+        callback = (MainActivityCallback) getActivity();
     }
 
     @Override
@@ -205,6 +210,10 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
                                     layout.findViewById(R.id.llNoTracksFound).setVisibility(View.VISIBLE);
                                 }
 
+                                if (track.getPlaylistId() != null) {
+                                    callback.onRemovePlaylistTrack(track.getPlaylistId());
+                                }
+
                             }
                         }).show();
 
@@ -245,12 +254,22 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
 
     @Override
     public void onNewTrack(Track newTrack) {
+        if (trackList == null) {
+            trackList = new ArrayList<>();
+        }
 
+        if (trackList.isEmpty()) {
+            //showing no tracks downloaded text view.
+            layout.findViewById(R.id.llNoTracksFound).setVisibility(View.GONE);
+        }
+
+        trackList.add(0, newTrack);
+        itsAdapter.notifyItemInserted(0);
     }
 
     @Override
     public void onTrackRemoved(Track removedTrack) {
-
+        throw new IllegalArgumentException("Not implemented");
     }
 
     @Override
@@ -274,6 +293,8 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
     }
 
     public void onPlaylistRemoved(String removedPlaylistId) {
+
+
         for (int i = 0; i < trackList.size(); i++) {
             final Track track = trackList.get(i);
 

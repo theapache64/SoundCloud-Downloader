@@ -21,6 +21,7 @@ import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.adapters.ITSAdapter;
 import com.theah64.soundclouddownloader.database.Playlists;
 import com.theah64.soundclouddownloader.database.Tracks;
+import com.theah64.soundclouddownloader.interfaces.MainActivityCallback;
 import com.theah64.soundclouddownloader.interfaces.PlaylistListener;
 import com.theah64.soundclouddownloader.interfaces.TrackListener;
 import com.theah64.soundclouddownloader.models.Playlist;
@@ -48,6 +49,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
     private int currentPosition;
     private View layout;
     private App app;
+    private MainActivityCallback callback;
 
     public PlaylistsFragment() {
         // Required empty public constructor
@@ -57,6 +59,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
     public void onAttach(Context context) {
         super.onAttach(context);
         app = (App) context.getApplicationContext();
+        callback = (MainActivityCallback) getActivity();
     }
 
 
@@ -211,6 +214,8 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
                                     layout.findViewById(R.id.llNoPlaylistsFound).setVisibility(View.VISIBLE);
                                 }
 
+                                callback.onRemovePlaylist(currentPlaylist.getId());
+
                             }
                         })
                         .show();
@@ -248,7 +253,12 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
 
     @Override
     public void onNewPlaylist(Playlist playlist) {
+        if (playlists == null) {
+            playlists = new ArrayList<>();
+        }
 
+        playlists.add(0, playlist);
+        itsAdapter.notifyItemInserted(0);
     }
 
     public int getPlaylistsCount() {

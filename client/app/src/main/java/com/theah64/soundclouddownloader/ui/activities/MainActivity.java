@@ -61,8 +61,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallb
         vpTracksAndPlaylists.setAdapter(new TracksAndPlaylistsViewPagerAdapter(getSupportFragmentManager(), this, tracksFragment, playlistsFragment));
 
         final TabLayout tlTracksAndPlaylists = (TabLayout) findViewById(R.id.tlTracksAndPlaylists);
-        tracksTab = tlTracksAndPlaylists.getTabAt(0);
-        playlistsTab = tlTracksAndPlaylists.getTabAt(1);
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             tlTracksAndPlaylists.setTabTextColors(getColor(R.color.black_800), getColor(R.color.deep_orange_500));
@@ -89,6 +88,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallb
 
             }
         });
+
+        tracksTab = tlTracksAndPlaylists.getTabAt(0);
+        playlistsTab = tlTracksAndPlaylists.getTabAt(1);
     }
 
     @Override

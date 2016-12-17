@@ -121,7 +121,7 @@ public class Tracks extends BaseTable<Track> {
                 final String username = c.getString(c.getColumnIndex(COLUMN_USERNAME));
 
 
-                trackList.add(new Track(id, title, username, null, artworkUrl, downloadId, soundCloudUrl, null, false, isDownloaded, absoluteFilePath != null ? new File(absoluteFilePath) : null, duration));
+                trackList.add(new Track(id, title, username, null, artworkUrl, downloadId, soundCloudUrl, playlistId, false, isDownloaded, absoluteFilePath != null ? new File(absoluteFilePath) : null, duration));
             } while (c.moveToNext());
         }
 

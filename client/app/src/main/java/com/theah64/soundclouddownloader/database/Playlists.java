@@ -67,10 +67,12 @@ public class Playlists extends BaseTable<Playlist> {
                 }
             });
         } else {
+
             if (getApp().getPlaylistListener() != null) {
                 playlist.setId(String.valueOf(playlistId));
                 getApp().getPlaylistListener().onNewPlaylist(playlist);
             }
+
         }
 
         return playlistId;
