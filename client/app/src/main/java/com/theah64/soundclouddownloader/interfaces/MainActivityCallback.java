@@ -6,5 +6,10 @@ package com.theah64.soundclouddownloader.interfaces;
 
 public interface MainActivityCallback {
     void onRemovePlaylistTrack(String playlistId);
+
     void onRemovePlaylist(String playlistId);
+
+    void setTabTracksCount(int count);
+
+    void setTabPlaylistsCount(int count);
 }

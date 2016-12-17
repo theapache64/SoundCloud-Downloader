@@ -85,18 +85,11 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
         final String playlistId = getArguments().getString(Playlists.COLUMN_ID);
         tracksTable = Tracks.getInstance(getActivity());
 
-        Log.d(X, "TracksFragment resumed");
-
         trackList = tracksTable.getAll(playlistId);
 
         if (trackList != null) {
 
-            itsAdapter = new ITSAdapter(trackList, this);
-            final RecyclerView rvTracks = (RecyclerView) layout.findViewById(R.id.rvTracks);
-            rvTracks.setLayoutManager(new LinearLayoutManager(getActivity()));
-            rvTracks.setAdapter(itsAdapter);
-
-            layout.findViewById(R.id.llNoTracksFound).setVisibility(View.GONE);
+            initAdapter();
 
         } else {
 
@@ -115,6 +108,15 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
         });
 
         return layout;
+    }
+
+    private void initAdapter() {
+        itsAdapter = new ITSAdapter(trackList, this);
+        final RecyclerView rvTracks = (RecyclerView) layout.findViewById(R.id.rvTracks);
+        rvTracks.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rvTracks.setAdapter(itsAdapter);
+
+        layout.findViewById(R.id.llNoTracksFound).setVisibility(View.GONE);
     }
 
     @Override
@@ -214,6 +216,9 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
                                     callback.onRemovePlaylistTrack(track.getPlaylistId());
                                 }
 
+                                //Updating tabcount
+                                callback.setTabTracksCount(trackList.size());
+
                             }
                         }).show();
 
@@ -254,8 +259,10 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
 
     @Override
     public void onNewTrack(Track newTrack) {
+
         if (trackList == null) {
             trackList = new ArrayList<>();
+            initAdapter();
         }
 
         if (trackList.isEmpty()) {
@@ -265,6 +272,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
 
         trackList.add(0, newTrack);
         itsAdapter.notifyItemInserted(0);
+        callback.setTabTracksCount(trackList.size());
     }
 
     @Override
@@ -294,13 +302,21 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
 
     public void onPlaylistRemoved(String removedPlaylistId) {
 
+        Log.d(X, "Total tracks: " + trackList.size());
+        Log.d(X, "Removed playlist ID " + removedPlaylistId);
+
         final List<Track> unDeletedTracks = new ArrayList<>();
 
         for (final Track track : trackList) {
+
+            Log.d(X, "CurrentPlaylistId: " + track.getPlaylistId());
+
             if (track.getPlaylistId() == null || !track.getPlaylistId().equals(removedPlaylistId)) {
                 unDeletedTracks.add(track);
             }
         }
+
+        Log.d(X, "Remaining track size : " + unDeletedTracks.size());
 
         trackList.clear();
         trackList.addAll(unDeletedTracks);

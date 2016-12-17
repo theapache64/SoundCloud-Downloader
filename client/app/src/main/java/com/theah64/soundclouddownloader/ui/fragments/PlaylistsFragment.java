@@ -92,12 +92,8 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
         playlists = playlistsTable.getAll();
 
         if (playlists != null) {
-            RecyclerView rvPlaylists = (RecyclerView) layout.findViewById(R.id.rvPlaylists);
-            rvPlaylists.setLayoutManager(new LinearLayoutManager(getActivity()));
-            itsAdapter = new ITSAdapter(playlists, this);
-            rvPlaylists.setAdapter(itsAdapter);
+            initAdapter();
 
-            layout.findViewById(R.id.llNoPlaylistsFound).setVisibility(View.GONE);
         } else {
 
             //showing no tracks downloaded text view.
@@ -112,6 +108,14 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
 
 
         return layout;
+    }
+
+    private void initAdapter() {
+        RecyclerView rvPlaylists = (RecyclerView) layout.findViewById(R.id.rvPlaylists);
+        rvPlaylists.setLayoutManager(new LinearLayoutManager(getActivity()));
+        itsAdapter = new ITSAdapter(playlists, this);
+        rvPlaylists.setAdapter(itsAdapter);
+        layout.findViewById(R.id.llNoPlaylistsFound).setVisibility(View.GONE);
     }
 
 
@@ -214,8 +218,8 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
                                     layout.findViewById(R.id.llNoPlaylistsFound).setVisibility(View.VISIBLE);
                                 }
 
-
                                 callback.onRemovePlaylist(currentPlaylist.getId());
+                                callback.setTabPlaylistsCount(playlists.size());
 
                             }
                         })
@@ -255,7 +259,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
     @Override
     public void onNewPlaylist(Playlist playlist) {
         if (playlists == null) {
-            playlists = new ArrayList<>();
+            initAdapter();
         }
 
         playlists.add(0, playlist);

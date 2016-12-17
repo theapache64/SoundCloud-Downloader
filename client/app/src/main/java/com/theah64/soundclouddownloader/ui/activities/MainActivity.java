@@ -105,8 +105,18 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallb
         updateTabTitle();
     }
 
+    @Override
+    public void setTabTracksCount(int count) {
+        tracksTab.setText(String.format(Locale.getDefault(), "TRACKS (%d)", count));
+    }
+
+    @Override
+    public void setTabPlaylistsCount(int count) {
+        playlistsTab.setText(String.format(Locale.getDefault(), "PLAYLISTS (%d)", count));
+    }
+
     private void updateTabTitle() {
-        tracksTab.setText(String.format(Locale.getDefault(), "TRACKS (%d)", tracksFragment.getTracksCount()));
-        playlistsTab.setText(String.format(Locale.getDefault(), "PLAYLISTS (%d)", playlistsFragment.getPlaylistsCount()));
+        setTabTracksCount(tracksFragment.getTracksCount());
+        setTabPlaylistsCount(playlistsFragment.getPlaylistsCount());
     }
 }

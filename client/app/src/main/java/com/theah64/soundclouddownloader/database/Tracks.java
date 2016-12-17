@@ -102,19 +102,19 @@ public class Tracks extends BaseTable<Track> {
     public List<Track> getAll(@Nullable String playlistId) {
         List<Track> trackList = null;
 
-        final Cursor c = this.getReadableDatabase().query(TABLE_NAME_TRACKS, new String[]{COLUMN_ID, COLUMN_PLAYLIST_ID, COLUMN_USERNAME, COLUMN_DURATION, COLUMN_DOWNLOAD_ID, COLUMN_ARTWORK_URL, COLUMN_TITLE, COLUMN_DOWNLOAD_ID, COLUMN_SOUNDCLOUD_URL, COLUMN_ABS_FILE_PATH, COLUMN_IS_DOWNLOADED}, playlistId != null ? "playlist_id = ?" :
-                        null, playlistId != null ? new String[]{playlistId} : null
-                , null, null, COLUMN_ID + " DESC");
+        final String query = String.format("SELECT id,title, playlist_id, download_id,artwork_url, abs_file_path,soundcloud_url,is_downloaded, duration,username FROM tracks %s ORDER BY id DESC;",
+                playlistId != null ? "WHERE playlist_id = ?" : "");
+
+        Log.d(X, "Query : " + query);
+
+        final Cursor c = this.getReadableDatabase().rawQuery(query, playlistId != null ? new String[]{playlistId} : null);
         if (c != null && c.moveToFirst()) {
 
             trackList = new ArrayList<>(c.getCount());
 
             do {
                 final String id = c.getString(c.getColumnIndex(COLUMN_ID));
-                if (playlistId == null) {
-                    playlistId = c.getString(c.getColumnIndex(COLUMN_PLAYLIST_ID));
-                }
-
+                final String playlistId2 = c.getString(c.getColumnIndex(COLUMN_PLAYLIST_ID));
                 final String downloadId = c.getString(c.getColumnIndex(COLUMN_DOWNLOAD_ID));
                 final String artworkUrl = c.getString(c.getColumnIndex(COLUMN_ARTWORK_URL));
                 final String title = c.getString(c.getColumnIndex(COLUMN_TITLE));
@@ -124,8 +124,9 @@ public class Tracks extends BaseTable<Track> {
                 final long duration = c.getLong(c.getColumnIndex(COLUMN_DURATION));
                 final String username = c.getString(c.getColumnIndex(COLUMN_USERNAME));
 
+                Log.d(X, playlistId2 + "->" + title);
 
-                trackList.add(new Track(id, title, username, null, artworkUrl, downloadId, soundCloudUrl, playlistId, false, isDownloaded, absoluteFilePath != null ? new File(absoluteFilePath) : null, duration));
+                trackList.add(new Track(id, title, username, null, artworkUrl, downloadId, soundCloudUrl, playlistId2, false, isDownloaded, absoluteFilePath != null ? new File(absoluteFilePath) : null, duration));
             } while (c.moveToNext());
         }
 

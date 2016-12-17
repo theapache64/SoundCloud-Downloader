@@ -47,4 +47,14 @@ public class PlaylistTracksActivity extends BaseAppCompatActivity implements Mai
     public void onRemovePlaylist(String playlistId) {
 
     }
+
+    @Override
+    public void setTabTracksCount(int count) {
+
+    }
+
+    @Override
+    public void setTabPlaylistsCount(int count) {
+
+    }
 }
