@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.theah64.soundclouddownloader.models.Track;
 
 import java.io.File;
@@ -170,20 +171,22 @@ public class Tracks extends BaseTable<Track> {
 
     public boolean update(String whereColumn, String whereColumnValue, String columnToUpdate, String valueToUpdate, @Nullable Handler handler) {
 
-        super.update(whereColumn, whereColumnValue, columnToUpdate, valueToUpdate);
+        final boolean isUpdated = super.update(whereColumn, whereColumnValue, columnToUpdate, valueToUpdate);
+
+        if (!isUpdated) {
+            FirebaseCrash.log(String.format("whereColumn:%s whereColumnValue:%s columnToUpdate:%s valueToUpdate:%s", whereColumn, whereColumnValue, columnToUpdate, valueToUpdate));
+        }
+
         final Track track = get(whereColumn, whereColumnValue);
         if (track != null) {
 
             if (handler != null) {
-
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
                         onTrackUpdated(track);
                     }
                 });
-
-
             } else {
                 onTrackUpdated(track);
             }
