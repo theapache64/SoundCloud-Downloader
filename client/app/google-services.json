@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "454253955084",
+    "firebase_url": "https://soundclouddownloader-18653.firebaseio.com",
+    "project_id": "soundclouddownloader-18653",
+    "storage_bucket": "soundclouddownloader-18653.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:454253955084:android:804de5ebfa8ba704",
+        "android_client_info": {
+          "package_name": "com.theah64.soundclouddownloader"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "454253955084-4q97p9jr4hnmda1o11vfb0ktlv6erslj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.theah64.soundclouddownloader",
+            "certificate_hash": "243F99B5BBF8E02A8883BDC245CF61B8A6155C36"
+          }
+        },
+        {
+          "client_id": "454253955084-eeuk0kse299uqhe2vhgf5i2skvjfa09v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhCoabGckwuLK0myVE3pQ95UUeLsDvUvo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "454253955084-eeuk0kse299uqhe2vhgf5i2skvjfa09v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -15,38 +15,12 @@ import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.interfaces.PlaylistListener;
 import com.theah64.soundclouddownloader.interfaces.TrackListener;
 
-import org.acra.ACRA;
-import org.acra.ReportField;
-import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
-import org.acra.sender.HttpSender;
 
 import java.io.File;
 
 /**
  * Created by theapache64 on 9/12/16.
- * Key:thessoccauldastaisillype
- * Password:a5d37fe917104a40f338d00abf8bc54abc4f2f75
  */
-
-@ReportsCrashes(
-        formUri = "https://soundclouddownloader.cloudant.com/acra-soundclouddownloader/_design/acra-storage/_update/report",
-        reportType = HttpSender.Type.JSON,
-        httpMethod = HttpSender.Method.POST,
-        formUriBasicAuthLogin = "thessoccauldastaisillype",
-        formUriBasicAuthPassword = "a5d37fe917104a40f338d00abf8bc54abc4f2f75",
-        customReportContent = {
-                ReportField.APP_VERSION_CODE,
-                ReportField.APP_VERSION_NAME,
-                ReportField.ANDROID_VERSION,
-                ReportField.PACKAGE_NAME,
-                ReportField.REPORT_ID,
-                ReportField.BUILD,
-                ReportField.STACK_TRACE
-        },
-        mode = ReportingInteractionMode.TOAST,
-        resToastText = R.string.Application_crashed
-)
 public class App extends Application {
 
     public static final boolean IS_DEBUG_MODE = false;
@@ -87,12 +61,6 @@ public class App extends Application {
         return DEFAULT_STORAGE_LOCATION;
     }
 
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        ACRA.init(this);
-    }
 
     @Override
     public void onCreate() {

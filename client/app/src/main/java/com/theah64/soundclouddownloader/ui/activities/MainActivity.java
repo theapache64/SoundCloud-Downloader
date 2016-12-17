@@ -56,6 +56,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallb
             startService(new Intent(this, ClipboardWatchIgniterService.class));
         }
 
+
+        String data = null;
+        data.length();
+
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
