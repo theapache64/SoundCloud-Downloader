@@ -167,13 +167,18 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
                     }
                 }
 
-                final Intent shareTracksIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-                shareTracksIntent.putExtra(Intent.EXTRA_TEXT, String.format("Downloaded via SoundCloud Downloader (%s)  Playlist: %s ", App.STORE_URL, currentPlaylist.getTitle())); //TOOD: Modify sub
-                shareTracksIntent.setType("audio/*");
-                shareTracksIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, existingTracks);
-                startActivity(shareTracksIntent);
+                if (!existingTracks.isEmpty()) {
+                    final Intent shareTracksIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    shareTracksIntent.putExtra(Intent.EXTRA_TEXT, String.format("Downloaded via SoundCloud Downloader (%s)  Playlist: %s ", App.STORE_URL, currentPlaylist.getTitle())); //TOOD: Modify sub
+                    shareTracksIntent.setType("audio/*");
+                    shareTracksIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, existingTracks);
+                    startActivity(shareTracksIntent);
 
-                Toast.makeText(getActivity(), getResources().getQuantityString(R.plurals.sharing_d_tracks, existingTracks.size(), existingTracks.size()), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getQuantityString(R.plurals.sharing_d_tracks, existingTracks.size(), existingTracks.size()), Toast.LENGTH_SHORT).show();
+
+                } else {
+                    Toast.makeText(getActivity(), R.string.No_tracks_downloaded, Toast.LENGTH_SHORT).show();
+                }
 
                 return true;
 
