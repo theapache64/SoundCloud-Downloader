@@ -60,10 +60,10 @@ public class SoundCloudDownloader {
     private static String getSoundCloudDownloadUrl(String trackId) {
 
 
-        if (true) {
+        /*if (true) {
             //TODO: Until production
             return (Connection.isDebugMode() ? "http://192.168.43.234:8080/" : "http://theapache64.xyz:8080/scd/") + "jaan_kesi.mp3";
-        }
+        }*/
 
         final String trackDownloadUrl = String.format(STREAM_TRACK_URL_FORMAT, trackId);
         final String downloadTrackResp = new NetworkHelper(trackDownloadUrl).getResponse();
