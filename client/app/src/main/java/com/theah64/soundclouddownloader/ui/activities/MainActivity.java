@@ -96,13 +96,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallb
     @Override
     public void onRemovePlaylistTrack(String playlistId) {
         playlistsFragment.onPlaylistUpdated(playlistId);
-        updateTabTitle();
     }
 
     @Override
     public void onRemovePlaylist(String playlistId) {
         tracksFragment.onPlaylistRemoved(playlistId);
-        updateTabTitle();
     }
 
     @Override
@@ -113,10 +111,5 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallb
     @Override
     public void setTabPlaylistsCount(int count) {
         playlistsTab.setText(String.format(Locale.getDefault(), "PLAYLISTS (%d)", count));
-    }
-
-    private void updateTabTitle() {
-        setTabTracksCount(tracksFragment.getTracksCount());
-        setTabPlaylistsCount(playlistsFragment.getPlaylistsCount());
     }
 }

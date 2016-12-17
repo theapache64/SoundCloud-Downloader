@@ -50,6 +50,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
     private View layout;
     private App app;
     private MainActivityCallback callback;
+    private RecyclerView rvPlaylists;
 
     public PlaylistsFragment() {
         // Required empty public constructor
@@ -111,7 +112,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
     }
 
     private void initAdapter() {
-        RecyclerView rvPlaylists = (RecyclerView) layout.findViewById(R.id.rvPlaylists);
+        rvPlaylists = (RecyclerView) layout.findViewById(R.id.rvPlaylists);
         rvPlaylists.setLayoutManager(new LinearLayoutManager(getActivity()));
         itsAdapter = new ITSAdapter(playlists, this);
         rvPlaylists.setAdapter(itsAdapter);
@@ -225,7 +226,6 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
 
                                 callback.onRemovePlaylist(currentPlaylist.getId());
                                 callback.setTabPlaylistsCount(playlists.size());
-
                             }
                         })
                         .show();
@@ -267,8 +267,16 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
             initAdapter();
         }
 
+
+        if (playlists.isEmpty()) {
+            //showing no tracks downloaded text view.
+            layout.findViewById(R.id.llNoPlaylistsFound).setVisibility(View.VISIBLE);
+        }
+
         playlists.add(0, playlist);
         itsAdapter.notifyItemInserted(0);
+        rvPlaylists.scrollToPosition(0);
+        callback.setTabPlaylistsCount(playlists.size());
     }
 
     public int getPlaylistsCount() {

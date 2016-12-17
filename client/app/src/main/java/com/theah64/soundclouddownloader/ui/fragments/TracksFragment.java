@@ -47,6 +47,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
     private View layout;
     private App app;
     private MainActivityCallback callback;
+    private RecyclerView rvTracks;
 
 
     public TracksFragment() {
@@ -112,7 +113,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
 
     private void initAdapter() {
         itsAdapter = new ITSAdapter(trackList, this);
-        final RecyclerView rvTracks = (RecyclerView) layout.findViewById(R.id.rvTracks);
+        rvTracks = (RecyclerView) layout.findViewById(R.id.rvTracks);
         rvTracks.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvTracks.setAdapter(itsAdapter);
 
@@ -267,12 +268,13 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
 
         if (trackList.isEmpty()) {
             //showing no tracks downloaded text view.
-            layout.findViewById(R.id.llNoTracksFound).setVisibility(View.GONE);
+            layout.findViewById(R.id.llNoTracksFound).setVisibility(View.VISIBLE);
         }
 
         trackList.add(0, newTrack);
         itsAdapter.notifyItemInserted(0);
         callback.setTabTracksCount(trackList.size());
+        rvTracks.scrollToPosition(0);
     }
 
     @Override
@@ -325,6 +327,8 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
         if (trackList.isEmpty()) {
             layout.findViewById(R.id.llNoTracksFound).setVisibility(View.GONE);
         }
+
+        callback.setTabTracksCount(trackList.size());
     }
 
     public int getTracksCount() {
