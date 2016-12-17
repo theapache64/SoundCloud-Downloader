@@ -53,7 +53,7 @@ public class ClipboardWatchIgniterService extends Service implements ClipboardMa
             final boolean isAPlaylist = soundCloudUrl.matches(SOUND_CLOUD_PLAYLIST_REGEX);
 
             final int notifId = Random.getRandomInt();
-            final String title = getString(R.string.Do_you_want_to_download_this_s, isAPlaylist ? "Playlist" : "Track");
+            final String title = getString(R.string.Do_you_want_to_download_this_s, isAPlaylist ? "playlist" : "track");
 
             Log.d(X, "Notification id : " + notifId);
 
