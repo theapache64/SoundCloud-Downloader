@@ -72,13 +72,11 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         actionBar.setTitle(playlist.getTitle());
 
         final Playlists playlistsTable = Playlists.getInstance(this);
-
-
-        if (playlist.getId() == null) {
-            final String playlistId = String.valueOf(playlistsTable.add(playlist, null));
+        String playlistId = playlistsTable.get(Playlists.COLUMN_SOUNDCLOUD_URL, playlist.getSoundCloudUrl(), Playlists.COLUMN_ID);
+        if (playlistId == null) {
+            playlistId = String.valueOf(playlistsTable.add(playlist, null));
             playlist.setId(playlistId);
         }
-
 
         trackList = new ArrayList<>();
         try {
