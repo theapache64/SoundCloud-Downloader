@@ -2,9 +2,12 @@ package com.theah64.soundclouddownloader.ui.activities;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBar;
@@ -23,6 +26,7 @@ import com.theah64.soundclouddownloader.database.Playlists;
 import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.Playlist;
 import com.theah64.soundclouddownloader.models.Track;
+import com.theah64.soundclouddownloader.ui.activities.settings.SettingsActivity;
 import com.theah64.soundclouddownloader.utils.App;
 import com.theah64.soundclouddownloader.utils.DownloadUtils;
 import com.theah64.soundclouddownloader.utils.NetworkUtils;
@@ -83,6 +87,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
             final JSONArray jaTracks = new JSONArray(getStringOrThrow(KEY_TRACKS));
 
             tracksTable = Tracks.getInstance(this);
+            final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 
             for (int i = 0; i < jaTracks.length(); i++) {
 
@@ -101,7 +106,8 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                 final String username = joTrack.getString(Tracks.COLUMN_USERNAME);
                 final long duration = joTrack.getLong(Tracks.COLUMN_DURATION);
 
-                final String absoluteFilePath = String.format("%s/%s/%s/%s", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), App.FOLDER_NAME, playlist.getSanitizedTitle(), fileName);
+                final String baseStorageLocation = pref.getString(SettingsActivity.SettingsFragment.KEY_STORAGE_LOCATION, App.getDefaultStorageLocation());
+                final String absoluteFilePath = String.format("%s/%s/%s", baseStorageLocation, playlist.getSanitizedTitle(), fileName);
                 final Track newTrack = new Track(null, title, username, downloadUrl, trackArtWorkUrl, null, trackSoundCloudUrl, playlist.getId(), true, false, new File(absoluteFilePath), duration);
                 String dbTrackId = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, trackSoundCloudUrl, Tracks.COLUMN_ID);
 

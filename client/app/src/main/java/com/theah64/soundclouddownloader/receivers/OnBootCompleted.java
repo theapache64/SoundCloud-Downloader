@@ -7,6 +7,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.theah64.soundclouddownloader.services.ClipboardWatchIgniterService;
+import com.theah64.soundclouddownloader.utils.CommonUtils;
 
 public class OnBootCompleted extends BroadcastReceiver {
 
@@ -19,7 +20,7 @@ public class OnBootCompleted extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.d(X, "Boot finished");
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && !CommonUtils.isMyServiceRunning(context, ClipboardWatchIgniterService.class)) {
             //Supports clipboard listener
             context.startService(new Intent(context, ClipboardWatchIgniterService.class));
         }

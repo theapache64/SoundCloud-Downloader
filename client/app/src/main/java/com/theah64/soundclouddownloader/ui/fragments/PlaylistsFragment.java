@@ -264,19 +264,23 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
     @Override
     public void onNewPlaylist(Playlist playlist) {
         if (playlists == null) {
+            playlists = new ArrayList<>();
             initAdapter();
         }
 
-
-        if (playlists.isEmpty()) {
-            //showing no tracks downloaded text view.
-            layout.findViewById(R.id.llNoPlaylistsFound).setVisibility(View.VISIBLE);
-        }
 
         playlists.add(0, playlist);
         itsAdapter.notifyItemInserted(0);
         rvPlaylists.scrollToPosition(0);
         callback.setTabPlaylistsCount(playlists.size());
+
+
+        if (playlists.isEmpty()) {
+            //showing no tracks downloaded text view.
+            layout.findViewById(R.id.llNoPlaylistsFound).setVisibility(View.VISIBLE);
+        } else {
+            layout.findViewById(R.id.llNoPlaylistsFound).setVisibility(View.GONE);
+        }
     }
 
     public int getPlaylistsCount() {

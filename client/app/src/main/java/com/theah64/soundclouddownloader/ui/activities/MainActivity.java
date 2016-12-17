@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.theah64.soundclouddownloader.R;
@@ -19,6 +21,8 @@ import com.theah64.soundclouddownloader.interfaces.MainActivityCallback;
 import com.theah64.soundclouddownloader.interfaces.TrackListener;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.services.ClipboardWatchIgniterService;
+import com.theah64.soundclouddownloader.ui.activities.settings.SettingsActivity;
+import com.theah64.soundclouddownloader.ui.activities.settings.SettingsActivityCompat;
 import com.theah64.soundclouddownloader.ui.fragments.PlaylistsFragment;
 import com.theah64.soundclouddownloader.ui.fragments.TracksFragment;
 import com.theah64.soundclouddownloader.utils.App;
@@ -91,6 +95,27 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallb
 
         tracksTab = tlTracksAndPlaylists.getTabAt(0);
         playlistsTab = tlTracksAndPlaylists.getTabAt(1);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            //Starting brand new settings activity
+            startActivity(new Intent(this, SettingsActivity.class));
+        } else {
+            //Launching compat settings activity.
+            startActivity(new Intent(this, SettingsActivityCompat.class));
+        }
+
+
+        return true;
     }
 
     @Override

@@ -266,15 +266,18 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
             initAdapter();
         }
 
-        if (trackList.isEmpty()) {
-            //showing no tracks downloaded text view.
-            layout.findViewById(R.id.llNoTracksFound).setVisibility(View.VISIBLE);
-        }
-
         trackList.add(0, newTrack);
         itsAdapter.notifyItemInserted(0);
         callback.setTabTracksCount(trackList.size());
         rvTracks.scrollToPosition(0);
+
+
+        if (trackList.isEmpty()) {
+            //showing no tracks downloaded text view.
+            layout.findViewById(R.id.llNoTracksFound).setVisibility(View.VISIBLE);
+        } else {
+            layout.findViewById(R.id.llNoTracksFound).setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -304,31 +307,37 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
 
     public void onPlaylistRemoved(String removedPlaylistId) {
 
-        Log.d(X, "Total tracks: " + trackList.size());
-        Log.d(X, "Removed playlist ID " + removedPlaylistId);
+        if (trackList != null) {
 
-        final List<Track> unDeletedTracks = new ArrayList<>();
 
-        for (final Track track : trackList) {
+            Log.d(X, "Total tracks: " + trackList.size());
+            Log.d(X, "Removed playlist ID " + removedPlaylistId);
 
-            Log.d(X, "CurrentPlaylistId: " + track.getPlaylistId());
+            final List<Track> unDeletedTracks = new ArrayList<>();
 
-            if (track.getPlaylistId() == null || !track.getPlaylistId().equals(removedPlaylistId)) {
-                unDeletedTracks.add(track);
+            for (final Track track : trackList) {
+
+                Log.d(X, "CurrentPlaylistId: " + track.getPlaylistId());
+
+                if (track.getPlaylistId() == null || !track.getPlaylistId().equals(removedPlaylistId)) {
+                    unDeletedTracks.add(track);
+                }
             }
+
+            Log.d(X, "Remaining track size : " + unDeletedTracks.size());
+
+            trackList.clear();
+            trackList.addAll(unDeletedTracks);
+            itsAdapter.notifyDataSetChanged();
+
+            if (trackList.isEmpty()) {
+                layout.findViewById(R.id.llNoTracksFound).setVisibility(View.VISIBLE);
+            }
+
+            callback.setTabTracksCount(trackList.size());
+
         }
 
-        Log.d(X, "Remaining track size : " + unDeletedTracks.size());
-
-        trackList.clear();
-        trackList.addAll(unDeletedTracks);
-        itsAdapter.notifyDataSetChanged();
-
-        if (trackList.isEmpty()) {
-            layout.findViewById(R.id.llNoTracksFound).setVisibility(View.GONE);
-        }
-
-        callback.setTabTracksCount(trackList.size());
     }
 
     public int getTracksCount() {

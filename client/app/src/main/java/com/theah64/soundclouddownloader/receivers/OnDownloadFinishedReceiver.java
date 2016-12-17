@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.interfaces.TrackListener;
@@ -49,6 +50,12 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
 
         if (!tracksTable.update(Tracks.COLUMN_DOWNLOAD_ID, downloadId, Tracks.COLUMN_IS_DOWNLOADED, Tracks.TRUE, handler)) {
             throw new IllegalArgumentException("Failed to update download status");
+        }
+
+        final Track downloadedTrack = tracksTable.get(Tracks.COLUMN_DOWNLOAD_ID, downloadId);
+
+        if (downloadedTrack != null) {
+            Toast.makeText(context, "Track downloaded -> " + downloadedTrack.getTitle(), Toast.LENGTH_SHORT).show();
         }
     }
 }

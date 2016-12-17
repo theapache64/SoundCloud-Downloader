@@ -11,6 +11,8 @@
         <item name="colorControlHighlight">@color/deep_orange_500</item>
         <item name="colorButtonNormal">@color/deep_orange_500</item>
         <item name="android:textColorPrimary">@color/black_800</item>
+        <item name="android:textColorSecondary">@color/black_700</item>
+
         <item name="buttonStyle">@style/themedButtonStyle</item>
         <item name="alertDialogTheme">@style/themedDialogStyle</item>
         <item name="android:windowBackground">@android:color/white</item>

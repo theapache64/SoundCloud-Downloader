@@ -3,6 +3,7 @@ package com.theah64.soundclouddownloader.utils;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Environment;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -14,6 +15,8 @@ import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.interfaces.PlaylistListener;
 import com.theah64.soundclouddownloader.interfaces.TrackListener;
 
+import java.io.File;
+
 /**
  * Created by theapache64 on 9/12/16.
  */
@@ -22,7 +25,8 @@ public class App extends Application {
 
     public static final boolean IS_DEBUG_MODE = false;
     public static final String STORE_URL = "http://play.google.com/store/apps/details?id=com.theah64.soundclouddownloader";
-    public static final String FOLDER_NAME = "SoundCloud Downloader";
+    private static final String FOLDER_NAME = "SoundCloudDownloader";
+    private static String DEFAULT_STORAGE_LOCATION;
 
     private static void initImageLoader(final Context context) {
 
@@ -53,11 +57,16 @@ public class App extends Application {
         ImageLoader.getInstance().init(config.build());
     }
 
+    public static String getDefaultStorageLocation() {
+        return DEFAULT_STORAGE_LOCATION;
+    }
+
 
     @Override
     public void onCreate() {
         super.onCreate();
         initImageLoader(this);
+        DEFAULT_STORAGE_LOCATION = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC) + File.separator + FOLDER_NAME;
     }
 
     private TrackListener trackListener = null;

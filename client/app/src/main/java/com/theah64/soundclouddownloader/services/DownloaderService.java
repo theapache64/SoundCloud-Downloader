@@ -5,11 +5,14 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.annotation.StringRes;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -21,6 +24,7 @@ import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.Playlist;
 import com.theah64.soundclouddownloader.ui.activities.PlaylistDownloadActivity;
 import com.theah64.soundclouddownloader.models.Track;
+import com.theah64.soundclouddownloader.ui.activities.settings.SettingsActivity;
 import com.theah64.soundclouddownloader.utils.APIRequestBuilder;
 import com.theah64.soundclouddownloader.utils.APIResponse;
 import com.theah64.soundclouddownloader.utils.App;
@@ -79,6 +83,7 @@ public class DownloaderService extends Service {
         if (intent != null) {
 
             nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 
             //Clearing notification if exists
             final int clipNotifId = intent.getIntExtra(KEY_NOTIFICATION_ID, -1);
@@ -155,7 +160,8 @@ public class DownloaderService extends Service {
                                     nm.notify(notifId, apiNotification.build());
 
                                     //Checking file existence
-                                    final String absFilePath = String.format("%s/%s/%s", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), App.FOLDER_NAME, fileName);
+                                    final String baseStorageLocation = pref.getString(SettingsActivity.SettingsFragment.KEY_STORAGE_LOCATION, App.getDefaultStorageLocation());
+                                    final String absFilePath = String.format("%s/%s", baseStorageLocation, fileName);
                                     Log.d(X, "New file : " + absFilePath);
 
                                     final File trackFile = new File(absFilePath);
