@@ -57,9 +57,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallb
         }
 
 
-        String data = null;
-        data.length();
-
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
