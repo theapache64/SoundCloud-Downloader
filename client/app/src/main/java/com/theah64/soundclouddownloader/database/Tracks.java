@@ -170,12 +170,7 @@ public class Tracks extends BaseTable<Track> {
 
     public boolean update(String whereColumn, String whereColumnValue, String columnToUpdate, String valueToUpdate, @Nullable Handler handler) {
 
-        final boolean isUpdated = super.update(whereColumn, whereColumnValue, columnToUpdate, valueToUpdate);
-
-        if (!isUpdated) {
-            throw new IllegalArgumentException("Failed to update the track");
-        }
-
+        super.update(whereColumn, whereColumnValue, columnToUpdate, valueToUpdate);
         final Track track = get(whereColumn, whereColumnValue);
         if (track != null) {
 
