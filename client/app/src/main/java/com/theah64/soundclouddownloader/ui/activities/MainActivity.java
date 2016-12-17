@@ -51,8 +51,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        //TODO: DEBUG
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && !CommonUtils.isMyServiceRunning(this, ClipboardWatchIgniterService.class)) {
             //Supports clipboard listener
             startService(new Intent(this, ClipboardWatchIgniterService.class));

@@ -54,4 +54,5 @@
     <string name="Choose_file_browser">Choose file browser</string>
     <string name="About">About</string>
     <string name="Developed_by_theapache64">Developed by theapache64</string>
+    <string name="Application_crashed">Ooops!! am crashed!  :/</string>
 </resources>
