@@ -294,16 +294,21 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
 
     public void onPlaylistRemoved(String removedPlaylistId) {
 
+        final List<Track> unDeletedTracks = new ArrayList<>();
 
-        for (int i = 0; i < trackList.size(); i++) {
-            final Track track = trackList.get(i);
-
-            if (track.getPlaylistId() != null && track.getPlaylistId().equals(removedPlaylistId)) {
-                trackList.remove(i);
+        for (final Track track : trackList) {
+            if (track.getPlaylistId() == null || !track.getPlaylistId().equals(removedPlaylistId)) {
+                unDeletedTracks.add(track);
             }
         }
 
+        trackList.clear();
+        trackList.addAll(unDeletedTracks);
         itsAdapter.notifyDataSetChanged();
+
+        if (trackList.isEmpty()) {
+            layout.findViewById(R.id.llNoTracksFound).setVisibility(View.GONE);
+        }
     }
 
     public int getTracksCount() {

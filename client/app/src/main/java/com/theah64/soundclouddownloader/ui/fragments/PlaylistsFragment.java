@@ -214,6 +214,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
                                     layout.findViewById(R.id.llNoPlaylistsFound).setVisibility(View.VISIBLE);
                                 }
 
+
                                 callback.onRemovePlaylist(currentPlaylist.getId());
 
                             }

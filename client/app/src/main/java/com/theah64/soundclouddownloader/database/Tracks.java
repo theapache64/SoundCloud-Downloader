@@ -99,10 +99,10 @@ public class Tracks extends BaseTable<Track> {
     }
 
 
-    public List<Track> getAll(@Nullable final String playlistId) {
+    public List<Track> getAll(@Nullable String playlistId) {
         List<Track> trackList = null;
 
-        final Cursor c = this.getReadableDatabase().query(TABLE_NAME_TRACKS, new String[]{COLUMN_ID, COLUMN_USERNAME, COLUMN_DURATION, COLUMN_DOWNLOAD_ID, COLUMN_ARTWORK_URL, COLUMN_TITLE, COLUMN_DOWNLOAD_ID, COLUMN_SOUNDCLOUD_URL, COLUMN_ABS_FILE_PATH, COLUMN_IS_DOWNLOADED}, playlistId != null ? "playlist_id = ?" :
+        final Cursor c = this.getReadableDatabase().query(TABLE_NAME_TRACKS, new String[]{COLUMN_ID, COLUMN_PLAYLIST_ID, COLUMN_USERNAME, COLUMN_DURATION, COLUMN_DOWNLOAD_ID, COLUMN_ARTWORK_URL, COLUMN_TITLE, COLUMN_DOWNLOAD_ID, COLUMN_SOUNDCLOUD_URL, COLUMN_ABS_FILE_PATH, COLUMN_IS_DOWNLOADED}, playlistId != null ? "playlist_id = ?" :
                         null, playlistId != null ? new String[]{playlistId} : null
                 , null, null, COLUMN_ID + " DESC");
         if (c != null && c.moveToFirst()) {
@@ -111,6 +111,10 @@ public class Tracks extends BaseTable<Track> {
 
             do {
                 final String id = c.getString(c.getColumnIndex(COLUMN_ID));
+                if (playlistId == null) {
+                    playlistId = c.getString(c.getColumnIndex(COLUMN_PLAYLIST_ID));
+                }
+
                 final String downloadId = c.getString(c.getColumnIndex(COLUMN_DOWNLOAD_ID));
                 final String artworkUrl = c.getString(c.getColumnIndex(COLUMN_ARTWORK_URL));
                 final String title = c.getString(c.getColumnIndex(COLUMN_TITLE));
