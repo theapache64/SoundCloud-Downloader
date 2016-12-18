@@ -109,6 +109,9 @@ public class DownloaderService extends Service {
                             .setSmallIcon(R.drawable.ic_stat_logo_white)
                             .setProgress(100, 0, true)
                             .setAutoCancel(false)
+                            .setPriority(NotificationCompat.PRIORITY_HIGH)
+                            .setContentInfo(soundCloudUrl)
+                            .setDefaults(NotificationCompat.DEFAULT_VIBRATE)
                             .setTicker(getString(R.string.initializing_download))
                             .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_logo_color_24dp));
 
