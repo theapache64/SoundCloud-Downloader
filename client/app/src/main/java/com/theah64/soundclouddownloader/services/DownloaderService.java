@@ -101,7 +101,10 @@ public class DownloaderService extends Service {
                 notification.getNotificationManager().cancel(clipNotifId);
             }
 
-            final String soundCloudUrl = intent.getStringExtra(Tracks.COLUMN_SOUNDCLOUD_URL);
+            //Converting url to https
+            Log.d(X, "SoundCloudURL: " + intent.getStringExtra(Tracks.COLUMN_SOUNDCLOUD_URL));
+            final String soundCloudUrl = intent.getStringExtra(Tracks.COLUMN_SOUNDCLOUD_URL).replaceAll("^https:\\/\\/", "http://");
+            Log.d(X, "SoundCloudURL _> RwEX: " + soundCloudUrl);
 
             if (!Playlist.isPlaylist(soundCloudUrl)) {
 
@@ -172,7 +175,6 @@ public class DownloaderService extends Service {
 
                         //Single track
                         if (track != null && !track.isExistInStorage()) {
-
 
                             //Track exist in db but in storage so download
                             track.setDownloadUrl(downloadUrl);
@@ -270,7 +272,7 @@ public class DownloaderService extends Service {
             this.notBuilder = new NotificationCompat.Builder(context)
                     .setSmallIcon(R.drawable.ic_stat_logo_white)
                     .setAutoCancel(false)
-                    .setDefaults(NotificationCompat.DEFAULT_VIBRATE)
+                    .setDefaults(NotificationCompat.DEFAULT_SOUND)
                     .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_logo_color_24dp));
 
         }

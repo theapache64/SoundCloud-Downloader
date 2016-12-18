@@ -52,7 +52,7 @@ public class Tracks extends BaseTable<Track> {
 
         final ContentValues cv = new ContentValues(4);
         cv.put(COLUMN_TITLE, track.getTitle());
-        cv.put(COLUMN_SOUNDCLOUD_URL, track.getSoundCloudUrl().replaceAll("^http:\\/\\/", "https://"));
+        cv.put(COLUMN_SOUNDCLOUD_URL, track.getSoundCloudUrl());
         cv.put(COLUMN_DOWNLOAD_ID, track.getDownloadId());
         cv.put(COLUMN_ARTWORK_URL, track.getArtWorkUrl());
         cv.put(COLUMN_DURATION, track.getDuration());
@@ -215,7 +215,6 @@ public class Tracks extends BaseTable<Track> {
     public boolean update(final Track track, @Nullable Handler handler) {
         final ContentValues cv = new ContentValues(1);
         cv.put(COLUMN_DOWNLOAD_ID, track.getDownloadId());
-        cv.put(COLUMN_ABS_FILE_PATH, track.getFile().getAbsolutePath());
 
         final boolean isUpdated = this.getWritableDatabase().update(TABLE_NAME_TRACKS, cv, COLUMN_ID + " = ?", new String[]{track.getId()}) > 0;
 
