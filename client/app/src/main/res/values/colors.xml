@@ -12,6 +12,7 @@
     <color name="black_800_trans_95">#F2424242</color>
     <color name="black_800_trans_15">#84424242</color>
     <color name="white_200">#EEEEEE</color>
+    <color name="white_200_light">#f5f5f5</color>
     <color name="deep_orange_500">#FF5722</color>
     <color name="black_500">#9E9E9E</color>
 </resources>
