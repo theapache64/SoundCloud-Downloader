@@ -102,9 +102,7 @@ public class DownloaderService extends Service {
             }
 
             //Converting url to https
-            Log.d(X, "SoundCloudURL: " + intent.getStringExtra(Tracks.COLUMN_SOUNDCLOUD_URL));
-            final String soundCloudUrl = intent.getStringExtra(Tracks.COLUMN_SOUNDCLOUD_URL).replaceAll("^https:\\/\\/", "http://");
-            Log.d(X, "SoundCloudURL _> RwEX: " + soundCloudUrl);
+            final String soundCloudUrl = intent.getStringExtra(Tracks.COLUMN_SOUNDCLOUD_URL);
 
             if (!Playlist.isPlaylist(soundCloudUrl)) {
 
