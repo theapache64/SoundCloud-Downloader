@@ -52,7 +52,7 @@ public class Tracks extends BaseTable<Track> {
 
         final ContentValues cv = new ContentValues(4);
         cv.put(COLUMN_TITLE, track.getTitle());
-        cv.put(COLUMN_SOUNDCLOUD_URL, track.getSoundCloudUrl());
+        cv.put(COLUMN_SOUNDCLOUD_URL, track.getSoundCloudUrl().replaceAll("^http:\\/\\/", "https://"));
         cv.put(COLUMN_DOWNLOAD_ID, track.getDownloadId());
         cv.put(COLUMN_ARTWORK_URL, track.getArtWorkUrl());
         cv.put(COLUMN_DURATION, track.getDuration());
@@ -119,7 +119,7 @@ public class Tracks extends BaseTable<Track> {
                 final String artworkUrl = c.getString(c.getColumnIndex(COLUMN_ARTWORK_URL));
                 final String title = c.getString(c.getColumnIndex(COLUMN_TITLE));
                 final String absoluteFilePath = c.getString(c.getColumnIndex(COLUMN_ABS_FILE_PATH));
-                final String soundCloudUrl = c.getString(c.getColumnIndex(COLUMN_SOUNDCLOUD_URL)).replaceAll("^http:\\/\\/", "https://");
+                final String soundCloudUrl = c.getString(c.getColumnIndex(COLUMN_SOUNDCLOUD_URL));
                 final boolean isDownloaded = c.getString(c.getColumnIndex(COLUMN_IS_DOWNLOADED)).equals(TRUE);
                 final long duration = c.getLong(c.getColumnIndex(COLUMN_DURATION));
                 final String username = c.getString(c.getColumnIndex(COLUMN_USERNAME));

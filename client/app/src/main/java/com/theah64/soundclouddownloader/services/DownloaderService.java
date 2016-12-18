@@ -157,11 +157,13 @@ public class DownloaderService extends Service {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
+
                     final APIResponse apiResponse = new APIResponse(OkHttpUtils.logAndGetStringBody(response));
 
                     final JSONObject joData = apiResponse.getJSONObjectData();
                     final JSONArray jaTracks = joData.getJSONArray("tracks");
 
+                    final DownloadUtils downloadUtils = new DownloadUtils(DownloaderService.this);
                     if (!joData.has(Track.KEY_PLAYLIST_NAME)) {
 
                         final JSONObject joTrack = jaTracks.getJSONObject(0);
@@ -174,7 +176,7 @@ public class DownloaderService extends Service {
 
                             //Track exist in db but in storage so download
                             track.setDownloadUrl(downloadUrl);
-                            final long downloadId = DownloadUtils.addToDownloadQueue(DownloaderService.this, track);
+                            final long downloadId = downloadUtils.addToDownloadQueue(track);
                             //Updating
                             track.setDownloadId(String.valueOf(downloadId));
 
@@ -203,7 +205,7 @@ public class DownloaderService extends Service {
                             final String absFilePath = String.format("%s/%s", baseStorageLocation, fileName);
 
                             final Track newtrack = new Track(null, title, username, downloadUrl, artworkUrl, null, soundCloudUrl, null, false, false, new File(absFilePath), duration);
-                            final long downloadId = DownloadUtils.addToDownloadQueue(DownloaderService.this, newtrack);
+                            final long downloadId = downloadUtils.addToDownloadQueue(newtrack);
 
                             //Starting download
                             newtrack.setDownloadId(String.valueOf(downloadId));

@@ -12,7 +12,13 @@ import com.theah64.soundclouddownloader.models.Track;
  */
 public class DownloadUtils {
 
-    public static long addToDownloadQueue(final Context context, final Track track) {
+    private final DownloadManager dm;
+
+    public DownloadUtils(final Context context) {
+        this.dm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+    }
+
+    public long addToDownloadQueue(final Track track) {
 
         final DownloadManager.Request downloadRequest = new DownloadManager.Request(Uri.parse(track.getDownloadUrl()));
 
@@ -25,7 +31,7 @@ public class DownloadUtils {
         }
 
         downloadRequest.setDestinationUri(Uri.fromFile(track.getFile()));
-        return ((DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE)).enqueue(downloadRequest);
+        return dm.enqueue(downloadRequest);
 
     }
 }

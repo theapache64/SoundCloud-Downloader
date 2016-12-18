@@ -191,6 +191,8 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
     private void startDownload() {
 
+        final DownloadUtils downloadUtils = new DownloadUtils(this);
+
         // Single song
         apiNotification.setContentTitle(getString(R.string.Starting_download));
         nm.notify(notifId, apiNotification.build());
@@ -202,7 +204,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
             if ((track.getFile() == null || !track.getFile().exists()) && track.isChecked()) {
                 //Starting download
-                final long downloadId = DownloadUtils.addToDownloadQueue(this, track);
+                final long downloadId = downloadUtils.addToDownloadQueue(track);
                 if (!tracksTable.update(Tracks.COLUMN_ID, track.getId(), Tracks.COLUMN_DOWNLOAD_ID, String.valueOf(downloadId), null)) {
                     throw new IllegalArgumentException("Failed to set download id");
                 }
