@@ -166,24 +166,17 @@ public class DownloaderService extends Service {
 
                         final JSONObject joTrack = jaTracks.getJSONObject(0);
 
-                        final String fileName = joTrack.getString("filename");
                         final String downloadUrl = joTrack.getString("download_url");
-
-
-                        final String baseStorageLocation = PrefUtils.getInstance(DownloaderService.this).getPref().getString(SettingsActivity.SettingsFragment.KEY_STORAGE_LOCATION, App.getDefaultStorageLocation());
-                        final String absFilePath = String.format("%s/%s", baseStorageLocation, fileName);
 
                         //Single track
                         if (track != null && !track.isExistInStorage()) {
 
+
                             //Track exist in db but in storage so download
                             track.setDownloadUrl(downloadUrl);
-
                             final long downloadId = DownloadUtils.addToDownloadQueue(DownloaderService.this, track);
-
                             //Updating
                             track.setDownloadId(String.valueOf(downloadId));
-                            track.setFile(new File(absFilePath));
 
                             //Track exist so just updating the download id.
                             tracksTable.update(track, handler);
@@ -205,7 +198,9 @@ public class DownloaderService extends Service {
                             final String username = joTrack.getString(Tracks.COLUMN_USERNAME);
                             final long duration = joTrack.getLong(Tracks.COLUMN_DURATION);
 
-                            Log.d(X, "New file : " + absFilePath);
+                            final String fileName = joTrack.getString("filename");
+                            final String baseStorageLocation = PrefUtils.getInstance(DownloaderService.this).getPref().getString(SettingsActivity.SettingsFragment.KEY_STORAGE_LOCATION, App.getDefaultStorageLocation());
+                            final String absFilePath = String.format("%s/%s", baseStorageLocation, fileName);
 
                             final Track newtrack = new Track(null, title, username, downloadUrl, artworkUrl, null, soundCloudUrl, null, false, false, new File(absFilePath), duration);
                             final long downloadId = DownloadUtils.addToDownloadQueue(DownloaderService.this, newtrack);

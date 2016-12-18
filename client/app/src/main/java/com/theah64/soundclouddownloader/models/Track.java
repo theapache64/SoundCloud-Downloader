@@ -158,10 +158,6 @@ public class Track implements Serializable, ITSNode {
         this.downloadId = downloadId;
     }
 
-    public void setFile(File file) {
-        this.file = file;
-    }
-
     @Override
     public String toString() {
         return "Track{" +

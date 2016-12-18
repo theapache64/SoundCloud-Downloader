@@ -66,7 +66,7 @@ public class DownloadIgniter {
             return null;
         }
 
-        public static Set<String> parseUrls(String data) {
+        static Set<String> parseUrls(String data) {
             final Matcher matcher = urlPattern.matcher(data);
             Set<String> urls = null;
             if (matcher.find()) {
