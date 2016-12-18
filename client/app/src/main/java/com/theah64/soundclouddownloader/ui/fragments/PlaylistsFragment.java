@@ -175,7 +175,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
 
                 final ArrayList<Uri> existingTracks = new ArrayList<>();
                 for (final Track track : trackList) {
-                    if (track.getFile() != null && track.getFile().exists()) {
+                    if (track.getFile().exists()) {
                         existingTracks.add(Uri.fromFile(track.getFile()));
                     }
                 }

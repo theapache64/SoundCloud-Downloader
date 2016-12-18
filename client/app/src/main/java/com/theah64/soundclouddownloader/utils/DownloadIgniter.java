@@ -27,7 +27,7 @@ public class DownloadIgniter {
             //Checking if the track contains in the db and track exists
             final Track track = Tracks.getInstance(context).get(Tracks.COLUMN_SOUNDCLOUD_URL, url);
 
-            if (track != null && track.getFile() != null && track.getFile().exists()) {
+            if (track != null && track.getFile().exists()) {
                 //Track exist
                 Toast.makeText(context, context.getString(R.string.Existing_track_s, track.getTitle()), Toast.LENGTH_SHORT).show();
             } else {

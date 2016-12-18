@@ -43,6 +43,10 @@ public class Track implements Serializable, ITSNode {
         this.file = file;
         this.duration = duration;
         this.durationInHHMMSS = calculateHMS(duration);
+
+        if (file == null) {
+            throw new IllegalArgumentException("File can't be null");
+        }
     }
 
     static String calculateHMS(long duration) {
@@ -112,9 +116,9 @@ public class Track implements Serializable, ITSNode {
     @Override
     public String getSubtitle3() {
 
-        if (isDownloaded && file != null && file.exists()) {
+        if (isDownloaded && file.exists()) {
             return "(Saved)";
-        } else if (isDownloaded && file != null && !file.exists()) {
+        } else if (isDownloaded && !file.exists()) {
             return "(Saved but moved/deleted)";
         } else {
             return null;
@@ -146,7 +150,6 @@ public class Track implements Serializable, ITSNode {
         return duration;
     }
 
-    @Nullable
     public File getFile() {
         return file;
     }
