@@ -75,10 +75,11 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
         final Playlists playlistsTable = Playlists.getInstance(this);
         String playlistId = playlistsTable.get(Playlists.COLUMN_SOUNDCLOUD_URL, playlist.getSoundCloudUrl(), Playlists.COLUMN_ID);
+
         if (playlistId == null) {
             playlistId = String.valueOf(playlistsTable.add(playlist, null));
-            playlist.setId(playlistId);
         }
+        playlist.setId(playlistId);
 
         trackList = new ArrayList<>();
         try {
@@ -108,10 +109,22 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                 final String absoluteFilePath = String.format("%s/%s/%s", baseStorageLocation, playlist.getSanitizedTitle(), fileName);
                 final Track newTrack = new Track(null, title, username, downloadUrl, trackArtWorkUrl, null, trackSoundCloudUrl, playlist.getId(), true, false, new File(absoluteFilePath), duration) {
                     @Override
-                    public boolean isChecked() {
-                        return getSubtitle3() != null;
+                    public String getSubtitle3() {
+
+                        if (isExistInStorage()) {
+                            //noinspection ConstantConditions
+                            return "Exists in " + getFile().getParentFile().getName() + "/" + getFile().getName();
+                        } else if (isDownloaded() && !isExistInStorage()) {
+                            return "(Saved but moved/deleted)";
+                        } else {
+                            return null;
+                        }
+
+
                     }
                 };
+                newTrack.setChecked(!newTrack.isExistInStorage());
+
                 String dbTrackId = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, trackSoundCloudUrl, Tracks.COLUMN_ID);
 
                 if (dbTrackId != null) {
@@ -174,7 +187,6 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         });
 
         refreshDownloadButton();
-
     }
 
     private void startDownload() {

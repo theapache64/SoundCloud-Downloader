@@ -3,6 +3,7 @@ package com.theah64.soundclouddownloader.ui.activities;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallb
 
     private static final String X = MainActivity.class.getSimpleName();
     private TabLayout.Tab tracksTab, playlistsTab;
+    private FloatingActionButton fabAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +73,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallb
 
         final InputDialogUtils inputDialogUtils = new InputDialogUtils(this);
 
+        fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
+
         //Add soundcloud url dialog.
-        findViewById(R.id.fabAdd).setOnClickListener(new View.OnClickListener() {
+        fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -129,5 +133,20 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallb
     @Override
     public void setTabPlaylistsCount(int count) {
         playlistsTab.setText(String.format(Locale.getDefault(), "PLAYLISTS (%d)", count));
+    }
+
+    @Override
+    public void hideFabAdd() {
+        fabAdd.hide();
+    }
+
+    @Override
+    public void showFabAdd() {
+        fabAdd.show();
+    }
+
+    @Override
+    public boolean isFabAddShown() {
+        return fabAdd.isShown();
     }
 }

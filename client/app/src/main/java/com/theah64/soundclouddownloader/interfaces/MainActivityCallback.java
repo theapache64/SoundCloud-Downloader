@@ -12,4 +12,10 @@ public interface MainActivityCallback {
     void setTabTracksCount(int count);
 
     void setTabPlaylistsCount(int count);
+
+    void hideFabAdd();
+
+    void showFabAdd();
+
+    boolean isFabAddShown();
 }

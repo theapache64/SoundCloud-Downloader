@@ -53,4 +53,19 @@ public class PlaylistTracksActivity extends BaseAppCompatActivity implements Mai
     public void setTabPlaylistsCount(int count) {
 
     }
+
+    @Override
+    public void hideFabAdd() {
+        
+    }
+
+    @Override
+    public void showFabAdd() {
+
+    }
+
+    @Override
+    public boolean isFabAddShown() {
+        return false;
+    }
 }

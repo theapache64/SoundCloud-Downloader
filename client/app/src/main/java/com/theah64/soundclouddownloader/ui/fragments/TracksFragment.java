@@ -118,6 +118,18 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
         rvTracks.setAdapter(itsAdapter);
 
         layout.findViewById(R.id.llNoTracksFound).setVisibility(View.GONE);
+
+        rvTracks.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) {
+                    callback.hideFabAdd();
+                } else if (dy < 0) {
+                    callback.showFabAdd();
+                }
+            }
+
+        });
     }
 
     @Override

@@ -116,6 +116,19 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
         itsAdapter = new ITSAdapter(playlists, this);
         rvPlaylists.setAdapter(itsAdapter);
         layout.findViewById(R.id.llNoPlaylistsFound).setVisibility(View.GONE);
+
+
+        rvPlaylists.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) {
+                    callback.hideFabAdd();
+                } else if (dy < 0) {
+                    callback.showFabAdd();
+                }
+            }
+
+        });
     }
 
 
