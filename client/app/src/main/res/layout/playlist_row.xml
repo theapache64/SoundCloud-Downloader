@@ -2,44 +2,103 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:padding="8dp">
-
-    <CheckBox
-        android:id="@+id/cbDownload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="5dp" />
+    android:background="@drawable/simple_selector"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:weightSum="100">
 
-
-        <TextView
-            android:id="@+id/tvTrackTitle"
-            android:layout_width="wrap_content"
+        <CheckBox
+            android:id="@+id/cbDownload"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:text="@string/sample_track_name"
-            android:textSize="17sp" />
+            android:layout_gravity="center_vertical"
+            android:layout_weight="10"
+            android:padding="5dp" />
 
-        <TextView
-            android:id="@+id/tvSubtitle"
-            android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/ivArtwork"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_weight="20"
+            android:scaleType="centerCrop"
+            android:src="@drawable/sample_track_image" />
+
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/sample_track_name"
-            android:textColor="@color/black_700"
-            android:textSize="15sp" />
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="70"
+            android:orientation="vertical">
 
+            <!--Artist and duration panel-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <!--Artist name-->
+                <TextView
+                    android:id="@+id/tvSubtitle1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="80"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="The Chainsmokers"
+                    android:textColor="@color/black_500"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvSubtitle2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="20"
+                    android:ellipsize="end"
+                    android:gravity="right"
+                    android:maxLines="1"
+                    android:text="03:50"
+                    android:textColor="@color/black_400"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+            <!--Title-->
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Don't let me down"
+                android:textColor="@color/black_800"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvSubtitle3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="(Saved)"
+                android:textColor="@color/black_400"
+                android:textSize="14sp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white_200_light" />
 </LinearLayout>

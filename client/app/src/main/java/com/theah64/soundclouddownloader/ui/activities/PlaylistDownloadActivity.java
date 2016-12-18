@@ -106,7 +106,12 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
                 final String baseStorageLocation = pref.getString(SettingsActivity.SettingsFragment.KEY_STORAGE_LOCATION, App.getDefaultStorageLocation());
                 final String absoluteFilePath = String.format("%s/%s/%s", baseStorageLocation, playlist.getSanitizedTitle(), fileName);
-                final Track newTrack = new Track(null, title, username, downloadUrl, trackArtWorkUrl, null, trackSoundCloudUrl, playlist.getId(), true, false, new File(absoluteFilePath), duration);
+                final Track newTrack = new Track(null, title, username, downloadUrl, trackArtWorkUrl, null, trackSoundCloudUrl, playlist.getId(), true, false, new File(absoluteFilePath), duration) {
+                    @Override
+                    public boolean isChecked() {
+                        return getSubtitle3() != null;
+                    }
+                };
                 String dbTrackId = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, trackSoundCloudUrl, Tracks.COLUMN_ID);
 
                 if (dbTrackId != null) {
@@ -121,9 +126,6 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
 
                 newTrack.setId(dbTrackId);
-                //Uncheck if file exists
-                newTrack.setChecked(!newTrack.getFile().exists());
-
                 trackList.add(newTrack);
             }
 

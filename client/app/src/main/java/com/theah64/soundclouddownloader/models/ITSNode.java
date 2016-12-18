@@ -15,4 +15,6 @@ public interface ITSNode {
     String getSubtitle2();
 
     String getSubtitle3();
+
+    boolean isChecked();
 }

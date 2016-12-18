@@ -16,13 +16,13 @@ import android.util.Log;
 
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.database.Tracks;
+import com.theah64.soundclouddownloader.models.Playlist;
 import com.theah64.soundclouddownloader.utils.ClipboardUtils;
 import com.theah64.soundclouddownloader.utils.Random;
 
 @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
 public class ClipboardWatchIgniterService extends Service implements ClipboardManager.OnPrimaryClipChangedListener {
     private static final String X = ClipboardWatchIgniterService.class.getSimpleName();
-    private static final String SOUND_CLOUD_PLAYLIST_REGEX = "^(?:https:\\/\\/|http:\\/\\/|www\\.|)soundcloud\\.com\\/(?:.+)\\/sets\\/(?:.+)$";
 
     public ClipboardWatchIgniterService() {
     }
@@ -48,14 +48,8 @@ public class ClipboardWatchIgniterService extends Service implements ClipboardMa
 
         if (soundCloudUrl != null) {
 
-            Log.d(X, "Captured SoundCloud url : " + soundCloudUrl);
-
-            final boolean isAPlaylist = soundCloudUrl.matches(SOUND_CLOUD_PLAYLIST_REGEX);
-
             final int notifId = Random.getRandomInt();
-            final String title = getString(R.string.Do_you_want_to_download_this_s, isAPlaylist ? "playlist" : "track");
-
-            Log.d(X, "Notification id : " + notifId);
+            final String title = getString(R.string.Do_you_want_to_download_this_s, Playlist.isPlaylist(soundCloudUrl) ? "playlist" : "track");
 
             final Intent yesIntent = new Intent(this, DownloaderService.class);
             yesIntent.putExtra(Tracks.COLUMN_SOUNDCLOUD_URL, soundCloudUrl);

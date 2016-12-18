@@ -44,7 +44,7 @@
     <string name="Downloading_playlist">Download playlist</string>
     <string name="Tracks_under_this">Tracks under this playlist will be also removed</string>
     <string name="CONTINUE">CONTINUE</string>
-    <string name="Do_you_really">Do you really want to delete this track ?</string>
+    <string name="Do_you_really">Do you really want to remove this track ?</string>
     <string name="Empty_playlist">Empty playlist!</string>
     <string name="Storage_location">Storage location</string>
     <string name="Store_tracks_on">Store tracks on</string>
@@ -55,4 +55,10 @@
     <string name="Developed_by_theapache64">Developed by theapache64</string>
     <string name="Application_crashed">Ooops!! am crashed!  :/</string>
     <string name="No_file_browser_found">No file browser found</string>
+    <string name="Track_exists">Track exists</string>
+    <string name="s_in_s" formatted="false">%s in %s</string>
+    <string name="s_added_to_download_queue">%s added to download queue</string>
+    <string name="Network_error">Network error!</string>
+    <string name="Server_error">Server error</string>
+    <string name="Server_error_occurred">Server error occurred, please try again later.</string>
 </resources>

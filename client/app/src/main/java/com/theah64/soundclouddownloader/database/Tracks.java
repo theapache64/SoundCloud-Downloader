@@ -190,6 +190,7 @@ public class Tracks extends BaseTable<Track> {
                 onTrackUpdated(track);
             }
         } else {
+            //FirebaseCrash.log("Couldn't find track with column " + whereColumn + ", value " + whereColumnValue);
             throw new IllegalArgumentException("Couldn't find track with column " + whereColumn + ", value " + whereColumnValue);
         }
 
@@ -214,7 +215,10 @@ public class Tracks extends BaseTable<Track> {
     public boolean update(final Track track, @Nullable Handler handler) {
         final ContentValues cv = new ContentValues(1);
         cv.put(COLUMN_DOWNLOAD_ID, track.getDownloadId());
-        cv.put(COLUMN_ABS_FILE_PATH, track.getFile().getAbsolutePath());
+
+        if (track.getFile() != null) {
+            cv.put(COLUMN_ABS_FILE_PATH, track.getFile().getAbsolutePath());
+        }
 
         final boolean isUpdated = this.getWritableDatabase().update(TABLE_NAME_TRACKS, cv, COLUMN_ID + " = ?", new String[]{track.getId()}) > 0;
 

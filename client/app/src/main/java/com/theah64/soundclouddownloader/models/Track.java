@@ -1,5 +1,7 @@
 package com.theah64.soundclouddownloader.models;
 
+import android.support.annotation.Nullable;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.Locale;
@@ -16,7 +18,7 @@ public class Track implements Serializable, ITSNode {
     public static final String KEY_PLAYLIST_NAME = "playlist_name";
     private String id;
     private final String title, username;
-    private final String downloadUrl;
+    private String downloadUrl;
     private final String artWorkUrl;
     private String downloadId;
     private final String soundCloudUrl;
@@ -144,6 +146,7 @@ public class Track implements Serializable, ITSNode {
         return duration;
     }
 
+    @Nullable
     public File getFile() {
         return file;
     }
@@ -173,5 +176,13 @@ public class Track implements Serializable, ITSNode {
                 ", duration=" + duration +
                 ", durationInHHMMSS='" + durationInHHMMSS + '\'' +
                 '}';
+    }
+
+    public boolean isExistInStorage() {
+        return file != null && file.exists();
+    }
+
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
     }
 }

@@ -7,9 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.theah64.soundclouddownloader.R;
+import com.theah64.soundclouddownloader.models.ITSNode;
 import com.theah64.soundclouddownloader.models.Track;
 
 import java.io.File;
@@ -22,14 +25,14 @@ import java.util.List;
 public class PlaylistDownloadAdapter extends RecyclerView.Adapter<PlaylistDownloadAdapter.ViewHolder> {
 
     private static final String X = PlaylistDownloadAdapter.class.getSimpleName();
-    private final List<Track> tracks;
+    private final List<? extends ITSNode> itsNodes;
     private LayoutInflater inflater;
     private final PlaylistListener callback;
     private final Context context;
 
-    public PlaylistDownloadAdapter(Context context, List<Track> tracks, PlaylistListener callback) {
+    public PlaylistDownloadAdapter(Context context, List<? extends ITSNode> tracks, PlaylistListener callback) {
         this.context = context;
-        this.tracks = tracks;
+        this.itsNodes = tracks;
         this.callback = callback;
     }
 
@@ -46,40 +49,38 @@ public class PlaylistDownloadAdapter extends RecyclerView.Adapter<PlaylistDownlo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final Track track = tracks.get(position);
+        final ITSNode track = itsNodes.get(position);
 
-        holder.tvTrackTitle.setText(track.getTitle());
+        holder.tvTitle.setText(track.getTitle());
         holder.cbDownload.setChecked(track.isChecked());
+        holder.tvSubtitle1.setText(track.getSubtitle1());
+        holder.tvSubtitle2.setText(track.getSubtitle2());
+        holder.tvSubtitle3.setText(track.getSubtitle3());
 
-        if (track.getFile() != null && track.getFile().exists()) {
-            final File trackFile = track.getFile();
-
-            final String trackName = trackFile.getName();
-            final String parentFileName = trackFile.getParentFile().getName();
-
-            holder.tvSubtitle.setText(context.getString(R.string.Existing_track_s_s, parentFileName, trackName));
-        } else {
-            holder.tvSubtitle.setVisibility(View.GONE);
-        }
+        ImageLoader.getInstance().displayImage(track.getArtworkUrl(), holder.ivArtwork);
     }
 
     @Override
     public int getItemCount() {
-        return tracks.size();
+        return itsNodes.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
+        final ImageView ivArtwork;
         final CheckBox cbDownload;
-        final TextView tvTrackTitle, tvSubtitle;
+        final TextView tvSubtitle1, tvSubtitle2, tvTitle, tvSubtitle3;
 
         ViewHolder(View itemView) {
             super(itemView);
 
 
             this.cbDownload = (CheckBox) itemView.findViewById(R.id.cbDownload);
-            this.tvTrackTitle = (TextView) itemView.findViewById(R.id.tvTrackTitle);
-            this.tvSubtitle = (TextView) itemView.findViewById(R.id.tvSubtitle);
+            this.ivArtwork = (ImageView) itemView.findViewById(R.id.ivArtwork);
+            this.tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
+            this.tvSubtitle1 = (TextView) itemView.findViewById(R.id.tvSubtitle1);
+            this.tvSubtitle2 = (TextView) itemView.findViewById(R.id.tvSubtitle2);
+            this.tvSubtitle3 = (TextView) itemView.findViewById(R.id.tvSubtitle3);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

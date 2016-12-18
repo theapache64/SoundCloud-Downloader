@@ -75,6 +75,11 @@ public class Playlist implements ITSNode, Serializable {
         return tracksDownloaded + " (saved) /" + totalTracks + " (total)";
     }
 
+    @Override
+    public boolean isChecked() {
+        return false;
+    }
+
 
     public String getSoundCloudUrl() {
         return url;
@@ -98,5 +103,11 @@ public class Playlist implements ITSNode, Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    private static final String SOUND_CLOUD_PLAYLIST_REGEX = "^(?:https:\\/\\/|http:\\/\\/|www\\.|)soundcloud\\.com\\/(?:.+)\\/sets\\/(?:.+)$";
+
+    public static boolean isPlaylist(String soundCloudUrl) {
+        return soundCloudUrl.matches(SOUND_CLOUD_PLAYLIST_REGEX);
     }
 }

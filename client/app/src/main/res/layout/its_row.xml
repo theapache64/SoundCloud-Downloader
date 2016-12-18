@@ -12,7 +12,6 @@
         android:padding="10dp"
         android:weightSum="100">
 
-
         <ImageView
             android:id="@+id/ivArtwork"
             android:layout_width="0dp"
