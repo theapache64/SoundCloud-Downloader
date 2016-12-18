@@ -39,9 +39,8 @@ public class App extends Application {
                 .cacheInMemory(true)
                 .considerExifParams(true)
                 .showImageOnLoading(R.drawable.ic_spinner_grey_24dp)
-                /*//TODO:Create new images for empty and fail.
-                .showImageForEmptyUri(R.drawable.ic_loading_24dp)
-                .showImageOnFail(R.drawable.ic_loading_24dp)*/
+                .showImageForEmptyUri(R.drawable.ic_av_album_70dp)
+                .showImageOnFail(R.drawable.ic_av_album_70dp)
                 .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
