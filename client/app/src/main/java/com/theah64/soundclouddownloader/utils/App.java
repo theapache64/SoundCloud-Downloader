@@ -15,7 +15,6 @@ import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.interfaces.PlaylistListener;
 import com.theah64.soundclouddownloader.interfaces.TrackListener;
 
-
 import java.io.File;
 
 /**

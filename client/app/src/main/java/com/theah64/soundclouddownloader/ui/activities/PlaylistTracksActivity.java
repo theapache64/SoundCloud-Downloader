@@ -3,15 +3,11 @@ package com.theah64.soundclouddownloader.ui.activities;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.interfaces.MainActivityCallback;
-import com.theah64.soundclouddownloader.interfaces.TrackListener;
 import com.theah64.soundclouddownloader.models.Playlist;
-import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.ui.fragments.TracksFragment;
-import com.theah64.soundclouddownloader.utils.App;
 
 public class PlaylistTracksActivity extends BaseAppCompatActivity implements MainActivityCallback {
 

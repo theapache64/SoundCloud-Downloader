@@ -1,6 +1,5 @@
 package com.theah64.soundclouddownloader.models;
 
-import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.utils.CommonUtils;
 
 import java.io.Serializable;

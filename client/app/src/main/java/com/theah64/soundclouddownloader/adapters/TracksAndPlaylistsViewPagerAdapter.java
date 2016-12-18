@@ -7,8 +7,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.theah64.soundclouddownloader.database.Playlists;
 import com.theah64.soundclouddownloader.database.Tracks;
-import com.theah64.soundclouddownloader.ui.fragments.PlaylistsFragment;
-import com.theah64.soundclouddownloader.ui.fragments.TracksFragment;
 
 import java.util.Locale;
 

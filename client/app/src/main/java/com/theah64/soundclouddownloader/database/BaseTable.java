@@ -1,12 +1,10 @@
 package com.theah64.soundclouddownloader.database;
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -14,10 +12,7 @@ import android.util.Log;
 import com.theah64.soundclouddownloader.utils.App;
 import com.theah64.soundclouddownloader.utils.FileUtils;
 
-import org.json.JSONObject;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

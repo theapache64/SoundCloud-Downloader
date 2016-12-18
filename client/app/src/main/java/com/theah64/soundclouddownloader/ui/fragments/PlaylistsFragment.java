@@ -23,7 +23,6 @@ import com.theah64.soundclouddownloader.database.Playlists;
 import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.interfaces.MainActivityCallback;
 import com.theah64.soundclouddownloader.interfaces.PlaylistListener;
-import com.theah64.soundclouddownloader.interfaces.TrackListener;
 import com.theah64.soundclouddownloader.models.Playlist;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.services.DownloaderService;

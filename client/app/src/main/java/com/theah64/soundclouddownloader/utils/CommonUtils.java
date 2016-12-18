@@ -1,9 +1,7 @@
 package com.theah64.soundclouddownloader.utils;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
-import android.net.Uri;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 

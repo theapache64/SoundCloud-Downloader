@@ -10,9 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.database.Tracks;
-import com.theah64.soundclouddownloader.interfaces.TrackListener;
 import com.theah64.soundclouddownloader.models.Track;
-import com.theah64.soundclouddownloader.utils.App;
 
 public class OnDownloadFinishedReceiver extends BroadcastReceiver {
 
