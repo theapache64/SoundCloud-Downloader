@@ -187,7 +187,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
 
                 final Intent sharePlaylistUrlIntent = new Intent(Intent.ACTION_SEND);
                 sharePlaylistUrlIntent.setType("text/plain");
-                sharePlaylistUrlIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.Download_track_using_soundcloud_downloader_s, App.STORE_URL, currentPlaylist.getTitle(), currentPlaylist.getSoundCloudUrl()));
+                sharePlaylistUrlIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.Download_playlist_using_soundcloud_downloader_s, App.STORE_URL, currentPlaylist.getTitle(), currentPlaylist.getSoundCloudUrl()));
                 startActivity(Intent.createChooser(sharePlaylistUrlIntent, getString(R.string.Share_using)));
 
                 return true;

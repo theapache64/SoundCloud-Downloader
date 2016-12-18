@@ -13,7 +13,6 @@
     <string name="sample_track_name">Headhunterz - Dragonborn (Breaux Remix)</string>
     <string name="No_tracks_downloaded">No tracks downloaded</string>
     <string name="No_playlist_downloaded">No playlists downloaded</string>
-    <string name="title_activity_playlist_tracks">PlaylistTracksActivity</string>
     <string name="Title">Title</string>
     <string name="Share_file">Share file</string>
     <string name="Remove">Remove</string>
@@ -26,10 +25,10 @@
     <string name="Removed">Removed</string>
     <string name="Play">Play</string>
     <string name="Please_download_the_track">Please download the track</string>
-    <string name="Download_track_using_soundcloud_downloader_s" formatted="false">Download this track using SoundCloud downloader (%s)\n\n %s - %s</string>
-    <string name="Download_playlist_using_soundcloud_downloader_s" formatted="false">Download this playlist using SoundCloud downloader (%s)\n\n %s - %s</string>
+    <string name="Download_track_using_soundcloud_downloader_s" formatted="false">Hey, I've downloaded this track using 'SoundCloud Downloader'.Check this out %s \n\n %s - %s</string>
+    <string name="Download_playlist_using_soundcloud_downloader_s" formatted="false">Hey,I've downloaded the entire playlist using 'SoundCloud Downloader'. Check this out %s \n\n %s - %s</string>
     <string name="Check_all_tracks">Check all tracks</string>
-    <string name="miUnCheckAllTracks">Uncheck all tracks</string>
+    <string name="miUnCheckAllTracks">UnCheck all tracks</string>
     <string name="Existing_track_s">Existing track %s</string>
     <string name="Existing_track_s_s" formatted="false">Existing track %s/%s</string>
     <string name="Share_tracks">Share tracks</string>
