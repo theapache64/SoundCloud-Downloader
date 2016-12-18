@@ -208,7 +208,6 @@ public class DownloaderService extends Service {
                             Log.d(X, "New file : " + absFilePath);
 
                             final Track newtrack = new Track(null, title, username, downloadUrl, artworkUrl, null, soundCloudUrl, null, false, false, new File(absFilePath), duration);
-
                             final long downloadId = DownloadUtils.addToDownloadQueue(DownloaderService.this, newtrack);
 
                             //Starting download
