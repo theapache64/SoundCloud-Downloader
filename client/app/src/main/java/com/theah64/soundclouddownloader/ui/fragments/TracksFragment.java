@@ -48,6 +48,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
     private App app;
     private MainActivityCallback callback;
     private RecyclerView rvTracks;
+    private boolean isLaunchedToListPlaylistTracks;
 
 
     public TracksFragment() {
@@ -64,15 +65,29 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
     @Override
     public void onStart() {
         super.onStart();
-        app.setTrackListener(this);
+
+        isLaunchedToListPlaylistTracks = getArguments().getString(Playlists.COLUMN_ID) != null;
+
+        if (isLaunchedToListPlaylistTracks) {
+            app.setPlaylistTrackListener(this);
+        } else {
+            app.setTrackListener(this);
+        }
     }
 
     @Override
     public void onDestroy() {
 
-        final TrackListener trackListener = app.getTrackListener();
-        if (this.equals(trackListener)) {
-            app.setTrackListener(null);
+        if (isLaunchedToListPlaylistTracks) {
+            final TrackListener playlistTrackListener = app.getPlaylistTrackListener();
+            if (this.equals(playlistTrackListener)) {
+                app.setPlaylistTrackListener(null);
+            }
+        } else {
+            final TrackListener trackListener = app.getTrackListener();
+            if (this.equals(trackListener)) {
+                app.setTrackListener(null);
+            }
         }
 
         super.onDestroy();

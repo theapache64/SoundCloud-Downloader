@@ -68,7 +68,7 @@ public class App extends Application {
         DEFAULT_STORAGE_LOCATION = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC) + File.separator + FOLDER_NAME;
     }
 
-    private TrackListener trackListener = null;
+    private TrackListener trackListener = null, playlistTrackListener = null;
     private PlaylistListener playlistListener = null;
 
     public TrackListener getTrackListener() {
@@ -85,5 +85,13 @@ public class App extends Application {
 
     public void setPlaylistListener(PlaylistListener playlistListener) {
         this.playlistListener = playlistListener;
+    }
+
+    public TrackListener getPlaylistTrackListener() {
+        return playlistTrackListener;
+    }
+
+    public void setPlaylistTrackListener(TrackListener playlistTrackListener) {
+        this.playlistTrackListener = playlistTrackListener;
     }
 }

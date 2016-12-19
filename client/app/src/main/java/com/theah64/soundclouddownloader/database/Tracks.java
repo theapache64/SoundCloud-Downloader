@@ -96,6 +96,10 @@ public class Tracks extends BaseTable<Track> {
             getApp().getPlaylistListener().onPlaylistUpdated(track.getPlaylistId());
         }
 
+        if (getApp().getPlaylistTrackListener() != null) {
+            getApp().getPlaylistTrackListener().onNewTrack(track);
+        }
+
     }
 
 
@@ -208,6 +212,10 @@ public class Tracks extends BaseTable<Track> {
             //The track is from a playlist and we've playlist track listener
             getApp().getPlaylistListener().onPlaylistUpdated(track.getPlaylistId());
 
+        }
+
+        if (getApp().getPlaylistTrackListener() != null) {
+            getApp().getPlaylistTrackListener().onTrackUpdated(track);
         }
     }
 

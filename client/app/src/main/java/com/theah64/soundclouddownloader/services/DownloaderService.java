@@ -77,20 +77,6 @@ public class DownloaderService extends Service {
 
         notification = new Notification(this);
 
-        /*start;
-        Read soundCloudUrl;
-        if(soundCloudUrl is a track){
-            if(track exist in db and storage){
-                show track exists;
-            }else if(track exist in db and not in strg){
-                add to d-queue and update storage path;
-            }else{
-                add track to d-queue and add track to db;
-            }
-        }else{
-            start download playlist;
-        }
-        end;*/
         Log.d(X, "Download service initialized : " + intent);
 
         if (intent != null) {
@@ -108,7 +94,10 @@ public class DownloaderService extends Service {
 
                 //It's a track
                 tracksTable = Tracks.getInstance(this);
+
+                //Checking if the track had solved before.
                 final Track track = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, soundCloudUrl);
+
                 if (track != null && track.isExistInStorage()) {
                     //track exist in db and storage
 
