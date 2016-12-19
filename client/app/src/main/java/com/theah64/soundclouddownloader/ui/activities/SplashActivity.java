@@ -24,11 +24,13 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        ((TextView) findViewById(R.id.tvAppVersion)).setText(String.format("v%s", BuildConfig.VERSION_NAME));
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
             if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
-                if (shouldShowRequestPermissionRationale(Manifest.permission.GET_ACCOUNTS)) {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RQ_CODE_RQ_WRITE_EXTERNAL_STORAGE);
                 } else {
                     requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RQ_CODE_RQ_WRITE_EXTERNAL_STORAGE);
@@ -60,23 +62,16 @@ public class SplashActivity extends AppCompatActivity {
 
     private void doNormalSplashWork() {
 
-        ((TextView) findViewById(R.id.tvAppVersion)).setText(String.format("v%s", BuildConfig.VERSION_NAME));
-
         //Checking if the api key exists
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+
+
                 startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 finish();
+
             }
         }, SPLASH_DELAY);
-
-    }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        this.finish();
     }
 }
