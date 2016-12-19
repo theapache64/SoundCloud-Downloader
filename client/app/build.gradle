@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.1"
     defaultConfig {
-        applicationId "com.theah64.soundclouddownloader"
+        applicationId "com.theah64.zoundloader"
         minSdkVersion 9
         targetSdkVersion 25
         versionCode 1

@@ -1,35 +1,35 @@
 {
   "project_info": {
-    "project_number": "454253955084",
-    "firebase_url": "https://soundclouddownloader-18653.firebaseio.com",
-    "project_id": "soundclouddownloader-18653",
-    "storage_bucket": "soundclouddownloader-18653.appspot.com"
+    "project_number": "638589919434",
+    "firebase_url": "https://zoundloader.firebaseio.com",
+    "project_id": "zoundloader",
+    "storage_bucket": "zoundloader.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:454253955084:android:804de5ebfa8ba704",
+        "mobilesdk_app_id": "1:638589919434:android:4cb867ac6c022edb",
         "android_client_info": {
-          "package_name": "com.theah64.soundclouddownloader"
+          "package_name": "com.theah64.zoundloader"
         }
       },
       "oauth_client": [
         {
-          "client_id": "454253955084-4q97p9jr4hnmda1o11vfb0ktlv6erslj.apps.googleusercontent.com",
+          "client_id": "638589919434-p0ae54j86rrhfo0v7csss3bm7dl5v5s0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.theah64.soundclouddownloader",
+            "package_name": "com.theah64.zoundloader",
             "certificate_hash": "243F99B5BBF8E02A8883BDC245CF61B8A6155C36"
           }
         },
         {
-          "client_id": "454253955084-eeuk0kse299uqhe2vhgf5i2skvjfa09v.apps.googleusercontent.com",
+          "client_id": "638589919434-gs08kmr057v2obc7v0h2dk7adu355037.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBhCoabGckwuLK0myVE3pQ95UUeLsDvUvo"
+          "current_key": "AIzaSyBLtz2CPPc9JoqKQylCjGxaONyG5DarnlE"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "454253955084-eeuk0kse299uqhe2vhgf5i2skvjfa09v.apps.googleusercontent.com",
+              "client_id": "638589919434-gs08kmr057v2obc7v0h2dk7adu355037.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
