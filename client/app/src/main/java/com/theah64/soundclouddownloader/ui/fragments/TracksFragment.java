@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,11 +41,10 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
 
 
     private static final String X = TracksFragment.class.getSimpleName();
+    private static final int TRACK_POSITION_UNKNOWN = -1;
     private List<Track> trackList;
     private Tracks tracksTable;
     private ITSAdapter itsAdapter;
-    private Track track;
-    private int position;
     private View layout;
     private App app;
     private MainActivityCallback callback;
@@ -68,6 +69,8 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
 
         isLaunchedToListPlaylistTracks = getArguments().getString(Playlists.COLUMN_ID) != null;
 
+        Log.d(X, "isLaunchedToListPlaylistTracks " + isLaunchedToListPlaylistTracks);
+
         if (isLaunchedToListPlaylistTracks) {
             app.setPlaylistTrackListener(this);
         } else {
@@ -78,16 +81,15 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
     @Override
     public void onDestroy() {
 
-        if (isLaunchedToListPlaylistTracks) {
-            final TrackListener playlistTrackListener = app.getPlaylistTrackListener();
-            if (this.equals(playlistTrackListener)) {
-                app.setPlaylistTrackListener(null);
-            }
-        } else {
-            final TrackListener trackListener = app.getTrackListener();
-            if (this.equals(trackListener)) {
-                app.setTrackListener(null);
-            }
+        final TrackListener playlistTrackListener = app.getPlaylistTrackListener();
+        if (this.equals(playlistTrackListener)) {
+            app.setPlaylistTrackListener(null);
+        }
+
+
+        final TrackListener trackListener = app.getTrackListener();
+        if (this.equals(trackListener)) {
+            app.setTrackListener(null);
         }
 
         super.onDestroy();
@@ -150,12 +152,11 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
     @Override
     public void onRowClicked(int position, View popUpAnchor) {
 
-        this.position = position;
-        track = trackList.get(position);
+        final Track track = trackList.get(position);
 
         if (track.isDownloaded()) {
             //playing track
-            playTrack();
+            playTrack(track);
         } else {
             onPopUpMenuClicked(popUpAnchor, position);
             Toast.makeText(getActivity(), R.string.Please_download_the_track, Toast.LENGTH_SHORT).show();
@@ -166,11 +167,26 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
     @Override
     public void onPopUpMenuClicked(View anchor, final int position) {
 
-        this.position = position;
-        track = trackList.get(position);
+        final Track track = trackList.get(position);
 
         final PopupMenu trackMenu = new PopupMenu(getActivity(), anchor);
-        trackMenu.getMenuInflater().inflate(track.isDownloaded() && track.getFile().exists() ? R.menu.menu_track_downloaded : R.menu.menu_track_not_downloaded, trackMenu.getMenu());
+
+        final Menu menu = trackMenu.getMenu();
+
+        if (track.isDownloaded() && track.getFile().exists()) {
+
+            //Build  R.menu.menu_track_downloaded
+            menu.add(position, R.id.miPlay, 1, R.string.Play);
+            menu.add(position, R.id.miShareFile, 2, R.string.Share_file);
+            menu.add(position, R.id.miShareURL, 3, R.string.Share_URL);
+            menu.add(position, R.id.miRemove, 4, R.string.Remove);
+
+        } else {
+            //Build R.menu.menu_track_not_downloaded
+            menu.add(position, R.id.miDownload, 1, R.string.Download);
+            menu.add(position, R.id.miShareURL, 2, R.string.Share_URL);
+            menu.add(position, R.id.miRemove, 3, R.string.Remove);
+        }
         trackMenu.setOnMenuItemClickListener(this);
 
         trackMenu.show();
@@ -186,12 +202,14 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
     }
 
     @Override
-    public boolean onMenuItemClick(MenuItem item) {
+    public boolean onMenuItemClick(final MenuItem item) {
+
+        final Track track = trackList.get(item.getGroupId());
 
         switch (item.getItemId()) {
 
             case R.id.miPlay:
-                playTrack();
+                playTrack(track);
                 return true;
 
             case R.id.miShareFile:
@@ -225,27 +243,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
                         .setAction(R.string.YES, new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-
-                                if (tracksTable.delete(Tracks.COLUMN_ID, track.getId())) {
-                                    trackList.remove(position);
-                                    itsAdapter.notifyItemRemoved(position);
-
-                                    Toast.makeText(getActivity(), R.string.Removed, Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(getActivity(), R.string.Failed_to_remove, Toast.LENGTH_SHORT).show();
-                                }
-
-                                if (trackList.isEmpty()) {
-                                    //showing no tracks downloaded text view.
-                                    layout.findViewById(R.id.llNoTracksFound).setVisibility(View.VISIBLE);
-                                }
-
-                                if (track.getPlaylistId() != null) {
-                                    callback.onRemovePlaylistTrack(track.getPlaylistId());
-                                }
-
-                                //Updating tabcount
-                                callback.setTabTracksCount(trackList.size());
+                                onTrackRemoved(null, item.getGroupId());
 
                             }
                         }).show();
@@ -268,9 +266,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
 
     }
 
-    private void playTrack() {
-
-        Log.d(X, "Track is " + track);
+    private void playTrack(Track track) {
 
         if (track.getFile().exists()) {
             //Opening audio file
@@ -308,9 +304,54 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
     }
 
     @Override
-    public void onTrackRemoved(Track removedTrack) {
-        throw new IllegalArgumentException("Not implemented");
+    public void onTrackRemoved(@Nullable Track removedTrack, int position) {
+
+        if (position == TRACK_POSITION_UNKNOWN) {
+            //find track position
+            position = Track.getTrackPosition(trackList, removedTrack);
+        }
+
+        removedTrack = trackList.get(position);
+
+
+        if (tracksTable.delete(Tracks.COLUMN_ID, removedTrack.getId(), null)) {
+
+            if (removedTrack.getPlaylistId() != null) {
+
+                if (isLaunchedToListPlaylistTracks && app.getPlaylistListener() != null) {
+                    //Tracks fragment shows at PlaylistTracksActivity, so update this activity
+                    app.getPlaylistListener().onPlaylistUpdated(removedTrack.getPlaylistId());
+                } else {
+                    //tracks fragment shows at main activity, so update main activity
+                    callback.onRemovePlaylistTrack(removedTrack.getPlaylistId());
+                }
+            }
+
+            if (app.getTrackListener() != null) {
+                app.getTrackListener().onTrackRemoved(removedTrack, position);
+            }
+
+
+            trackList.remove(position);
+            itsAdapter.notifyItemRemoved(position);
+
+            Toast.makeText(getActivity(), R.string.Removed, Toast.LENGTH_SHORT).show();
+
+        } else {
+            Toast.makeText(getActivity(), R.string.Failed_to_remove, Toast.LENGTH_SHORT).show();
+        }
+
+        if (trackList.isEmpty()) {
+            //showing no tracks downloaded text view.
+            layout.findViewById(R.id.llNoTracksFound).setVisibility(View.VISIBLE);
+        }
+
+
+        //Updating tabcount
+        callback.setTabTracksCount(trackList.size());
+
     }
+
 
     @Override
     public void onTrackUpdated(Track downloadedTrack) {
@@ -365,9 +406,5 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
 
         }
 
-    }
-
-    public int getTracksCount() {
-        return trackList != null ? trackList.size() : 0;
     }
 }

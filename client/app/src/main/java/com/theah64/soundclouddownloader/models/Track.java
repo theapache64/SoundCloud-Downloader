@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -183,5 +184,15 @@ public class Track implements Serializable, ITSNode {
 
     public void setDownloadUrl(String downloadUrl) {
         this.downloadUrl = downloadUrl;
+    }
+
+    public static int getTrackPosition(List<Track> trackList, Track track) {
+        for (int i = 0; i < trackList.size(); i++) {
+            final Track t = trackList.get(i);
+            if (t.getId().equals(track.getId())) {
+                return i;
+            }
+        }
+        throw new IllegalArgumentException("failed to find track " + track);
     }
 }

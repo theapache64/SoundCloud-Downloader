@@ -11,7 +11,7 @@
         android:title="@string/Share_URL" />
 
     <item
-        android:id="@+id/miRemovePlaylist"
+        android:id="@+id/miRemove"
         android:title="@string/Remove" />
 
 </menu>

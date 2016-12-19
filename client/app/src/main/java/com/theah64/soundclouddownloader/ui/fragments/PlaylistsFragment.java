@@ -122,9 +122,13 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) {
-                    callback.hideFabAdd();
+                    if (callback.isFabAddShown()) {
+                        callback.hideFabAdd();
+                    }
                 } else if (dy < 0) {
-                    callback.showFabAdd();
+                    if (!callback.isFabAddShown()) {
+                        callback.showFabAdd();
+                    }
                 }
             }
 

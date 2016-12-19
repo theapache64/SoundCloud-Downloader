@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.firebase.crash.FirebaseCrash;
+import com.theah64.soundclouddownloader.interfaces.TrackListener;
 import com.theah64.soundclouddownloader.models.Track;
 
 import java.io.File;
@@ -26,7 +27,7 @@ public class Tracks extends BaseTable<Track> {
     private static final String TABLE_NAME_TRACKS = "tracks";
     public static final String COLUMN_PLAYLIST_ID = "playlist_id";
     private static final String X = Tracks.class.getSimpleName();
-    public static final String COLUMN_ABS_FILE_PATH = "abs_file_path";
+    private static final String COLUMN_ABS_FILE_PATH = "abs_file_path";
     public static final String COLUMN_IS_DOWNLOADED = "is_downloaded";
     public static final String COLUMN_USERNAME = "username";
     public static final String COLUMN_DURATION = "duration";
@@ -202,6 +203,7 @@ public class Tracks extends BaseTable<Track> {
     }
 
     private void onTrackUpdated(Track track) {
+
         //Track updated, so alerting the listeners
         if (getApp().getTrackListener() != null) {
             getApp().getTrackListener().onTrackUpdated(track);
@@ -231,22 +233,58 @@ public class Tracks extends BaseTable<Track> {
         }
 
         if (handler != null) {
+
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    //Track updated, so alerting the listeners
-                    if (getApp().getTrackListener() != null) {
-                        getApp().getTrackListener().onTrackUpdated(track);
-                    }
-
-                    if (track.getPlaylistId() != null && getApp().getPlaylistListener() != null) {
-
-                        //The track is from a playlist and we've playlist track listener
-                        getApp().getPlaylistListener().onPlaylistUpdated(track.getPlaylistId());
-
-                    }
+                    onTrackUpdated(track);
                 }
             });
+        } else {
+            onTrackUpdated(track);
+        }
+
+        return true;
+    }
+
+    public boolean delete(String whereColumn, String whereColumnValue, @Nullable Handler handler) {
+
+        final Track track = get(whereColumn, whereColumnValue);
+
+        if (track == null) {
+            throw new IllegalArgumentException("failed to find track with " + whereColumn + '=' + whereColumnValue);
+        }
+
+        if (super.delete(whereColumn, whereColumnValue)) {
+
+            if (handler != null) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        //Track updated, so alerting the listeners
+                        if (getApp().getTrackListener() != null) {
+                            getApp().getTrackListener().onTrackRemoved(track, TrackListener.TRACK_POSITION_UNKNOWN);
+                        }
+
+                        if (track.getPlaylistId() != null && getApp().getPlaylistListener() != null) {
+
+                            //The track is from a playlist and we've playlist track listener
+                            getApp().getPlaylistListener().onPlaylistUpdated(track.getPlaylistId());
+
+                        }
+
+                        if (getApp().getPlaylistTrackListener() != null) {
+                            getApp().getPlaylistTrackListener().onTrackUpdated(track);
+                        }
+
+                    }
+                });
+            } else {
+
+            }
+        } else {
+            throw new IllegalArgumentException("Failed to delete track with " + whereColumn + '=' + whereColumnValue + " : " + track);
         }
 
         return true;

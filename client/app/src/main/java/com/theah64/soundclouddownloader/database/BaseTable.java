@@ -134,7 +134,7 @@ public class BaseTable<T> extends SQLiteOpenHelper {
         this.getWritableDatabase().delete(getTableName(), null, null);
     }
 
-    public final boolean delete(final String whereColumn, final String whereColumnValue) {
+    public boolean delete(final String whereColumn, final String whereColumnValue) {
         return this.getWritableDatabase().delete(getTableName(), whereColumn + " = ?", new String[]{whereColumnValue}) == 1;
     }
 
