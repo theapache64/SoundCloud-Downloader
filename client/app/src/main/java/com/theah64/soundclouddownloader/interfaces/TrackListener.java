@@ -1,5 +1,6 @@
 package com.theah64.soundclouddownloader.interfaces;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.theah64.soundclouddownloader.models.Track;
@@ -9,11 +10,9 @@ import com.theah64.soundclouddownloader.models.Track;
  */
 
 public interface TrackListener {
-    int TRACK_POSITION_UNKNOWN = -1;
-
     void onNewTrack(Track newTrack);
 
-    void onTrackRemoved(@Nullable  Track track, int position);
+    void onTrackRemoved(@NonNull Track removedTrack);
 
-    void onTrackUpdated(Track updatedTrack);
+    void onTrackUpdated(@NonNull Track updatedTrack);
 }

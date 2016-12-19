@@ -89,8 +89,8 @@ public class Tracks extends BaseTable<Track> {
 
     private void onNewTrack(final Track track) {
 
-        if (getApp().getTrackListener() != null) {
-            getApp().getTrackListener().onNewTrack(track);
+        if (getApp().getMainTrackListener() != null) {
+            getApp().getMainTrackListener().onNewTrack(track);
         }
 
         if (track.getPlaylistId() != null && getApp().getPlaylistListener() != null) {
@@ -205,8 +205,8 @@ public class Tracks extends BaseTable<Track> {
     private void onTrackUpdated(Track track) {
 
         //Track updated, so alerting the listeners
-        if (getApp().getTrackListener() != null) {
-            getApp().getTrackListener().onTrackUpdated(track);
+        if (getApp().getMainTrackListener() != null) {
+            getApp().getMainTrackListener().onTrackUpdated(track);
         }
 
         if (track.getPlaylistId() != null && getApp().getPlaylistListener() != null) {
@@ -261,32 +261,37 @@ public class Tracks extends BaseTable<Track> {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-
-                        //Track updated, so alerting the listeners
-                        if (getApp().getTrackListener() != null) {
-                            getApp().getTrackListener().onTrackRemoved(track, TrackListener.TRACK_POSITION_UNKNOWN);
-                        }
-
-                        if (track.getPlaylistId() != null && getApp().getPlaylistListener() != null) {
-
-                            //The track is from a playlist and we've playlist track listener
-                            getApp().getPlaylistListener().onPlaylistUpdated(track.getPlaylistId());
-
-                        }
-
-                        if (getApp().getPlaylistTrackListener() != null) {
-                            getApp().getPlaylistTrackListener().onTrackUpdated(track);
-                        }
-
+                        onTrackRemoved(track);
                     }
                 });
             } else {
-
+                onTrackRemoved(track);
             }
+
         } else {
             throw new IllegalArgumentException("Failed to delete track with " + whereColumn + '=' + whereColumnValue + " : " + track);
         }
 
         return true;
+    }
+
+    private void onTrackRemoved(final Track track) {
+
+        //Track updated, so alerting the listeners
+        if (getApp().getMainTrackListener() != null) {
+            getApp().getMainTrackListener().onTrackRemoved(track);
+        }
+
+        if (getApp().getPlaylistTrackListener() != null) {
+            getApp().getPlaylistTrackListener().onTrackRemoved(track);
+        }
+
+        if (track.getPlaylistId() != null && getApp().getPlaylistListener() != null) {
+
+            //The track is from a playlist and we've playlist track listener
+            getApp().getPlaylistListener().onPlaylistUpdated(track.getPlaylistId());
+
+        }
+
     }
 }

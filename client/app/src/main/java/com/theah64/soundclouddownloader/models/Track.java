@@ -186,13 +186,13 @@ public class Track implements Serializable, ITSNode {
         this.downloadUrl = downloadUrl;
     }
 
-    public static int getTrackPosition(List<Track> trackList, Track track) {
+    public static int getTrackPosition(List<Track> trackList, final String trackId) {
         for (int i = 0; i < trackList.size(); i++) {
             final Track t = trackList.get(i);
-            if (t.getId().equals(track.getId())) {
+            if (t.getId().equals(trackId)) {
                 return i;
             }
         }
-        throw new IllegalArgumentException("failed to find track " + track);
+        throw new IllegalArgumentException("failed to find track id" + trackId);
     }
 }

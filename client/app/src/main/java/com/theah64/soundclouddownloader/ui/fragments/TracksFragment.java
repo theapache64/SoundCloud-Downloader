@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -74,7 +75,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
         if (isLaunchedToListPlaylistTracks) {
             app.setPlaylistTrackListener(this);
         } else {
-            app.setTrackListener(this);
+            app.setMainTrackListener(this);
         }
     }
 
@@ -87,9 +88,9 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
         }
 
 
-        final TrackListener trackListener = app.getTrackListener();
+        final TrackListener trackListener = app.getMainTrackListener();
         if (this.equals(trackListener)) {
-            app.setTrackListener(null);
+            app.setMainTrackListener(null);
         }
 
         super.onDestroy();
@@ -243,7 +244,8 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
                         .setAction(R.string.YES, new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                onTrackRemoved(null, item.getGroupId());
+                                //just call this method and everything will be cared.
+                                tracksTable.delete(Tracks.COLUMN_ID, track.getId(), null);
 
                             }
                         }).show();
@@ -291,9 +293,14 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
 
         trackList.add(0, newTrack);
         itsAdapter.notifyItemInserted(0);
-        callback.setTabTracksCount(trackList.size());
         rvTracks.scrollToPosition(0);
 
+        updateTabsAndNothingFounds();
+    }
+
+    private void updateTabsAndNothingFounds() {
+
+        callback.setTabTracksCount(trackList.size());
 
         if (trackList.isEmpty()) {
             //showing no tracks downloaded text view.
@@ -301,82 +308,30 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
         } else {
             layout.findViewById(R.id.llNoTracksFound).setVisibility(View.GONE);
         }
+
     }
 
     @Override
-    public void onTrackRemoved(@Nullable Track removedTrack, int position) {
+    public void onTrackRemoved(@NonNull Track removedTrack) {
+        final int removedTrackPosition = Track.getTrackPosition(trackList, removedTrack.getId());
+        trackList.remove(removedTrackPosition);
+        itsAdapter.notifyItemRemoved(removedTrackPosition);
 
-        if (position == TRACK_POSITION_UNKNOWN) {
-            //find track position
-            position = Track.getTrackPosition(trackList, removedTrack);
-        }
-
-        removedTrack = trackList.get(position);
-
-
-        if (tracksTable.delete(Tracks.COLUMN_ID, removedTrack.getId(), null)) {
-
-            if (removedTrack.getPlaylistId() != null) {
-
-                if (isLaunchedToListPlaylistTracks && app.getPlaylistListener() != null) {
-                    //Tracks fragment shows at PlaylistTracksActivity, so update this activity
-                    app.getPlaylistListener().onPlaylistUpdated(removedTrack.getPlaylistId());
-                } else {
-                    //tracks fragment shows at main activity, so update main activity
-                    callback.onRemovePlaylistTrack(removedTrack.getPlaylistId());
-                }
-            }
-
-            if (app.getTrackListener() != null) {
-                app.getTrackListener().onTrackRemoved(removedTrack, position);
-            }
-
-
-            trackList.remove(position);
-            itsAdapter.notifyItemRemoved(position);
-
-            Toast.makeText(getActivity(), R.string.Removed, Toast.LENGTH_SHORT).show();
-
-        } else {
-            Toast.makeText(getActivity(), R.string.Failed_to_remove, Toast.LENGTH_SHORT).show();
-        }
-
-        if (trackList.isEmpty()) {
-            //showing no tracks downloaded text view.
-            layout.findViewById(R.id.llNoTracksFound).setVisibility(View.VISIBLE);
-        }
-
-
-        //Updating tabcount
-        callback.setTabTracksCount(trackList.size());
-
+        updateTabsAndNothingFounds();
     }
-
 
     @Override
-    public void onTrackUpdated(Track downloadedTrack) {
-        for (int i = 0; i < trackList.size(); i++) {
-
-            final Track track = trackList.get(i);
-
-            if (track.getId().equals(downloadedTrack.getId())) {
-                Log.d(X, "Downloaded track found : " + track);
-
-                //Removing the old track
-                trackList.remove(i);
-                trackList.add(i, downloadedTrack);
-                itsAdapter.notifyItemChanged(i);
-                return;
-            }
-        }
-
-        throw new IllegalArgumentException("Couldn't find the downloaded track");
+    public void onTrackUpdated(@NonNull Track updatedTrack) {
+        final int updatedTrackPosition = Track.getTrackPosition(trackList, updatedTrack.getId());
+        trackList.remove(updatedTrackPosition);
+        trackList.add(updatedTrackPosition, updatedTrack);
+        itsAdapter.notifyItemChanged(updatedTrackPosition);
     }
+
 
     public void onPlaylistRemoved(String removedPlaylistId) {
 
         if (trackList != null) {
-
 
             Log.d(X, "Total tracks: " + trackList.size());
             Log.d(X, "Removed playlist ID " + removedPlaylistId);
@@ -398,12 +353,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
             trackList.addAll(unDeletedTracks);
             itsAdapter.notifyDataSetChanged();
 
-            if (trackList.isEmpty()) {
-                layout.findViewById(R.id.llNoTracksFound).setVisibility(View.VISIBLE);
-            }
-
-            callback.setTabTracksCount(trackList.size());
-
+            updateTabsAndNothingFounds();
         }
 
     }
