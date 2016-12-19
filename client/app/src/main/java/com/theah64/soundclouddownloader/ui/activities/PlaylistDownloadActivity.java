@@ -113,7 +113,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
                         if (isExistInStorage()) {
                             //noinspection ConstantConditions
-                            return "Exists in " + getFile().getParentFile().getName() + "/" + getFile().getName();
+                            return "#Existing track ../" + getFile().getParentFile().getName() + "/" + getFile().getName();
                         } else if (isDownloaded() && !isExistInStorage()) {
                             return "(Saved but moved/deleted)";
                         } else {
