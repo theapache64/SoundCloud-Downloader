@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.theah64.zoundloader">
+    package="com.theah64.musicdog">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -8,19 +8,19 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-        android:name="com.theah64.zoundloader.utils.App"
+        android:name="com.theah64.musicdog.utils.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.theah64.zoundloader.ui.activities.MainActivity"
+            android:name="com.theah64.musicdog.ui.activities.MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.theah64.zoundloader.ui.activities.DownloaderActivity"
+            android:name="com.theah64.musicdog.ui.activities.DownloaderActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize">
             <intent-filter android:priority="9998">
                 <action android:name="android.intent.action.SEND" />
@@ -56,12 +56,12 @@
         </activity>
 
         <service
-            android:name="com.theah64.zoundloader.services.DownloaderService"
+            android:name="com.theah64.musicdog.services.DownloaderService"
             android:enabled="true"
             android:exported="true" />
 
         <activity
-            android:name="com.theah64.zoundloader.ui.activities.SplashActivity"
+            android:name="com.theah64.musicdog.ui.activities.SplashActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -71,39 +71,39 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.theah64.zoundloader.ui.activities.PlaylistDownloadActivity"
+            android:name="com.theah64.musicdog.ui.activities.PlaylistDownloadActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.theah64.zoundloader.ui.activities.TestActivity"
+            android:name="com.theah64.musicdog.ui.activities.TestActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
         <activity
-            android:name="com.theah64.zoundloader.ui.activities.PlaylistTracksActivity"
+            android:name="com.theah64.musicdog.ui.activities.PlaylistTracksActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver
-            android:name="com.theah64.zoundloader.receivers.OnDownloadFinishedReceiver"
+            android:name="com.theah64.musicdog.receivers.OnDownloadFinishedReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.theah64.zoundloader.receivers.OnBootCompleted">
+        <receiver android:name="com.theah64.musicdog.receivers.OnBootCompleted">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-        <service android:name="com.theah64.zoundloader.services.ClipboardWatchIgniterService" />
+        <service android:name="com.theah64.musicdog.services.ClipboardWatchIgniterService" />
 
         <activity
-            android:name="com.theah64.zoundloader.ui.activities.settings.SettingsActivity"
+            android:name="com.theah64.musicdog.ui.activities.settings.SettingsActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:label="@string/Settings"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.theah64.zoundloader.ui.activities.settings.SettingsActivityCompat"
+            android:name="com.theah64.musicdog.ui.activities.settings.SettingsActivityCompat"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:label="@string/Settings"
             android:theme="@style/AppTheme.NoActionBar" />

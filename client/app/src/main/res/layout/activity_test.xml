@@ -4,7 +4,7 @@
     android:id="@+id/activity_test"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.theah64.zoundloader.ui.activities.TestActivity">
+    tools:context="com.theah64.musicdog.ui.activities.TestActivity">
 
     <FrameLayout
         android:id="@+id/flContainer"
