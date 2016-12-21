@@ -17,7 +17,7 @@ public class Track implements Serializable, ITSNode {
     public static final String KEY_PLAYLIST_NAME = "playlist_name";
     private String id;
     private final String title, username;
-    private String downloadUrl;
+    private final String downloadUrl;
     private final String artWorkUrl;
     private String downloadId;
     private final String soundCloudUrl;
@@ -178,10 +178,6 @@ public class Track implements Serializable, ITSNode {
 
     public boolean isExistInStorage() {
         return file != null && file.exists();
-    }
-
-    public void setDownloadUrl(String downloadUrl) {
-        this.downloadUrl = downloadUrl;
     }
 
     public static int getTrackPosition(List<Track> trackList, final String trackId) {

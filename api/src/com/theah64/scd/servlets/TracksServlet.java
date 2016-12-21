@@ -1,5 +1,6 @@
 package com.theah64.scd.servlets;
 
+import com.theah64.scd.core.OldSoundCloudDownloader;
 import com.theah64.scd.core.SoundCloudDownloader;
 import com.theah64.scd.database.tables.BaseTable;
 import com.theah64.scd.database.tables.Preference;
@@ -73,10 +74,11 @@ public final class TracksServlet extends AdvancedBaseServlet {
     }
 
     private JSONTracks getTracks() throws BaseTable.InsertFailedException {
-        final String userId = isSecureServlet() ? getHeaderSecurity().getUserId() : Preference.getInstance().getString(Preference.KEY_DEFAULT_USER_ID);
+        final Preference prefTable = Preference.getInstance();
+        final String userId = isSecureServlet() ? getHeaderSecurity().getUserId() : prefTable.getString(Preference.KEY_DEFAULT_USER_ID);
         final String soundCloudUrl = getStringParameter(Requests.COLUMN_SOUND_CLOUD_URL);
         final com.theah64.scd.models.Request apiRequest = new com.theah64.scd.models.Request(userId, soundCloudUrl);
         Requests.getInstance().add(apiRequest);
-        return SoundCloudDownloader.getSoundCloudTracks(soundCloudUrl);
+        return prefTable.getString(Preference.KEY_IS_NEW_SOUNDCLOUD_DOWNLOADER).equals(Preference.TRUE) ? SoundCloudDownloader.getTracks(soundCloudUrl) : OldSoundCloudDownloader.getTracks(soundCloudUrl);
     }
 }

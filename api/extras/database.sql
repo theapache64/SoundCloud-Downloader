@@ -37,6 +37,8 @@ INSERT INTO preference (_key, _value) VALUES
   ('gmail_password', 'mypassword64'),
   ('admin_email', 'theapache64@gmail.com'),
   ('is_debug_download', '0'),
-  ('filename_format', '%s_%s_theapache64.%s');
+  ('filename_format', '%s_theah64.%s'),
+  ('is_new_soundcloud_downloader', '1'),
+  ('is_direct_download', '0');
 
 

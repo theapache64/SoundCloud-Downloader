@@ -56,7 +56,6 @@ public class DownloaderServlet extends AdvancedBaseServlet {
 
     }
 
-
     private static final String STREAM_TRACK_URL_FORMAT = "https://api.soundcloud.com/i1/tracks/%s/streams?client_id=" + CLIENT_ID;
 
     static String getSoundCloudDownloadUrl(String trackId) {
@@ -72,7 +71,9 @@ public class DownloaderServlet extends AdvancedBaseServlet {
 
         if (downloadTrackResp != null) {
             try {
-                return new JSONObject(downloadTrackResp).getString("http_mp3_128_url");
+                final String trackUrl = new JSONObject(downloadTrackResp).getString("http_mp3_128_url");
+                System.out.println("TRACK: " + trackUrl);
+                return trackUrl;
             } catch (JSONException e) {
                 e.printStackTrace();
             }

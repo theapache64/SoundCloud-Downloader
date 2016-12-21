@@ -15,6 +15,7 @@ CREATE TABLE tracks(
 	username VARCHAR(100) NOT NULL,
 	duration INTEGER NOT NULL,
 	soundcloud_url TEXT NOT NULL,
+	download_url TEXT NOT NULL,
 	artwork_url TEXT DEFAULT NULL,
 	abs_file_path TEXT NOT NULL,
     is_downloaded INTEGER CHECK(is_downloaded IN (0,1)) NOT NULL DEFAULT 0,
