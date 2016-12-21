@@ -23,11 +23,8 @@ import java.net.URLConnection;
 /**
  * Created by theapache64 on 8/12/16.
  */
-@WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + "/scd/direct"})
+@WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + "/direct_download"})
 public class DirectDownloaderServlet extends DownloaderServlet {
-
-    private static final String KEY_DOWNLOAD_URL = "download_url";
-    private static final String KEY_NAME = "name";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -47,31 +44,31 @@ public class DirectDownloaderServlet extends DownloaderServlet {
 
     @Override
     protected String[] getRequiredParameters() {
-        return new String[]{Requests.COLUMN_SOUND_CLOUD_URL};
+        return new String[]{Track.KEY_ID, Track.KEY_FILENAME};
     }
 
     @Override
     protected void doAdvancedPost() throws BaseTable.InsertFailedException, JSONException, BaseTable.UpdateFailedException, Request.RequestException {
 
-        final JSONTracks jTracks = super.getTracks();
-
         final HttpServletResponse response = super.getHttpServletResponse();
 
+        System.out.println("Track found");
 
-        if (jTracks != null) {
+        final String trackId = getStringParameter(Track.KEY_ID);
+        final String downloadUrl = getSoundCloudDownloadUrl(trackId);
 
-            System.out.println("Track found");
+        if (downloadUrl != null) {
 
-            final JSONObject joTrack = jTracks.getJSONArrayTracks().getJSONObject(0);
+            final String fileName = getStringParameter(Track.KEY_FILENAME);
 
             response.setContentType("audio/mpeg");
-            response.addHeader("Content-Disposition", "attachment; filename=" + joTrack.getString(Track.KEY_FILENAME));
+            response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
 
             BufferedInputStream bis = null;
             ServletOutputStream sos = null;
 
             try {
-                final URL url = new URL(joTrack.getString(Track.KEY_DOWNLOAD_URL));
+                final URL url = new URL(downloadUrl);
                 final URLConnection con = url.openConnection();
                 response.setContentLength((int) con.getContentLength());
 
@@ -117,14 +114,10 @@ public class DirectDownloaderServlet extends DownloaderServlet {
 
 
         } else {
-            System.out.println("Couldn't find track");
-            try {
-                response.setContentType(CONTENT_TYPE_JSON);
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                response.getWriter().write(new APIResponse("Invalid soundcloud url").getResponse());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            response.setContentType(CONTENT_TYPE_JSON);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            throw new Request.RequestException("Invalid track id");
         }
+
     }
 }

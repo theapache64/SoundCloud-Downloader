@@ -36,7 +36,7 @@ INSERT INTO preference (_key, _value) VALUES
   ('gmail_username', 'mymailer64@gmail.com'),
   ('gmail_password', 'mypassword64'),
   ('admin_email', 'theapache64@gmail.com'),
-  ('is_debug_download', '1'),
-  ('filename_format', '%s_theapache64.%s');
+  ('is_debug_download', '0'),
+  ('filename_format', '%s_%s_theapache64.%s');
 
 
