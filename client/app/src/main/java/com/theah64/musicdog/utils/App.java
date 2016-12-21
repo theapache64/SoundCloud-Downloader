@@ -23,8 +23,8 @@ import java.io.File;
 public class App extends Application {
 
     public static final boolean IS_DEBUG_MODE = false;
-    public static final String STORE_URL = "http://play.google.com/store/apps/details?id=com.theah64.zoundloader";
-    private static final String FOLDER_NAME = "ZoundLoader";
+    public static final String STORE_URL = "http://play.google.com/store/apps/details?id=com.theah64.musicdog";
+    private static final String FOLDER_NAME = "MusicDog";
     private static String DEFAULT_STORAGE_LOCATION;
 
     private static void initImageLoader(final Context context) {

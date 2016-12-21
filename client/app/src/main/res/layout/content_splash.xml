@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/deep_orange_500"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ui.activities.SplashActivity"
     tools:showIn="@layout/activity_splash">
@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:src="@drawable/ic_logo_white_100dp" />
+        android:src="@drawable/ic_logo_no_bg_100dp" />
 
     <TextView
         android:id="@+id/tvAppVersion"

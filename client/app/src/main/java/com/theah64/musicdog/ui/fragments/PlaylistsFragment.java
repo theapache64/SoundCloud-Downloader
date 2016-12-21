@@ -186,7 +186,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
 
                 if (!existingTracks.isEmpty()) {
                     final Intent shareTracksIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-                    shareTracksIntent.putExtra(Intent.EXTRA_TEXT, String.format("Downloaded via ZoundLoader (%s)  Playlist: %s ", App.STORE_URL, currentPlaylist.getTitle())); //TOOD: Modify sub
+                    shareTracksIntent.putExtra(Intent.EXTRA_TEXT, String.format("Downloaded via MusicDog (%s)  Playlist: %s ", App.STORE_URL, currentPlaylist.getTitle())); //TOOD: Modify sub
                     shareTracksIntent.setType("audio/*");
                     shareTracksIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, existingTracks);
                     startActivity(shareTracksIntent);

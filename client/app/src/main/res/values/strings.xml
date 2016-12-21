@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ZoundLoader</string>
+    <string name="app_name">MusicDog</string>
     <string name="action_settings">Settings</string>
     <string name="initializing_download">Initializing download…</string>
     <string name="Invalid_soundcloud_URL">Invalid soundcloud URL</string>
@@ -25,8 +25,8 @@
     <string name="Removed">Removed</string>
     <string name="Play">Play</string>
     <string name="Please_download_the_track">Please download the track</string>
-    <string name="Download_track_using_soundcloud_downloader_s" formatted="false">Hey, I\'ve downloaded this track using \'ZoundLoader\'.Check this out %s \n\n %s - %s</string>
-    <string name="Download_playlist_using_soundcloud_downloader_s" formatted="false">Hey,I\'ve downloaded the entire playlist using \'ZoundLoader\'. Check this out %s \n\n %s - %s</string>
+    <string name="Download_track_using_soundcloud_downloader_s" formatted="false">Hey, I\'ve downloaded this track using \'MusicDog\'.Check this out %s \n\n %s - %s</string>
+    <string name="Download_playlist_using_soundcloud_downloader_s" formatted="false">Hey,I\'ve downloaded the entire playlist using \'MusicDog\'. Check this out %s \n\n %s - %s</string>
     <string name="Check_all_tracks">Check all tracks</string>
     <string name="miUnCheckAllTracks">UnCheck all tracks</string>
     <string name="Existing_track_s">Existing track %s</string>
