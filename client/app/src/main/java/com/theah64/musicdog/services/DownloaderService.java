@@ -101,12 +101,18 @@ public class DownloaderService extends Service {
                 if (track != null && track.isExistInStorage()) {
                     //track exist in db and storage
 
+                    //Checking if the track file is true
+                    if (!track.isDownloaded()) {
+                        tracksTable.update(Tracks.COLUMN_ID, track.getId(), Tracks.COLUMN_IS_DOWNLOADED, Tracks.TRUE, handler);
+                    }
+
                     //noinspection ConstantConditions - already checked with track.isExistInStorage;
                     notification.showNotification(getString(R.string.Track_exists), track.getTitle(), track.getFile().getAbsolutePath(), false);
 
                 } else {
                     fireApi(track, soundCloudUrl);
                 }
+
             } else {
                 fireApi(null, soundCloudUrl);
             }
@@ -120,62 +126,49 @@ public class DownloaderService extends Service {
         return START_STICKY;
     }
 
-    private void fireApi(final Track track, final String soundCloudUrl) {
+    private void fireApi(Track track, final String soundCloudUrl) {
 
-        notification.showNotification(getString(R.string.initializing_download), track == null ? soundCloudUrl : track.getTitle(), track == null ? null : track.getTitle(), true);
+        final DownloadUtils downloadUtils = new DownloadUtils(DownloaderService.this);
 
-        //Building json download request
-        final Request scdRequest = new APIRequestBuilder("/scd/json")
-                .addParam("soundcloud_url", soundCloudUrl)
-                .build();
+        if (track == null) {
 
-        //Processing request
-        OkHttpUtils.getInstance().getClient().newCall(scdRequest).enqueue(new Callback() {
+            notification.showNotification(getString(R.string.initializing_download), soundCloudUrl, null, true);
 
-            @Override
-            public void onFailure(Call call, IOException e) {
-                showToast("ERROR: " + e.getMessage());
+            //Building json download request
+            final Request scdRequest = new APIRequestBuilder("/json")
+                    .addParam("soundcloud_url", soundCloudUrl)
+                    .build();
 
-                notification.showNotification(
-                        getString(R.string.Network_error),
-                        getString(R.string.network_error),
-                        e.getMessage(),
-                        false
-                );
-            }
+            //Processing request
+            OkHttpUtils.getInstance().getClient().newCall(scdRequest).enqueue(new Callback() {
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    showToast("ERROR: " + e.getMessage());
 
-                    final APIResponse apiResponse = new APIResponse(OkHttpUtils.logAndGetStringBody(response));
+                    notification.showNotification(
+                            getString(R.string.Network_error),
+                            getString(R.string.network_error),
+                            e.getMessage(),
+                            false
+                    );
+                }
 
-                    final JSONObject joData = apiResponse.getJSONObjectData();
-                    final JSONArray jaTracks = joData.getJSONArray("tracks");
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    try {
 
-                    final DownloadUtils downloadUtils = new DownloadUtils(DownloaderService.this);
-                    if (!joData.has(Track.KEY_PLAYLIST_NAME)) {
+                        final APIResponse apiResponse = new APIResponse(OkHttpUtils.logAndGetStringBody(response));
 
-                        final JSONObject joTrack = jaTracks.getJSONObject(0);
+                        final JSONObject joData = apiResponse.getJSONObjectData();
+                        final JSONArray jaTracks = joData.getJSONArray("tracks");
 
-                        final String downloadUrl = joTrack.getString("download_url");
 
-                        //Single track
-                        if (track != null && !track.isExistInStorage()) {
+                        if (!joData.has(Track.KEY_PLAYLIST_NAME)) {
 
-                            //Track exist in db but in storage so download
-                            track.setDownloadUrl(downloadUrl);
-                            final long downloadId = downloadUtils.addToDownloadQueue(track);
-                            //Updating
-                            track.setDownloadId(String.valueOf(downloadId));
-
-                            //Track exist so just updating the download id.
-                            tracksTable.update(track, handler);
-                            showToast(getString(R.string.s_added_to_download_queue, track.getTitle()));
-
-                        } else {
-
-                            //New track
+                            //Managing new track
+                            final JSONObject joTrack = jaTracks.getJSONObject(0);
+                            final String downloadUrl = joTrack.getString("download_url");
                             final String title = joTrack.getString("title");
 
                             String artworkUrl = null;
@@ -202,47 +195,57 @@ public class DownloaderService extends Service {
                             //Adding track to database -
                             tracksTable.add(newtrack, handler);
                             showToast(getString(R.string.s_added_to_download_queue, newtrack.getTitle()));
+
+                        } else {
+
+                            //It's a playlist
+                            showToast("Playlist ready!");
+
+                            final String playlistName = joData.getString("playlist_name");
+                            final String username = joData.getString("username");
+
+                            String artworkUrl = null;
+                            if (joData.has(Playlists.COLUMN_ARTWORK_URL)) {
+                                artworkUrl = joData.getString(Playlists.COLUMN_ARTWORK_URL);
+                            }
+
+                            final Intent playListDownloadIntent = new Intent(DownloaderService.this, PlaylistDownloadActivity.class);
+
+                            playListDownloadIntent.putExtra(Playlist.KEY, new Playlist(null, playlistName, username, soundCloudUrl, artworkUrl, -1, -1, -1));
+                            playListDownloadIntent.putExtra(PlaylistDownloadActivity.KEY_TRACKS, jaTracks.toString());
+
+
+                            playListDownloadIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                            startActivity(playListDownloadIntent);
+
                         }
 
 
-                    } else {
+                        notification.dismiss();
 
-                        //It's a playlist
-                        showToast("Playlist ready!");
-
-                        final String playlistName = joData.getString("playlist_name");
-                        final String username = joData.getString("username");
-
-                        String artworkUrl = null;
-                        if (joData.has(Playlists.COLUMN_ARTWORK_URL)) {
-                            artworkUrl = joData.getString(Playlists.COLUMN_ARTWORK_URL);
-                        }
-
-                        final Intent playListDownloadIntent = new Intent(DownloaderService.this, PlaylistDownloadActivity.class);
-
-                        playListDownloadIntent.putExtra(Playlist.KEY, new Playlist(null, playlistName, username, soundCloudUrl, artworkUrl, -1, -1, -1));
-                        playListDownloadIntent.putExtra(PlaylistDownloadActivity.KEY_TRACKS, jaTracks.toString());
-
-
-                        playListDownloadIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                        startActivity(playListDownloadIntent);
-
+                    } catch (APIResponse.APIException | JSONException e) {
+                        e.printStackTrace();
+                        notification.showNotification(
+                                getString(R.string.Server_error),
+                                getString(R.string.Server_error_occurred), e.getMessage(), false);
+                        showToast("ERROR: " + e.getMessage());
                     }
-
-
-                    notification.dismiss();
-
-                } catch (APIResponse.APIException | JSONException e) {
-                    e.printStackTrace();
-                    notification.showNotification(
-                            getString(R.string.Server_error),
-                            getString(R.string.Server_error_occurred), e.getMessage(), false);
-                    showToast("ERROR: " + e.getMessage());
                 }
-            }
 
-        });
+            });
+
+        } else {
+
+            final long downloadId = downloadUtils.addToDownloadQueue(track);
+
+            //Updating
+            track.setDownloadId(String.valueOf(downloadId));
+
+            //Track exist so just updating the download id.
+            tracksTable.update(track, handler);
+            showToast(getString(R.string.s_added_to_download_queue, track.getTitle()));
+        }
 
 
     }
