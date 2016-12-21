@@ -1,6 +1,5 @@
 package com.theah64.scd.models;
 
-import com.theah64.scd.utils.FileNameUtils;
 import org.json.JSONArray;
 
 /**

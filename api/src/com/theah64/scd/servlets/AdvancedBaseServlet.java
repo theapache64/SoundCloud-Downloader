@@ -1,5 +1,6 @@
 package com.theah64.scd.servlets;
 
+import com.theah64.scd.database.Connection;
 import com.theah64.scd.database.tables.BaseTable;
 import com.theah64.scd.utils.APIResponse;
 import com.theah64.scd.utils.HeaderSecurity;
@@ -42,6 +43,10 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
 
         //GET Method not supported
         out.write(new APIResponse(methodErrorMessage).getResponse());
+    }
+
+    public static String getBaseUrl() {
+        return (Connection.isDebugMode() ? "http://192.168.0.107:8080" : "http://theapache64.xyz:8080/scd");
     }
 
     public PrintWriter getWriter() {

@@ -1,12 +1,9 @@
 package com.theah64.scd.servlets;
 
-import com.theah64.scd.core.SoundCloudDownloader;
 import com.theah64.scd.database.tables.BaseTable;
 import com.theah64.scd.database.tables.Preference;
-import com.theah64.scd.database.tables.Requests;
-import com.theah64.scd.models.JSONTracks;
 import com.theah64.scd.models.Track;
-import com.theah64.scd.utils.APIResponse;
+import com.theah64.scd.utils.NetworkHelper;
 import com.theah64.scd.utils.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,15 +14,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.theah64.scd.core.SoundCloudDownloader.CLIENT_ID;
+
 /**
  * Created by theapache64 on 8/12/16.
  */
-@WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + "/scd/json"})
+@WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + "/download"})
 public class DownloaderServlet extends AdvancedBaseServlet {
-
-    private static final String KEY_DOWNLOAD_URL = "download_url";
-    private static final String KEY_NAME = "name";
-    private static final String KEY_TRACKS = "tracks";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -44,40 +39,44 @@ public class DownloaderServlet extends AdvancedBaseServlet {
 
     @Override
     protected String[] getRequiredParameters() {
-        return new String[]{Requests.COLUMN_SOUND_CLOUD_URL};
+        return new String[]{Track.KEY_ID};
     }
 
     @Override
     protected void doAdvancedPost() throws BaseTable.InsertFailedException, JSONException, BaseTable.UpdateFailedException, Request.RequestException, IOException {
 
-        final JSONTracks jTracks = getTracks();
-
-        if (jTracks != null) {
-
-            final JSONObject joTrack = new JSONObject();
-
-            if (jTracks.getPlaylistName() != null) {
-                joTrack.put(Track.KEY_PLAYLIST_NAME, jTracks.getPlaylistName());
-                joTrack.put(Track.KEY_USERNAME, jTracks.getUsername());
-
-                //Playlist cover
-                joTrack.put(Track.KEY_ARTWORK_URL, jTracks.getArtworkUrl());
-            }
-
-
-            joTrack.put(KEY_TRACKS, jTracks.getJSONArrayTracks());
-
-            getWriter().write(new APIResponse("Request processed", joTrack).getResponse());
+        final String trackId = getStringParameter(Track.KEY_ID);
+        final String downloadUrl = getSoundCloudDownloadUrl(trackId);
+        if (downloadUrl != null) {
+            final HttpServletResponse response = super.getHttpServletResponse();
+            response.sendRedirect(downloadUrl);
         } else {
-            getWriter().write(new APIResponse("Invalid soundcloud url").getResponse());
+            throw new Request.RequestException("Invalid track id");
         }
+
     }
 
-    JSONTracks getTracks() throws BaseTable.InsertFailedException {
-        final String userId = isSecureServlet() ? getHeaderSecurity().getUserId() : Preference.getInstance().getString(Preference.KEY_DEFAULT_USER_ID);
-        final String soundCloudUrl = getStringParameter(Requests.COLUMN_SOUND_CLOUD_URL);
-        final com.theah64.scd.models.Request apiRequest = new com.theah64.scd.models.Request(userId, soundCloudUrl);
-        Requests.getInstance().add(apiRequest);
-        return SoundCloudDownloader.getTracks(soundCloudUrl);
+
+    private static final String STREAM_TRACK_URL_FORMAT = "https://api.soundcloud.com/i1/tracks/%s/streams?client_id=" + CLIENT_ID;
+
+    static String getSoundCloudDownloadUrl(String trackId) {
+
+        if (Preference.getInstance().getString(Preference.KEY_IS_DEBUG_DOWNLOAD).equals(Preference.TRUE)) {
+            return AdvancedBaseServlet.getBaseUrl() + "/jaan_kesi.mp3";
+        }
+
+        final String trackDownloadUrl = String.format(STREAM_TRACK_URL_FORMAT, trackId);
+        final String downloadTrackResp = new NetworkHelper(trackDownloadUrl).getResponse();
+
+        System.out.println("Track download url : " + trackDownloadUrl);
+
+        if (downloadTrackResp != null) {
+            try {
+                return new JSONObject(downloadTrackResp).getString("http_mp3_128_url");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }
