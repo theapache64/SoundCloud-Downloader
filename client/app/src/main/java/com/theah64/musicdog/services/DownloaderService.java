@@ -91,7 +91,7 @@ public class DownloaderService extends Service {
             final String soundCloudUrl = intent.getStringExtra(Tracks.COLUMN_SOUNDCLOUD_URL);
 
             if (soundCloudUrl != null) {
-                
+
                 if (!Playlist.isPlaylist(soundCloudUrl)) {
 
                     //It's a track
