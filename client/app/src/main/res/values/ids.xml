@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="miPlay" type="id" />
+    <item name="miShareFile" type="id" />
+    <item name="miShareURL" type="id" />
+    <item name="miRemove" type="id" />
+    <item name="miDownload" type="id" />
+</resources>

@@ -3,7 +3,6 @@ package com.theah64.soundclouddownloader.utils;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Build;
-import android.util.Log;
 
 import java.util.Set;
 
@@ -18,7 +17,6 @@ public class ClipboardUtils {
 
     public static String getSoundCloudUrl(final Context context) {
         final String clipboardData;
-        String soundCloudUrl = null;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             final ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -33,8 +31,6 @@ public class ClipboardUtils {
         if (urls != null) {
             for (final String url : urls) {
                 if (url.matches(SOUNDCLOUD_URL_REGEX)) {
-                    soundCloudUrl = url;
-                    Log.d(X, "SoundCloud URL: " + url);
                     return url;
                 }
             }

@@ -44,5 +44,4 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <color name="grey_300">#E0E0E0</color>
 </resources>

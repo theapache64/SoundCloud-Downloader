@@ -64,7 +64,7 @@ public class ClipboardWatchIgniterService extends Service implements ClipboardMa
                     .setTicker(title)
                     .setSmallIcon(R.drawable.ic_stat_logo_white)
                     .setStyle(new NotificationCompat.BigTextStyle())
-                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_logo_color_24dp))
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_logo_24dp))
                     .setContentTitle(title)
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setAutoCancel(true)

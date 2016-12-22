@@ -17,8 +17,7 @@
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_weight="20"
-            android:scaleType="centerCrop"
-            android:src="@drawable/sample_track_image" />
+            android:scaleType="centerCrop" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -45,7 +44,6 @@
                     android:layout_weight="80"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="The Chainsmokers"
                     android:textColor="@color/black_500"
                     android:textSize="14sp" />
 
@@ -55,9 +53,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="20"
                     android:ellipsize="end"
-                    android:gravity="right"
+                    android:gravity="end"
                     android:maxLines="1"
-                    android:text="03:50"
                     android:textColor="@color/black_400"
                     android:textSize="13sp" />
 
@@ -71,7 +68,6 @@
                 android:layout_marginBottom="4dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Don't let me down"
                 android:textColor="@color/black_800"
                 android:textSize="16sp" />
 
@@ -89,7 +85,6 @@
                     android:layout_weight="90"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="(Saved)"
                     android:textColor="@color/black_400"
                     android:textSize="14sp" />
 

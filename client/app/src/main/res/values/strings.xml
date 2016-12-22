@@ -5,15 +5,11 @@
     <string name="Invalid_soundcloud_URL">Invalid soundcloud URL</string>
     <string name="network_error">No network available, Please check your connection</string>
     <string name="Starting_download">Starting download…</string>
-    <string name="title_activity_playlist_download">Download Playlist</string>
     <string name="download_started">Download started…</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="sample_track_name">Headhunterz - Dragonborn (Breaux Remix)</string>
     <string name="No_tracks_downloaded">No tracks downloaded</string>
     <string name="No_playlist_downloaded">No playlists downloaded</string>
-    <string name="Title">Title</string>
     <string name="Share_file">Share file</string>
     <string name="Remove">Remove</string>
     <string name="Share_URL">Share URL</string>
@@ -21,8 +17,6 @@
     <string name="Share_saved_tracks">Share saved tracks</string>
     <string name="File_not_found">File not found</string>
     <string name="Share_using">Share using</string>
-    <string name="Failed_to_remove">Failed to remove</string>
-    <string name="Removed">Removed</string>
     <string name="Play">Play</string>
     <string name="Please_download_the_track">Please download the track</string>
     <string name="Download_track_using_soundcloud_downloader_s" formatted="false">Hey, I\'ve downloaded this track using \'SoundCloud Downloader\'.Check this out %s \n\n %s - %s</string>
@@ -30,10 +24,8 @@
     <string name="Check_all_tracks">Check all tracks</string>
     <string name="miUnCheckAllTracks">UnCheck all tracks</string>
     <string name="Existing_track_s">Existing track %s</string>
-    <string name="Existing_track_s_s" formatted="false">Existing track %s/%s</string>
     <string name="Share_tracks">Share tracks</string>
     <string name="Share_playlist_URL">Share playlist URL</string>
-    <string name="All_tracks_are_downloaded">All tracks are downloaded</string>
     <string name="Open_SoundCloud">Open SoundCloud</string>
     <string name="Empty">Empty!</string>
     <string name="Download_track_playlist">Download track/playlist</string>
@@ -47,18 +39,15 @@
     <string name="Do_you_really">Do you really want to remove this track ?</string>
     <string name="Empty_playlist">Empty playlist!</string>
     <string name="Storage_location">Storage location</string>
-    <string name="Store_tracks_on">Store tracks on</string>
     <string name="Settings">Settings</string>
     <string name="key_storage_location">storage_location</string>
-    <string name="Choose_file_browser">Choose file browser</string>
     <string name="About">About</string>
     <string name="Developed_by_theapache64">Developed by theapache64</string>
-    <string name="Application_crashed">Ooops!! am crashed!  :/</string>
     <string name="No_file_browser_found">No file browser found</string>
     <string name="Track_exists">Track exists</string>
-    <string name="s_in_s" formatted="false">%s in %s</string>
     <string name="s_added_to_download_queue">%s added to download queue</string>
     <string name="Network_error">Network error!</string>
     <string name="Server_error">Server error</string>
     <string name="Server_error_occurred">Server error occurred, please try again later.</string>
+    <string name="Download_again">Download again</string>
 </resources>

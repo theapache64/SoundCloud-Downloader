@@ -44,7 +44,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         return value;
     }
 
-    @NotNull
+
     protected int getIntOrThrow(String key) {
         final int value = getIntent().getIntExtra(key, -1);
         if (value == -1) {

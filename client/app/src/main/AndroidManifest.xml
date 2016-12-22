@@ -32,6 +32,7 @@
             <intent-filter android:priority="9999">
                 <action android:name="android.intent.action.VIEW" />
 
+                <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data

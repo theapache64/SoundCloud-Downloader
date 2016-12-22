@@ -275,7 +275,7 @@ public class DownloaderService extends Service {
                     .setSmallIcon(R.drawable.ic_stat_logo_white)
                     .setAutoCancel(false)
                     .setDefaults(NotificationCompat.DEFAULT_SOUND)
-                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_logo_color_24dp));
+                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_logo_24dp));
 
         }
 

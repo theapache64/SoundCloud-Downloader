@@ -168,7 +168,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                 .setProgress(100, 0, true)
                 .setAutoCancel(false)
                 .setTicker(getString(R.string.initializing_download))
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_logo_color_24dp));
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_logo_24dp));
 
         notifId = Random.getRandomInt();
 

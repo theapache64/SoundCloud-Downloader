@@ -1,6 +1,8 @@
 package com.theah64.soundclouddownloader.ui.activities.settings;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -10,8 +12,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 
 import com.theah64.musicdog.R;
+
+import static com.theah64.soundclouddownloader.ui.activities.settings.SettingsActivity.SettingsFragment.KEY_STORAGE_LOCATION;
 
 /**
  * This class used as a compatible version of SettingsActivity
@@ -104,7 +109,15 @@ public class SettingsActivityCompat extends PreferenceActivity implements Shared
     public boolean onPreferenceClick(Preference preference) {
 
         switch (preference.getKey()) {
-
+            case KEY_STORAGE_LOCATION:
+                final Intent storageIntent = new Intent(Intent.ACTION_VIEW);
+                storageIntent.setDataAndType(Uri.parse(preference.getSummary().toString()), "resource/folder");
+                if (storageIntent.resolveActivityInfo(getPackageManager(), 0) != null) {
+                    startActivity(storageIntent);
+                } else {
+                    Toast.makeText(this, R.string.No_file_browser_found, Toast.LENGTH_SHORT).show();
+                }
+                return true;
         }
 
         return false;
