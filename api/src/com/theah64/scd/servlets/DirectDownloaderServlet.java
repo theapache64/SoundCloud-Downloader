@@ -16,11 +16,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import static com.theah64.scd.servlets.DownloaderServlet.getSoundCloudDownloadUrl;
+
 /**
  * Created by theapache64 on 8/12/16.
  */
 @WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + "/direct_download"})
-public class DirectDownloaderServlet extends DownloaderServlet {
+public class DirectDownloaderServlet extends AdvancedBaseServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
