@@ -1,35 +1,35 @@
 {
   "project_info": {
-    "project_number": "193421736679",
-    "firebase_url": "https://musicdog-7ab5c.firebaseio.com",
-    "project_id": "musicdog-7ab5c",
-    "storage_bucket": "musicdog-7ab5c.appspot.com"
+    "project_number": "607760617513",
+    "firebase_url": "https://soundcloud-downloader-53706.firebaseio.com",
+    "project_id": "soundcloud-downloader-53706",
+    "storage_bucket": "soundcloud-downloader-53706.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:193421736679:android:32ab7d7077d28a65",
+        "mobilesdk_app_id": "1:607760617513:android:804de5ebfa8ba704",
         "android_client_info": {
-          "package_name": "com.theah64.musicdog"
+          "package_name": "com.theah64.soundclouddownloader"
         }
       },
       "oauth_client": [
         {
-          "client_id": "193421736679-m6qn9h81hpfc81nvgqfeoj619g2sqdhu.apps.googleusercontent.com",
+          "client_id": "607760617513-rre61jo78s0jbs9gt7mgvgp2hmptvalj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.theah64.musicdog",
+            "package_name": "com.theah64.soundclouddownloader",
             "certificate_hash": "243F99B5BBF8E02A8883BDC245CF61B8A6155C36"
           }
         },
         {
-          "client_id": "193421736679-o0d0ukhj70vl4fl2jdf7qrpc1b5g2pvm.apps.googleusercontent.com",
+          "client_id": "607760617513-q0j0ij5ucppebmn11bmp56c71eakt6e0.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB5gUGsSs3Hy4Te0g-C_uhFWSvb9B7bark"
+          "current_key": "AIzaSyDrptNHFk-h7i1ohoWkaf7WaAckfiREsWk"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "193421736679-o0d0ukhj70vl4fl2jdf7qrpc1b5g2pvm.apps.googleusercontent.com",
+              "client_id": "607760617513-q0j0ij5ucppebmn11bmp56c71eakt6e0.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

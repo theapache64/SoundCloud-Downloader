@@ -5,18 +5,18 @@
     android:orientation="vertical"
     android:padding="15dp">
 
-    <com.theah64.musicdog.widgets.ValidTextInputLayout
+    <com.theah64.soundclouddownloader.widgets.ValidTextInputLayout
         android:id="@+id/vtilInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.theah64.musicdog.widgets.AdvancedEditText
+        <com.theah64.soundclouddownloader.widgets.AdvancedEditText
             android:id="@+id/aetInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapWords"
             android:textColor="@color/black_800" />
 
-    </com.theah64.musicdog.widgets.ValidTextInputLayout>
+    </com.theah64.soundclouddownloader.widgets.ValidTextInputLayout>
 
 </LinearLayout>
