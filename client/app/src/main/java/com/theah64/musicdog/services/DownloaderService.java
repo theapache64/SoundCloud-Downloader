@@ -90,31 +90,34 @@ public class DownloaderService extends Service {
             //Converting url to https
             final String soundCloudUrl = intent.getStringExtra(Tracks.COLUMN_SOUNDCLOUD_URL);
 
-            if (!Playlist.isPlaylist(soundCloudUrl)) {
+            if (soundCloudUrl != null) {
+                
+                if (!Playlist.isPlaylist(soundCloudUrl)) {
 
-                //It's a track
-                tracksTable = Tracks.getInstance(this);
+                    //It's a track
+                    tracksTable = Tracks.getInstance(this);
 
-                //Checking if the track had solved before.
-                final Track track = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, soundCloudUrl);
+                    //Checking if the track had solved before.
+                    final Track track = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, soundCloudUrl);
 
-                if (track != null && track.isExistInStorage()) {
-                    //track exist in db and storage
+                    if (track != null && track.isExistInStorage()) {
+                        //track exist in db and storage
 
-                    //Checking if the track file is true
-                    if (!track.isDownloaded()) {
-                        tracksTable.update(Tracks.COLUMN_ID, track.getId(), Tracks.COLUMN_IS_DOWNLOADED, Tracks.TRUE, handler);
+                        //Checking if the track file is true
+                        if (!track.isDownloaded()) {
+                            tracksTable.update(Tracks.COLUMN_ID, track.getId(), Tracks.COLUMN_IS_DOWNLOADED, Tracks.TRUE, handler);
+                        }
+
+                        //noinspection ConstantConditions - already checked with track.isExistInStorage;
+                        notification.showNotification(getString(R.string.Track_exists), track.getTitle(), track.getFile().getAbsolutePath(), false);
+
+                    } else {
+                        fireApi(track, soundCloudUrl);
                     }
 
-                    //noinspection ConstantConditions - already checked with track.isExistInStorage;
-                    notification.showNotification(getString(R.string.Track_exists), track.getTitle(), track.getFile().getAbsolutePath(), false);
-
                 } else {
-                    fireApi(track, soundCloudUrl);
+                    fireApi(null, soundCloudUrl);
                 }
-
-            } else {
-                fireApi(null, soundCloudUrl);
             }
 
 

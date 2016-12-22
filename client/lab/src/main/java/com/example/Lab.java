@@ -1,8 +1,5 @@
 package com.example;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Created by theapache64 on 9/12/16.
  */

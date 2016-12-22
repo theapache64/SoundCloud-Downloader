@@ -4,6 +4,7 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 
 import com.theah64.musicdog.models.Track;
 
@@ -12,6 +13,7 @@ import com.theah64.musicdog.models.Track;
  */
 public class DownloadUtils {
 
+    private static final String X = DownloadUtils.class.getSimpleName();
     private final DownloadManager dm;
 
     public DownloadUtils(final Context context) {
@@ -19,6 +21,8 @@ public class DownloadUtils {
     }
 
     public long addToDownloadQueue(final Track track) {
+
+        Log.d(X, "Adding to download queue : " + track.getDownloadUrl() + " track:" + track);
 
         final DownloadManager.Request downloadRequest = new DownloadManager.Request(Uri.parse(track.getDownloadUrl()));
 
