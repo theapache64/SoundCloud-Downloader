@@ -1,11 +1,19 @@
-# soundcloud-downloader (UC)
-A simple android application that can be used to download mp3 from soundcloud.com (UNOFFICIAL - NO ADS - FULLY FREE)
+# SoundCloud Downloader
+An android application to download tracks/playlists from SoundCloud.
 
-- Got to build my own download manager
+#### TODOs
 
-#### Bugs to be solved
-- http/https track duplication
+- Attach album art and other ID tags (client)
+- Add cache-ing of track details (not playlist) with a expiraton in days. (3 will be okay)
 
 
-#### Features to be implemented
+#### Sad part :(
+
+- 2 times suspended and 1 time rejected from Google PlayStore
+
+#### Bugs ?
+
+- Found one ? shoot a mail to theapache64@gmail.com or create a repo issue.
+
+
 
