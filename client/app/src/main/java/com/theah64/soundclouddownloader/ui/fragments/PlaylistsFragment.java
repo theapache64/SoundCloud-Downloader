@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.theah64.musicdog.R;
 import com.theah64.soundclouddownloader.adapters.ITSAdapter;
 import com.theah64.soundclouddownloader.database.Playlists;
@@ -272,7 +273,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
         }
 
 
-        throw new IllegalArgumentException("Couldn't find the playlist. Playlist doesn't added to playlistList");
+        FirebaseCrash.log("Couldn't find the playlist. Playlist doesn't added to playlistList");
 
     }
 

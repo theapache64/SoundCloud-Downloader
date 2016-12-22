@@ -35,6 +35,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     }
 
 
+   
     @NotNull
     protected final String getStringOrThrow(final String key) {
         final String value = getIntent().getStringExtra(key);

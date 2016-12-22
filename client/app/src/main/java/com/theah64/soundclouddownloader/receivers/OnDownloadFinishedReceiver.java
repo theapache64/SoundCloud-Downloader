@@ -10,6 +10,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.Track;
 
@@ -45,7 +46,7 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
                     final Tracks tracksTable = Tracks.getInstance(context);
 
                     if (!tracksTable.update(Tracks.COLUMN_DOWNLOAD_ID, stringDownloadId, Tracks.COLUMN_IS_DOWNLOADED, Tracks.TRUE, handler)) {
-                        throw new IllegalArgumentException("Failed to update download status");
+                        FirebaseCrash.log("Failed to update download status");
                     }
 
                     final Track downloadedTrack = tracksTable.get(Tracks.COLUMN_DOWNLOAD_ID, stringDownloadId);

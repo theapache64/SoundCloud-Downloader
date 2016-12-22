@@ -200,7 +200,6 @@ public class Tracks extends BaseTable<Track> {
             }
         } else {
             FirebaseCrash.log("Couldn't find track with column " + whereColumn + ", value " + whereColumnValue);
-            //throw new IllegalArgumentException("Couldn't find track with column " + whereColumn + ", value " + whereColumnValue);
         }
 
         return true;
@@ -233,7 +232,8 @@ public class Tracks extends BaseTable<Track> {
         final boolean isUpdated = this.getWritableDatabase().update(TABLE_NAME_TRACKS, cv, COLUMN_ID + " = ?", new String[]{track.getId()}) > 0;
 
         if (!isUpdated) {
-            throw new IllegalArgumentException("Failed to update the track");
+            FirebaseCrash.log("Failed to update the track");
+            return false;
         }
 
         if (handler != null) {
@@ -256,7 +256,8 @@ public class Tracks extends BaseTable<Track> {
         final Track track = get(whereColumn, whereColumnValue);
 
         if (track == null) {
-            throw new IllegalArgumentException("failed to find track with " + whereColumn + '=' + whereColumnValue);
+            FirebaseCrash.log("failed to find track with " + whereColumn + '=' + whereColumnValue);
+            return false;
         }
 
         if (super.delete(whereColumn, whereColumnValue)) {
