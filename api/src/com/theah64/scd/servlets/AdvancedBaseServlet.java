@@ -82,6 +82,7 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
+            resp.setContentType(getContentType());
             out.write(new APIResponse(e.getMessage()).toString());
         }
     }

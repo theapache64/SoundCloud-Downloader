@@ -142,7 +142,7 @@ public class OldSoundCloudDownloader {
         final String username = joResolvedTrack.getJSONObject("user").getString("username");
 
         final String soundCloudUrl = joResolvedTrack.getString("permalink_url");
-        final String fileName = String.format(fileNameFormat, FileNameUtils.getSanitizedName(title), username, originalFormat);
+        final String fileName = String.format(fileNameFormat, FileNameUtils.getSanitizedName(title + "_" + id), originalFormat);
 
         final JSONObject joTrack = new JSONObject();
         joTrack.put(Track.KEY_ID, id);

@@ -14,12 +14,12 @@ public class Request {
     private final String[] requiredParams;
     private List<String> missingOrInvalidParams;
 
-    public Request(HttpServletRequest request, String[] requiredParams) throws Exception {
+    public Request(HttpServletRequest request, String[] requiredParams) throws RequestException {
         this.request = request;
         this.requiredParams = requiredParams;
 
         if (!hasAllParams()) {
-            throw new Exception(getErrorReport());
+            throw new RequestException(getErrorReport());
         }
     }
 
