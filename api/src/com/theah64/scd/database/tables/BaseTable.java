@@ -190,14 +190,37 @@ public class BaseTable<T> {
         return totalCount;
     }
 
+    public final boolean delete(final String whereColumn, final String whereColumnValue) {
+        boolean isDeleted = false;
+        final String query = String.format("DELETE FROM %s WHERE %s = ?", tableName, whereColumn);
+        final java.sql.Connection con = Connection.getConnection();
+        try {
+            final PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, whereColumnValue);
+            isDeleted = ps.executeUpdate() > 0;
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return isDeleted;
+
+    }
+
     public static class InsertFailedException extends SQLException {
-        public InsertFailedException(String message) {
+        InsertFailedException(String message) {
             super(message);
         }
     }
 
     public static class UpdateFailedException extends SQLException {
-        public UpdateFailedException(String message) {
+        UpdateFailedException(String message) {
             super(message);
         }
     }

@@ -4,7 +4,9 @@ package com.theah64.scd.database.tables;
 import com.theah64.scd.database.Connection;
 import com.theah64.scd.models.Request;
 
+import javax.xml.transform.Result;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -24,20 +26,27 @@ public class Requests extends BaseTable<Request> {
     }
 
     @Override
-    public boolean add(Request request) throws InsertFailedException {
-        boolean isAdded = false;
+    public String addv3(Request request) throws InsertFailedException {
+        String requestId = null;
 
         final String query = "INSERT INTO requests (user_id, soundcloud_url) VALUES (?,?);";
         final java.sql.Connection con = Connection.getConnection();
         try {
-            final PreparedStatement ps = con.prepareStatement(query);
+            final PreparedStatement ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
             ps.setString(1, request.getUserId());
             ps.setString(2, request.getSoundCloudUrl());
+            ps.executeUpdate();
 
-            isAdded = ps.executeUpdate() == 1;
+            final ResultSet rs = ps.getGeneratedKeys();
 
+            if (rs.first()) {
+                requestId = rs.getString(1);
+            }
+
+            rs.close();
             ps.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -48,10 +57,12 @@ public class Requests extends BaseTable<Request> {
             }
         }
 
-        if (!isAdded) {
+        if (requestId == null) {
             throw new InsertFailedException("Failed to add request");
         }
 
-        return true;
+        System.out.println("Created new request: " + requestId);
+
+        return requestId;
     }
 }

@@ -21,10 +21,11 @@ import static com.theah64.scd.core.SoundCloudDownloader.CLIENT_ID;
 /**
  * Created by theapache64 on 8/12/16.
  */
-@WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + "/download"})
+@WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + DownloaderServlet.ROUTE})
 public class DownloaderServlet extends HttpServlet {
 
-    private static final String[] REQUIRED_PARAMS = {Tracks.COLUMN_ID};
+    private static final String[] REQUIRED_PARAMS = {Tracks.COLUMN_SOUNDCLOUD_TRACK_ID};
+    public static final String ROUTE = "/download";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -33,19 +34,22 @@ public class DownloaderServlet extends HttpServlet {
         try {
             final Request request = new Request(req, REQUIRED_PARAMS);
 
-            final String id = request.getStringParameter(Tracks.COLUMN_ID);
-            final Track track = Tracks.getInstance().get(Tracks.COLUMN_ID, id);
+            final String soundCloudTrackId = request.getStringParameter(Tracks.COLUMN_SOUNDCLOUD_TRACK_ID);
+            final Tracks tracksTable = Tracks.getInstance();
+            final Track track = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_TRACK_ID, soundCloudTrackId);
 
-            if (track != null && !track.isDeleted()) {
+            if (track != null) {
 
-                System.out.println("Handing track : " + track.getTitle());
+                System.out.println("Handling track : " + track.getTitle());
                 final String downloadUrl = getSoundCloudDownloadUrl(track.getSoundcloudTrackId());
+
                 System.out.println("Track download url : " + downloadUrl);
 
                 if (downloadUrl != null) {
                     resp.sendRedirect(downloadUrl);
                     System.out.println("Track redirected to download url");
                 } else {
+                    tracksTable.delete(Tracks.COLUMN_ID, track.getId());
                     throw new Request.RequestException("Track deleted from soundcloud");
                 }
 

@@ -73,12 +73,15 @@ public final class TracksServlet extends AdvancedBaseServlet {
         }
     }
 
-    private JSONTracks getTracks() throws BaseTable.InsertFailedException {
+    private JSONTracks getTracks() throws BaseTable.InsertFailedException, JSONException {
         final Preference prefTable = Preference.getInstance();
         final String userId = isSecureServlet() ? getHeaderSecurity().getUserId() : prefTable.getString(Preference.KEY_DEFAULT_USER_ID);
-        final String soundCloudUrl = getStringParameter(Requests.COLUMN_SOUND_CLOUD_URL);
+        String soundCloudUrl = getStringParameter(Tracks.COLUMN_SOUNDCLOUD_URL);
+        System.out.println("Before:" + soundCloudUrl);
+        soundCloudUrl = soundCloudUrl.replaceAll("^https", "http");
+        System.out.println("After:" + soundCloudUrl);
         final com.theah64.scd.models.Request apiRequest = new com.theah64.scd.models.Request(userId, soundCloudUrl);
-        Requests.getInstance().add(apiRequest);
-        return SoundCloudDownloader.getTracks(soundCloudUrl);
+        final String requestId = Requests.getInstance().addv3(apiRequest);
+        return SoundCloudDownloader.getSoundCloudTracks(requestId, soundCloudUrl);
     }
 }

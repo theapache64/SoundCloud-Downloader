@@ -17,13 +17,16 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import static com.theah64.scd.servlets.DirectDownloaderServlet.ROUTE;
 import static com.theah64.scd.servlets.DownloaderServlet.getSoundCloudDownloadUrl;
 
 /**
  * Created by theapache64 on 8/12/16.
  */
-@WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + "/direct_download"})
+@WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + ROUTE})
 public class DirectDownloaderServlet extends AdvancedBaseServlet {
+
+    public static final String ROUTE = "/direct_download";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -57,7 +60,7 @@ public class DirectDownloaderServlet extends AdvancedBaseServlet {
         final Tracks tracksTable = Tracks.getInstance();
         final Track track = tracksTable.get(Tracks.COLUMN_ID, trackId);
 
-        if (track != null && !track.isDeleted()) {
+        if (track != null) {
 
             final String soundcloudDownloadUrl = getSoundCloudDownloadUrl(track.getSoundcloudTrackId());
 

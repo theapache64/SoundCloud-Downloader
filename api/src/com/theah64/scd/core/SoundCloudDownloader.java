@@ -1,11 +1,14 @@
 package com.theah64.scd.core;
 
+import com.theah64.scd.database.tables.BaseTable;
 import com.theah64.scd.database.tables.Preference;
 import com.theah64.scd.database.tables.Requests;
 import com.theah64.scd.database.tables.Tracks;
 import com.theah64.scd.models.JSONTracks;
 import com.theah64.scd.models.Track;
 import com.theah64.scd.servlets.AdvancedBaseServlet;
+import com.theah64.scd.servlets.DirectDownloaderServlet;
+import com.theah64.scd.servlets.DownloaderServlet;
 import com.theah64.scd.utils.FileNameUtils;
 import com.theah64.scd.utils.NetworkHelper;
 import org.json.JSONArray;
@@ -23,11 +26,29 @@ public class SoundCloudDownloader {
     public static final String CLIENT_ID = "a3e059563d7fd3372b49b37f00a00bcf";
 
     private static final String RESOLVE_TRACK_URL_FORMAT = "https://api.soundcloud.com/resolve.json?url=%s&client_id=" + CLIENT_ID;
-    private static final String DOWNLOAD_TRACK_URL_FORMAT = String.format("%s%s/download?id=%%s", AdvancedBaseServlet.getBaseUrl(), AdvancedBaseServlet.VERSION_CODE);
-    private static final String DIRECT_DOWNLOAD_TRACK_URL_FORMAT = String.format("%s%s/direct_download?id=%%s", AdvancedBaseServlet.getBaseUrl(), AdvancedBaseServlet.VERSION_CODE);
+    private static final String DOWNLOAD_TRACK_URL_FORMAT = String.format("%s%s%%s?soundcloud_track_id=%%s", AdvancedBaseServlet.getBaseUrl(), AdvancedBaseServlet.VERSION_CODE);
     private static final String KEY_ARTWORK_URL = "artwork_url";
 
-    public static JSONTracks getSoundCloudTracks(final String requestId, String soundCloudUrl) {
+    public static JSONTracks getSoundCloudTracks(final String requestId, String soundCloudUrl) throws JSONException {
+
+        System.out.println("Request url : " + soundCloudUrl);
+
+        if (!isPlaylist(soundCloudUrl)) {
+            //It's a track , so checking the data availability in db.
+
+            //It's track
+            final Track track = Tracks.getInstance().get(Tracks.COLUMN_SOUNDCLOUD_URL, soundCloudUrl);
+
+            if (track != null) {
+                System.out.println("Getting data from cache");
+                final JSONArray jaTracks = new JSONArray();
+                jaTracks.put(track.toJSONObject());
+                return new JSONTracks(null, null, null, jaTracks);
+            }
+        }
+
+        //Getting fresh data for playlist
+        System.out.println("Getting fresh data");
 
         final String resolveTrack = String.format(RESOLVE_TRACK_URL_FORMAT, soundCloudUrl);
         final String resolveTrackResp = new NetworkHelper(resolveTrack).getResponse();
@@ -67,50 +88,54 @@ public class SoundCloudDownloader {
 
                 return new JSONTracks(playlistName, username, playlistArtworkUrl, jaTracks);
 
-            } catch (JSONException e) {
+            } catch (JSONException | BaseTable.InsertFailedException e) {
                 e.printStackTrace();
             }
         }
 
+
         return null;
     }
 
+    private static final String SOUND_CLOUD_PLAYLIST_REGEX = "^(?:https:\\/\\/|http:\\/\\/|www\\.|)soundcloud\\.com\\/(?:.+)\\/sets\\/(?:.+)$";
 
-    private static JSONObject getResolvedTrack(JSONObject joResolvedTrack, String fileNameFormat, final String requestId, final boolean isDirectDownload) throws JSONException {
+    private static boolean isPlaylist(String soundCloudUrl) {
+        return soundCloudUrl.matches(SOUND_CLOUD_PLAYLIST_REGEX);
+    }
+
+
+    private static JSONObject getResolvedTrack(JSONObject joResolvedTrack, String fileNameFormat, final String requestId, final boolean isDirectDownload) throws JSONException, BaseTable.InsertFailedException {
 
         //Url is a single track
         final String soundCloudTrackId = String.valueOf(joResolvedTrack.getInt("id"));
-        final String title = joResolvedTrack.getString("title");
-        final String originalFormat = joResolvedTrack.getString("original_format");
+        final Tracks tracksTable = Tracks.getInstance();
 
-        String trackArtworkUrl = null;
-        if (joResolvedTrack.has(Tracks.COLUMN_ARTWORK_URL) && !joResolvedTrack.isNull(Tracks.COLUMN_ARTWORK_URL)) {
-            trackArtworkUrl = joResolvedTrack.getString(Tracks.COLUMN_ARTWORK_URL);
+        Track track = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_TRACK_ID, soundCloudTrackId);
+
+        if (track == null) {
+
+            final String title = joResolvedTrack.getString("title");
+            final String originalFormat = joResolvedTrack.getString("original_format");
+
+            String trackArtworkUrl = null;
+            if (joResolvedTrack.has(Tracks.COLUMN_ARTWORK_URL) && !joResolvedTrack.isNull(Tracks.COLUMN_ARTWORK_URL)) {
+                trackArtworkUrl = joResolvedTrack.getString(Tracks.COLUMN_ARTWORK_URL);
+            }
+
+            final long duration = joResolvedTrack.getLong("duration");
+            final String username = joResolvedTrack.getJSONObject("user").getString("username");
+
+            final String soundCloudUrl = joResolvedTrack.getString("permalink_url");
+            final String fileName = String.format(fileNameFormat, FileNameUtils.getSanitizedName(title + "_" + soundCloudTrackId), originalFormat);
+            final String downloadUrl = String.format(DOWNLOAD_TRACK_URL_FORMAT, isDirectDownload ? DirectDownloaderServlet.ROUTE : DownloaderServlet.ROUTE, soundCloudTrackId);
+
+            track = new Track(null, requestId, soundCloudUrl, soundCloudTrackId, title, username, downloadUrl, trackArtworkUrl, fileName, originalFormat, duration);
+
+            //New track
+            tracksTable.add(track);
         }
 
-        final long duration = joResolvedTrack.getLong("duration");
-        final String username = joResolvedTrack.getJSONObject("user").getString("username");
 
-        final String soundCloudUrl = joResolvedTrack.getString("permalink_url");
-        final String fileName = String.format(fileNameFormat, FileNameUtils.getSanitizedName(title + "_" + soundCloudTrackId), originalFormat);
-        final String downloadUrl = isDirectDownload ? String.format(DIRECT_DOWNLOAD_TRACK_URL_FORMAT, soundCloudTrackId, fileName) : String.format(DOWNLOAD_TRACK_URL_FORMAT, soundCloudTrackId);
-
-        final JSONObject joTrack = new JSONObject();
-        joTrack.put(Tracks.COLUMN_TITLE, title);
-        joTrack.put(Tracks.COLUMN_ORIGINAL_FORMAT, originalFormat);
-        joTrack.put(Tracks.COLUMN_FILENAME, fileName);
-        joTrack.put(Tracks.COLUMN_ARTWORK_URL, trackArtworkUrl);
-        joTrack.put(Tracks.COLUMN_DOWNLOAD_URL, downloadUrl);
-        joTrack.put(Tracks.COLUMN_DURATION, duration);
-        joTrack.put(Tracks.COLUMN_USERNAME, username);
-        joTrack.put(Tracks.COLUMN_SOUNDCLOUD_URL, soundCloudUrl);
-
-        //Adding the track to table
-        final Track track = new Track(null, requestId, soundCloudUrl, soundCloudTrackId, title, username, downloadUrl, trackArtworkUrl, fileName, originalFormat, duration, false);
-        return joTrack;
-    }
-
-    public static JSONTracks getTracks(String soundCloudUrl) {
-        return getSoundCloudTracks(soundCloudUrl);
+        return track.toJSONObject();
     }
 }
