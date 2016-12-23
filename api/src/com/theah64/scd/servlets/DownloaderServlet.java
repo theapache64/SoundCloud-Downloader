@@ -2,6 +2,7 @@ package com.theah64.scd.servlets;
 
 import com.theah64.scd.database.tables.BaseTable;
 import com.theah64.scd.database.tables.Preference;
+import com.theah64.scd.database.tables.Tracks;
 import com.theah64.scd.models.Track;
 import com.theah64.scd.utils.NetworkHelper;
 import com.theah64.scd.utils.Request;
@@ -23,7 +24,7 @@ import static com.theah64.scd.core.SoundCloudDownloader.CLIENT_ID;
 @WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + "/download"})
 public class DownloaderServlet extends HttpServlet {
 
-    private static final String[] REQUIRED_PARAMS = {Track.KEY_ID};
+    private static final String[] REQUIRED_PARAMS = {Tracks.COLUMN_ID};
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -32,13 +33,22 @@ public class DownloaderServlet extends HttpServlet {
         try {
             final Request request = new Request(req, REQUIRED_PARAMS);
 
-            final String trackId = request.getStringParameter(Track.KEY_ID);
-            System.out.println("Handing track : " + trackId);
-            final String downloadUrl = getSoundCloudDownloadUrl(trackId);
-            System.out.println("Track download url : " + downloadUrl);
-            if (downloadUrl != null) {
-                resp.sendRedirect(downloadUrl);
-                System.out.println("Track redirected to download url");
+            final String id = request.getStringParameter(Tracks.COLUMN_ID);
+            final Track track = Tracks.getInstance().get(Tracks.COLUMN_ID, id);
+
+            if (track != null && !track.isDeleted()) {
+
+                System.out.println("Handing track : " + track.getTitle());
+                final String downloadUrl = getSoundCloudDownloadUrl(track.getSoundcloudTrackId());
+                System.out.println("Track download url : " + downloadUrl);
+
+                if (downloadUrl != null) {
+                    resp.sendRedirect(downloadUrl);
+                    System.out.println("Track redirected to download url");
+                } else {
+                    throw new Request.RequestException("Track deleted from soundcloud");
+                }
+
             } else {
                 throw new Request.RequestException("Invalid track id");
             }

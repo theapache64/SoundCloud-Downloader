@@ -5,38 +5,72 @@ package com.theah64.scd.models;
  */
 public class Track {
 
-    public static final String KEY_ID = "id";
-    public static final String KEY_TITLE = "title";
-    public static final String KEY_ORIGINAL_FORMAT = "original_format";
-    public static final String KEY_FILENAME = "filename";
-    public static final String KEY_DOWNLOAD_URL = "download_url";
     public static final String KEY_PLAYLIST_NAME = "playlist_name";
-    public static final String KEY_ARTWORK_URL = "artwork_url";
-    public static final String KEY_USERNAME = "username";
-    private final String id;
-    private final String name;
-    private String downloadUrl;
 
-    public Track(String id, String name) {
+    private final String id, requestId, soundcloudUrl, soundcloudTrackId, title, username, downloadUrl, artworkUrl, filename, originalFormat;
+    private final long duration;
+    private final boolean isDeleted;
+
+    public Track(String id, String requestId, String soundcloudUrl, String soundcloudTrackId, String title, String username, String downloadUrl, String artworkUrl, String filename, String originalFormat, long duration, boolean isDeleted) {
         this.id = id;
-        this.name = name;
+        this.requestId = requestId;
+        this.soundcloudUrl = soundcloudUrl;
+        this.soundcloudTrackId = soundcloudTrackId;
+        this.title = title;
+        this.username = username;
+        this.downloadUrl = downloadUrl;
+        this.artworkUrl = artworkUrl;
+        this.filename = filename;
+        this.originalFormat = originalFormat;
+        this.duration = duration;
+        this.isDeleted = isDeleted;
     }
-
 
     public String getId() {
         return id;
     }
 
-
-    public void setDownloadUrl(String downloadUrl) {
-        this.downloadUrl = downloadUrl;
+    public String getRequestId() {
+        return requestId;
     }
 
-    public String getName() {
-        return name;
+    public String getSoundcloudUrl() {
+        return soundcloudUrl;
+    }
+
+    public String getSoundcloudTrackId() {
+        return soundcloudTrackId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public String getDownloadUrl() {
         return downloadUrl;
+    }
+
+    public String getArtworkUrl() {
+        return artworkUrl;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public String getOriginalFormat() {
+        return originalFormat;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
     }
 }

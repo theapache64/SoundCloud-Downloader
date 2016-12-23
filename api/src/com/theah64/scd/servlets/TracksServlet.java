@@ -1,10 +1,10 @@
 package com.theah64.scd.servlets;
 
-import com.theah64.scd.core.OldSoundCloudDownloader;
 import com.theah64.scd.core.SoundCloudDownloader;
 import com.theah64.scd.database.tables.BaseTable;
 import com.theah64.scd.database.tables.Preference;
 import com.theah64.scd.database.tables.Requests;
+import com.theah64.scd.database.tables.Tracks;
 import com.theah64.scd.models.JSONTracks;
 import com.theah64.scd.models.Track;
 import com.theah64.scd.utils.APIResponse;
@@ -58,10 +58,10 @@ public final class TracksServlet extends AdvancedBaseServlet {
 
             if (jTracks.getPlaylistName() != null) {
                 joTrack.put(Track.KEY_PLAYLIST_NAME, jTracks.getPlaylistName());
-                joTrack.put(Track.KEY_USERNAME, jTracks.getUsername());
+                joTrack.put(Tracks.COLUMN_USERNAME, jTracks.getUsername());
 
                 //Playlist cover
-                joTrack.put(Track.KEY_ARTWORK_URL, jTracks.getArtworkUrl());
+                joTrack.put(Tracks.COLUMN_ARTWORK_URL, jTracks.getArtworkUrl());
             }
 
 
@@ -79,6 +79,6 @@ public final class TracksServlet extends AdvancedBaseServlet {
         final String soundCloudUrl = getStringParameter(Requests.COLUMN_SOUND_CLOUD_URL);
         final com.theah64.scd.models.Request apiRequest = new com.theah64.scd.models.Request(userId, soundCloudUrl);
         Requests.getInstance().add(apiRequest);
-        return prefTable.getString(Preference.KEY_IS_NEW_SOUNDCLOUD_DOWNLOADER).equals(Preference.TRUE) ? SoundCloudDownloader.getTracks(soundCloudUrl) : OldSoundCloudDownloader.getTracks(soundCloudUrl);
+        return SoundCloudDownloader.getTracks(soundCloudUrl);
     }
 }

@@ -23,6 +23,25 @@ CREATE TABLE `requests`(
   FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+ CREATE TABLE tracks(
+  id INT NOT NULL AUTO_INCREMENT,
+  request_id INT NOT NULL,
+  soundcloud_url TEXT NOT NULL,
+  soundcloud_track_id BIGINT NOT NULL,
+  title VARCHAR(100) NOT NULL,
+  duration BIGINT NOT NULL,
+  username VARCHAR (255) NOT NULL,
+  download_url TEXT NOT NULL,
+  artwork_url TEXT NOT NULL,
+  filename TEXT NOT NULL,
+  original_format VARCHAR(10) NOT NULL,
+  is_deleted TINYINT(4) NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY(id),
+  FOREIGN KEY (request_id) REFERENCES requests(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  UNIQUE KEY(soundcloud_track_id)
+ );
+
 CREATE TABLE `preference` (
   `id`     INT(11)      NOT NULL AUTO_INCREMENT,
   `_key`   VARCHAR(100) NOT NULL,
@@ -38,6 +57,7 @@ INSERT INTO preference (_key, _value) VALUES
   ('admin_email', 'theapache64@gmail.com'),
   ('is_debug_download', '0'),
   ('filename_format', '%s_theah64.%s'),
+  ('apk_url', 'https://github.com/theapache64/SoundCloud-Downloader/releases/download/v1.0/soundclouddownloader.apk'),
   ('is_new_soundcloud_downloader', '1'),
   ('is_direct_download', '0');
 

@@ -1,6 +1,7 @@
 package com.theah64.scd.servlets;
 
 import com.theah64.scd.database.tables.BaseTable;
+import com.theah64.scd.database.tables.Tracks;
 import com.theah64.scd.models.Track;
 import com.theah64.scd.utils.APIResponse;
 import com.theah64.scd.utils.Request;
@@ -42,7 +43,7 @@ public class DirectDownloaderServlet extends AdvancedBaseServlet {
 
     @Override
     protected String[] getRequiredParameters() {
-        return new String[]{Track.KEY_ID, Track.KEY_FILENAME};
+        return new String[]{Tracks.COLUMN_ID};
     }
 
     @Override
@@ -52,62 +53,70 @@ public class DirectDownloaderServlet extends AdvancedBaseServlet {
 
         System.out.println("Track found");
 
-        final String trackId = getStringParameter(Track.KEY_ID);
-        final String downloadUrl = getSoundCloudDownloadUrl(trackId);
+        final String trackId = getStringParameter(Tracks.COLUMN_ID);
+        final Tracks tracksTable = Tracks.getInstance();
+        final Track track = tracksTable.get(Tracks.COLUMN_ID, trackId);
 
-        if (downloadUrl != null) {
+        if (track != null && !track.isDeleted()) {
 
-            final String fileName = getStringParameter(Track.KEY_FILENAME);
+            final String soundcloudDownloadUrl = getSoundCloudDownloadUrl(track.getSoundcloudTrackId());
 
-            response.setContentType("audio/mpeg");
-            response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
+            if (soundcloudDownloadUrl != null) {
 
-            BufferedInputStream bis = null;
-            ServletOutputStream sos = null;
-
-            try {
-                final URL url = new URL(downloadUrl);
-                final URLConnection con = url.openConnection();
-                response.setContentLength((int) con.getContentLength());
-
-                bis = new BufferedInputStream(url.openStream());
-                sos = response.getOutputStream();
-
-                int readBytes = 0;
-                //read from the file; write to the ServletOutputStream
-                while ((readBytes = bis.read()) != -1) {
-                    sos.write(readBytes);
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-
-                System.out.println("Couldn't find track");
+                BufferedInputStream bis = null;
+                ServletOutputStream sos = null;
 
                 try {
+                    final URL url = new URL(soundcloudDownloadUrl);
+                    final URLConnection con = url.openConnection();
+                    response.setContentLength((int) con.getContentLength());
+
+                    bis = new BufferedInputStream(url.openStream());
+                    sos = response.getOutputStream();
+
+                    int readBytes = 0;
+                    //read from the file; write to the ServletOutputStream
+                    while ((readBytes = bis.read()) != -1) {
+                        sos.write(readBytes);
+                    }
+
+                    response.setContentType("audio/mpeg");
+                    response.addHeader("Content-Disposition", "attachment; filename=" + track.getFilename());
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+
+                    System.out.println("Couldn't find track");
+
                     response.setContentType(CONTENT_TYPE_JSON);
                     response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                    response.getWriter().write(new APIResponse("Service unavailable").getResponse());
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+                    throw new Request.RequestException("Service unavailable");
 
-            } finally {
-                if (bis != null) {
-                    try {
-                        bis.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                } finally {
+                    if (bis != null) {
+                        try {
+                            bis.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    if (sos != null) {
+                        try {
+                            sos.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
 
-                if (sos != null) {
-                    try {
-                        sos.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+            } else {
+                //Track deleted from soundcluod.com, so set the is_deleted flag to true.
+                tracksTable.update(Tracks.COLUMN_ID, track.getId(), Tracks.COLUMN_IS_DELETED, Tracks.TRUE);
+
+                response.setContentType(CONTENT_TYPE_JSON);
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                throw new Request.RequestException("Track deleted from soundcloud");
             }
 
 
