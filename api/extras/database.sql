@@ -29,7 +29,7 @@
     request_id INT NOT NULL,
     soundcloud_url TEXT NOT NULL,
     soundcloud_track_id BIGINT NOT NULL,
-    title VARCHAR(100) NOT NULL,
+    title TEXT NOT NULL,
     duration BIGINT NOT NULL,
     username VARCHAR (255) NOT NULL,
     download_url TEXT NOT NULL,
