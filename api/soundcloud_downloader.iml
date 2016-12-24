@@ -20,5 +20,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="jms" level="application" />
+    <orderEntry type="library" name="mp3agic-0.8.1" level="project" />
   </component>
 </module>

@@ -3,6 +3,11 @@
     <output-path>$PROJECT_DIR$/out/artifacts/scd</output-path>
     <root id="archive" name="scd.war">
       <element id="artifact" artifact-name="soundcloud_downloader:war exploded" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="mp3agic-0.8.1" />
+        </element>
+      </element>
     </root>
   </artifact>
 </component>

@@ -7,6 +7,9 @@
         <element id="directory" name="classes">
           <element id="module-output" name="soundcloud_downloader" />
         </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="mp3agic-0.8.1" />
+        </element>
       </element>
     </root>
   </artifact>
