@@ -246,6 +246,9 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
                             public void onClick(View view) {
                                 //just call this method and everything will be cared.
                                 tracksTable.delete(Tracks.COLUMN_ID, track.getId(), null);
+                                //noinspection ResultOfMethodCallIgnored
+                                track.getFile().delete();
+
 
                             }
                         }).show();
