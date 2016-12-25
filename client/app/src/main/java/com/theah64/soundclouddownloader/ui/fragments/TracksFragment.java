@@ -141,7 +141,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
     }
 
     private void initAdapter() {
-        itsAdapter = new ITSAdapter(trackList, this, downloadUtils);
+        itsAdapter = new ITSAdapter(getActivity(), trackList, this, downloadUtils);
         rvTracks = (RecyclerView) layout.findViewById(R.id.rvTracks);
         rvTracks.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvTracks.setAdapter(itsAdapter);

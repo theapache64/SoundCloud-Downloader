@@ -1,9 +1,13 @@
 package com.theah64.soundclouddownloader.adapters;
 
+import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,10 +29,15 @@ public class ITSAdapter extends RecyclerView.Adapter<ITSAdapter.ViewHolder> {
     private LayoutInflater inflater;
     private final DownloadUtils downloadUtils;
 
-    public ITSAdapter(List<? extends ITSNode> itsNodes, TracksCallback callback, DownloadUtils downloadUtils) {
+    private final String downloadString;
+    private final Animation blinkAnimation;
+
+    public ITSAdapter(Context context, List<? extends ITSNode> itsNodes, TracksCallback callback, DownloadUtils downloadUtils) {
         this.itsNodes = itsNodes;
         this.callback = callback;
         this.downloadUtils = downloadUtils;
+        this.downloadString = context.getString(R.string.Downloading);
+        this.blinkAnimation = AnimationUtils.loadAnimation(context, R.anim.blink);
     }
 
     @Override
@@ -52,7 +61,15 @@ public class ITSAdapter extends RecyclerView.Adapter<ITSAdapter.ViewHolder> {
 
         holder.tvSubtitle1.setText(itsNode.getSubtitle1());
         holder.tvSubtitle2.setText(itsNode.getSubtitle2());
-        holder.tvSubtitle3.setText(itsNode.getSubtitle3(downloadUtils));
+
+        final String subTitle3 = itsNode.getSubtitle3(downloadUtils);
+        holder.tvSubtitle3.setText(subTitle3);
+
+        if (subTitle3 != null && subTitle3.equals(downloadString)) {
+            holder.tvSubtitle3.startAnimation(blinkAnimation);
+        } else {
+            holder.tvSubtitle3.clearAnimation();
+        }
     }
 
     @Override

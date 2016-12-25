@@ -114,7 +114,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
     private void initAdapter() {
         rvPlaylists = (RecyclerView) layout.findViewById(R.id.rvPlaylists);
         rvPlaylists.setLayoutManager(new LinearLayoutManager(getActivity()));
-        itsAdapter = new ITSAdapter(playlists, this, null);
+        itsAdapter = new ITSAdapter(getActivity(),playlists, this, null);
         rvPlaylists.setAdapter(itsAdapter);
         layout.findViewById(R.id.llNoPlaylistsFound).setVisibility(View.GONE);
 
