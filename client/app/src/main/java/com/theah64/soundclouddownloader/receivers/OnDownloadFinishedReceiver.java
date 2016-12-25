@@ -61,7 +61,6 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
 
                 if (downloadStatus == DownloadManager.STATUS_SUCCESSFUL) {
 
-
                     final Tracks tracksTable = Tracks.getInstance(context);
 
                     if (!tracksTable.update(Tracks.COLUMN_DOWNLOAD_ID, stringDownloadId, Tracks.COLUMN_IS_DOWNLOADED, Tracks.TRUE, handler)) {
@@ -75,7 +74,7 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
 
                         //Removing temp signature from file
                         //noinspection ResultOfMethodCallIgnored
-                        new File(downloadedTrack.getFile() + DownloadUtils.TEMP_SIGNATURE).renameTo(downloadedTrack.getFile());
+                        new File(downloadedTrack.getFile().getAbsolutePath() + DownloadUtils.TEMP_SIGNATURE).renameTo(downloadedTrack.getFile());
 
 
                         Toast.makeText(context, "Track downloaded -> " + downloadedTrack.getTitle(), Toast.LENGTH_SHORT).show();
@@ -145,6 +144,7 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
 
                 } else {
                     Log.e(X, "Download status : " + downloadStatus);
+                    throw new IllegalArgumentException("TSH: Download status : " + downloadStatus);
                 }
 
             }
