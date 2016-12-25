@@ -279,7 +279,7 @@ public class DownloaderService extends Service {
             nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             this.notBuilder = new NotificationCompat.Builder(context)
                     .setSmallIcon(R.drawable.ic_stat_logo_white)
-                    .setAutoCancel(false)
+                    .setAutoCancel(true)
                     .setDefaults(NotificationCompat.DEFAULT_SOUND)
                     .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_logo_24dp));
 
