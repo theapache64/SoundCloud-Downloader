@@ -269,7 +269,14 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
                 return true;
 
             case R.id.miOpenTrackDirectory:
-                
+
+                final Intent storageIntent = new Intent(Intent.ACTION_VIEW);
+                storageIntent.setDataAndType(Uri.fromFile(track.getFile().getParentFile()), "resource/folder");
+                if (storageIntent.resolveActivityInfo(getActivity().getPackageManager(), 0) != null) {
+                    getActivity().startActivity(storageIntent);
+                } else {
+                    Toast.makeText(getActivity(), R.string.No_file_browser_found, Toast.LENGTH_SHORT).show();
+                }
                 return true;
 
             default:

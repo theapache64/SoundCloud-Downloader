@@ -10,7 +10,6 @@ import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.firebase.crash.FirebaseCrash;
@@ -18,19 +17,15 @@ import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.ID3v1Tag;
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.ID3v22Tag;
-import com.mpatric.mp3agic.ID3v23Tag;
-import com.mpatric.mp3agic.ID3v24Tag;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.NotSupportedException;
 import com.mpatric.mp3agic.UnsupportedTagException;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.theah64.musicdog.R;
 import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.utils.App;
+import com.theah64.soundclouddownloader.utils.DownloadUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -66,6 +61,7 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
 
                 if (downloadStatus == DownloadManager.STATUS_SUCCESSFUL) {
 
+
                     final Tracks tracksTable = Tracks.getInstance(context);
 
                     if (!tracksTable.update(Tracks.COLUMN_DOWNLOAD_ID, stringDownloadId, Tracks.COLUMN_IS_DOWNLOADED, Tracks.TRUE, handler)) {
@@ -75,6 +71,12 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
                     final Track downloadedTrack = tracksTable.get(Tracks.COLUMN_DOWNLOAD_ID, stringDownloadId);
 
                     if (downloadedTrack != null) {
+
+
+                        //Removing temp signature from file
+                        //noinspection ResultOfMethodCallIgnored
+                        new File(downloadedTrack.getFile() + DownloadUtils.TEMP_SIGNATURE).renameTo(downloadedTrack.getFile());
+
 
                         Toast.makeText(context, "Track downloaded -> " + downloadedTrack.getTitle(), Toast.LENGTH_SHORT).show();
 

@@ -18,6 +18,7 @@ import java.io.File;
 public class DownloadUtils {
 
     private static final String X = DownloadUtils.class.getSimpleName();
+    public static final String TEMP_SIGNATURE = ".tmp.mp3";
     private final DownloadManager dm;
     private final Context context;
 
@@ -50,7 +51,7 @@ public class DownloadUtils {
             downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         }
 
-        downloadRequest.setDestinationUri(Uri.fromFile(track.getFile()));
+        downloadRequest.setDestinationUri(Uri.fromFile(new File(track.getFile().getAbsolutePath() + TEMP_SIGNATURE)));
         return dm.enqueue(downloadRequest);
 
     }
