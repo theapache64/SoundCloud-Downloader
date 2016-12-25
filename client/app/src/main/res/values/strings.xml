@@ -42,7 +42,7 @@
     <string name="Settings">Settings</string>
     <string name="key_storage_location">storage_location</string>
     <string name="About">About</string>
-    <string name="Developed_by_theapache64">Developed by theapache64</string>
+    <string name="Developed_by_theapache64">An open source project developed by theapache64</string>
     <string name="No_file_browser_found">No file browser found</string>
     <string name="Track_exists">Track exists</string>
     <string name="s_added_to_download_queue">%s added to download queue</string>
@@ -56,4 +56,9 @@
     <string name="Download_pending">Download pending</string>
     <string name="Downloading">Downloading...</string>
     <string name="Saved">Saved</string>
+    <string name="key_is_start_app_on_new_track">is_start_app_on_new_track</string>
+    <string name="Open_on_new_track">Open on new track</string>
+    <string name="Open_track_summary">Open application on new task added to download queue</string>
+    <string name="key_developed_by">developed_by</string>
+    <string name="Open_track_directory">Open track directory</string>
 </resources>

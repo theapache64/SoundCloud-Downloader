@@ -107,20 +107,7 @@ public class SettingsActivityCompat extends PreferenceActivity implements Shared
     //Clicked on preference item.
     @Override
     public boolean onPreferenceClick(Preference preference) {
-
-        switch (preference.getKey()) {
-            case KEY_STORAGE_LOCATION:
-                final Intent storageIntent = new Intent(Intent.ACTION_VIEW);
-                storageIntent.setDataAndType(Uri.parse(preference.getSummary().toString()), "resource/folder");
-                if (storageIntent.resolveActivityInfo(getPackageManager(), 0) != null) {
-                    startActivity(storageIntent);
-                } else {
-                    Toast.makeText(this, R.string.No_file_browser_found, Toast.LENGTH_SHORT).show();
-                }
-                return true;
-        }
-
-        return false;
+        return SettingsActivity.SettingsFragment.onCompatPreferenceClick(this, preference);
     }
 
 }

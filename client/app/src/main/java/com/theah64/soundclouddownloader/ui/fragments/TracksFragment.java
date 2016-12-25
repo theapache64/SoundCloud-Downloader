@@ -190,7 +190,8 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
             menu.add(position, R.id.miShareFile, 2, R.string.Share_file);
             menu.add(position, R.id.miShareURL, 3, R.string.Share_URL);
             menu.add(position, R.id.miDownload, 4, R.string.Download_again);
-            menu.add(position, R.id.miRemove, 5, R.string.Remove);
+            menu.add(position, R.id.miOpenTrackDirectory, 5, R.string.Open_track_directory);
+            menu.add(position, R.id.miRemove, 6, R.string.Remove);
 
         } else {
             //Build R.menu.menu_track_not_downloaded
@@ -265,6 +266,10 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
 
                 Toast.makeText(getActivity(), R.string.initializing_download, Toast.LENGTH_SHORT).show();
 
+                return true;
+
+            case R.id.miOpenTrackDirectory:
+                
                 return true;
 
             default:

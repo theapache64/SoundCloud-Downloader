@@ -1,6 +1,7 @@
 package com.theah64.soundclouddownloader.ui.activities.settings;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -79,6 +80,7 @@ public class SettingsActivity extends BaseAppCompatActivity {
 
         public static final String X = SettingsFragment.class.getSimpleName();
         public static final String KEY_STORAGE_LOCATION = "storage_location";
+        public static final String KEY_DEVELOPED_BY = "developed_by";
         private static final int RQ_CODE_STORAGE_LOCATION = 1;
         private SharedPreferences defaultSharedPref;
         private Preference prefStorageLocation;
@@ -122,17 +124,27 @@ public class SettingsActivity extends BaseAppCompatActivity {
 
         @Override
         public boolean onPreferenceClick(Preference preference) {
+            return onCompatPreferenceClick(getActivity(), preference);
+        }
+
+        public static boolean onCompatPreferenceClick(final Context context, Preference preference) {
 
             switch (preference.getKey()) {
 
                 case KEY_STORAGE_LOCATION:
                     final Intent storageIntent = new Intent(Intent.ACTION_VIEW);
                     storageIntent.setDataAndType(Uri.parse(preference.getSummary().toString()), "resource/folder");
-                    if (storageIntent.resolveActivityInfo(getActivity().getPackageManager(), 0) != null) {
-                        startActivity(storageIntent);
+                    if (storageIntent.resolveActivityInfo(context.getPackageManager(), 0) != null) {
+                        context.startActivity(storageIntent);
                     } else {
-                        Toast.makeText(getActivity(), R.string.No_file_browser_found, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.No_file_browser_found, Toast.LENGTH_SHORT).show();
                     }
+                    return true;
+
+                case KEY_DEVELOPED_BY:
+                    final Intent githubIntent = new Intent(Intent.ACTION_VIEW);
+                    githubIntent.setData(Uri.parse(App.GITHUB_URL));
+                    context.startActivity(githubIntent);
                     return true;
 
                 default:

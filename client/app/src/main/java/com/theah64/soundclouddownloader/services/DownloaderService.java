@@ -21,6 +21,7 @@ import com.theah64.soundclouddownloader.database.Playlists;
 import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.Playlist;
 import com.theah64.soundclouddownloader.models.Track;
+import com.theah64.soundclouddownloader.ui.activities.MainActivity;
 import com.theah64.soundclouddownloader.ui.activities.PlaylistDownloadActivity;
 import com.theah64.soundclouddownloader.ui.activities.settings.SettingsActivity;
 import com.theah64.soundclouddownloader.utils.APIRequestBuilder;
@@ -207,6 +208,15 @@ public class DownloaderService extends Service {
                             //Adding track to database -
                             tracksTable.add(newtrack, handler);
                             showToast(getString(R.string.s_added_to_download_queue, newtrack.getTitle()));
+
+                            //Checking pref
+                            final boolean isOpenOnNewTrack = PrefUtils.getInstance(DownloaderService.this).getPref().getBoolean(PrefUtils.KEY_IS_START_ON_NEW_TRACK, false);
+
+                            if (isOpenOnNewTrack) {
+                                final Intent mainIntent = new Intent(DownloaderService.this, MainActivity.class);
+                                mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(mainIntent);
+                            }
 
                         } else {
 

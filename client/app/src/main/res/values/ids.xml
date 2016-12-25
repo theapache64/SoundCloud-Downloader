@@ -5,4 +5,5 @@
     <item name="miShareURL" type="id" />
     <item name="miRemove" type="id" />
     <item name="miDownload" type="id" />
+    <item name="miOpenTrackDirectory" type="id" />
 </resources>

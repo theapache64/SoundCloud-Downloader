@@ -30,6 +30,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.theah64.musicdog.R;
 import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.Track;
+import com.theah64.soundclouddownloader.utils.App;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -40,7 +41,6 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
     private static final String X = OnDownloadFinishedReceiver.class.getSimpleName();
     private final Handler handler = new Handler(Looper.getMainLooper());
 
-    private static final String GITHUB_URL = "https://github.com/theapache64/soundcloud-downloader";
 
     public OnDownloadFinishedReceiver() {
     }
@@ -65,7 +65,7 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
                 final int downloadStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
 
                 if (downloadStatus == DownloadManager.STATUS_SUCCESSFUL) {
-                    
+
                     final Tracks tracksTable = Tracks.getInstance(context);
 
                     if (!tracksTable.update(Tracks.COLUMN_DOWNLOAD_ID, stringDownloadId, Tracks.COLUMN_IS_DOWNLOADED, Tracks.TRUE, handler)) {
@@ -121,7 +121,7 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
                                 id3v2Tag.setOriginalArtist(downloadedThrough);
                                 id3v2Tag.setCopyright(watermark);
                                 id3v2Tag.setPublisher(watermark);
-                                id3v2Tag.setUrl(GITHUB_URL);
+                                id3v2Tag.setUrl(App.GITHUB_URL);
                                 id3v2Tag.setArtist(watermark);
                                 id3v2Tag.setTrack(watermark);
 
