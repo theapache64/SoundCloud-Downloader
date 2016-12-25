@@ -26,7 +26,7 @@ public class Track implements Serializable, ITSNode {
     private String id;
     private String downloadId;
     private boolean isChecked;
-    private File file;
+    private final File file;
 
     public Track(String id, String title, String username, String downloadUrl, String artWorkUrl, String downloadId, String soundCloudUrl, String playlistId, boolean isChecked, boolean isDownloaded, File file, long duration) {
         this.id = id;
@@ -102,9 +102,6 @@ public class Track implements Serializable, ITSNode {
         this.downloadId = downloadId;
     }
 
-    public String getArtWorkUrl() {
-        return artWorkUrl;
-    }
 
     public boolean isChecked() {
         return isChecked;
@@ -186,5 +183,9 @@ public class Track implements Serializable, ITSNode {
 
     public boolean isExistInStorage() {
         return file != null && file.exists();
+    }
+
+    public boolean isMP3() {
+        return file.getAbsolutePath().endsWith(".mp3");
     }
 }

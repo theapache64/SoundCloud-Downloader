@@ -5,19 +5,36 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.firebase.crash.FirebaseCrash;
+import com.mpatric.mp3agic.ID3v2;
+import com.mpatric.mp3agic.ID3v24Tag;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.Mp3File;
+import com.mpatric.mp3agic.UnsupportedTagException;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.theah64.musicdog.R;
 import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.Track;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 public class OnDownloadFinishedReceiver extends BroadcastReceiver {
 
     private static final String X = OnDownloadFinishedReceiver.class.getSimpleName();
     private final Handler handler = new Handler(Looper.getMainLooper());
+
+    private static final String GITHUB_URL = "https://github.com/theapache64/soundcloud-downloader";
 
     public OnDownloadFinishedReceiver() {
     }
@@ -52,8 +69,55 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
                     final Track downloadedTrack = tracksTable.get(Tracks.COLUMN_DOWNLOAD_ID, stringDownloadId);
 
                     if (downloadedTrack != null) {
+
                         Toast.makeText(context, "Track downloaded -> " + downloadedTrack.getTitle(), Toast.LENGTH_SHORT).show();
+
+                        //Changing id3 tags
+                        if (downloadedTrack.isMP3()) {
+
+                            try {
+                                final Mp3File mp3File = new Mp3File(downloadedTrack.getFile().getAbsolutePath());
+                                ID3v2 id3v2Tag = null;
+                                if (mp3File.hasId3v2Tag()) {
+                                    id3v2Tag = mp3File.getId3v2Tag();
+                                } else {
+                                    id3v2Tag = new ID3v24Tag();
+                                    mp3File.setId3v2Tag(id3v2Tag);
+                                }
+
+                                final String watermark = context.getString(R.string.app_name);
+                                final String downloadedThrough = context.getString(R.string.Downloaded_through_SoundCloud_Downloader);
+
+                                id3v2Tag.setTitle(downloadedTrack.getTitle());
+                                id3v2Tag.setAlbumArtist(watermark);
+                                id3v2Tag.setAlbum(watermark);
+                                id3v2Tag.setComposer(downloadedThrough);
+                                id3v2Tag.setOriginalArtist(downloadedThrough);
+                                id3v2Tag.setCopyright(watermark);
+                                id3v2Tag.setPublisher(watermark);
+                                id3v2Tag.setUrl(GITHUB_URL);
+                                id3v2Tag.setArtist(watermark);
+                                id3v2Tag.setTrack(watermark);
+
+                                //Setting album art
+                                final Bitmap logo = BitmapFactory.decodeResource(context.getResources(), R.drawable.logo_tinypng);
+                                final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                logo.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                                final byte[] bitmapBytes = baos.toByteArray();
+                                id3v2Tag.setAlbumImage(bitmapBytes, "image/png");
+                                baos.flush();
+                                baos.close();
+
+                                
+
+                            } catch (IOException | UnsupportedTagException | InvalidDataException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
                     }
+
 
                 } else {
                     Log.e(X, "Download status : " + downloadStatus);

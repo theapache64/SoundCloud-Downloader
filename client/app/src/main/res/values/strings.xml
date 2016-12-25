@@ -50,4 +50,5 @@
     <string name="Server_error">Server error</string>
     <string name="Server_error_occurred">Server error occurred, please try again later.</string>
     <string name="Download_again">Download again</string>
+    <string name="Downloaded_through_SoundCloud_Downloader">Downloaded through \'SoundCloud Downloader\'</string>
 </resources>
