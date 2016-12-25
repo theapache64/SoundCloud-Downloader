@@ -2,12 +2,7 @@
 An android application to download tracks/playlists from SoundCloud.
 
 #### TODOs
-
-- Attach album art and other ID tags (client)
-- Delete track on 'Remove' from storage
-- Find why the data downloaded by the client gets deleted on client removal
-- Make sure the download status gets updated correctly
-
+- Nothing for now.
 
 #### Sad part :(
 

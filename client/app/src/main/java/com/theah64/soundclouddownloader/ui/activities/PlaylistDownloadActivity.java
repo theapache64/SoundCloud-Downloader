@@ -109,7 +109,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                 final String absoluteFilePath = String.format("%s/%s/%s", baseStorageLocation, playlist.getSanitizedTitle(), fileName);
                 final Track newTrack = new Track(null, title, username, downloadUrl, trackArtWorkUrl, null, trackSoundCloudUrl, playlist.getId(), true, false, new File(absoluteFilePath), duration) {
                     @Override
-                    public String getSubtitle3() {
+                    public String getSubtitle3(final DownloadUtils downloadUtils) {
 
                         if (isExistInStorage()) {
                             //noinspection ConstantConditions
@@ -119,7 +119,6 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                         } else {
                             return null;
                         }
-
 
                     }
                 };

@@ -29,6 +29,7 @@ import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.services.DownloaderService;
 import com.theah64.soundclouddownloader.utils.App;
 import com.theah64.soundclouddownloader.utils.CommonUtils;
+import com.theah64.soundclouddownloader.utils.DownloadUtils;
 import com.theah64.soundclouddownloader.widgets.ThemedSnackbar;
 
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
     private MainActivityCallback callback;
     private RecyclerView rvTracks;
     private boolean isLaunchedToListPlaylistTracks;
+    private DownloadUtils downloadUtils;
 
 
     public TracksFragment() {
@@ -111,6 +113,8 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
         final String playlistId = getArguments().getString(Playlists.COLUMN_ID);
         tracksTable = Tracks.getInstance(getActivity());
 
+        downloadUtils = new DownloadUtils(getActivity());
+
         trackList = tracksTable.getAll(playlistId);
 
         if (trackList != null) {
@@ -137,7 +141,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
     }
 
     private void initAdapter() {
-        itsAdapter = new ITSAdapter(trackList, this);
+        itsAdapter = new ITSAdapter(trackList, this, downloadUtils);
         rvTracks = (RecyclerView) layout.findViewById(R.id.rvTracks);
         rvTracks.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvTracks.setAdapter(itsAdapter);
@@ -165,11 +169,9 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
         if (track.isDownloaded()) {
             //playing track
             playTrack(track);
-        } else {
+        } else if (track.getSubtitle3(downloadUtils) == null) {
             onPopUpMenuClicked(popUpAnchor, position);
-            Toast.makeText(getActivity(), R.string.Please_download_the_track, Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override

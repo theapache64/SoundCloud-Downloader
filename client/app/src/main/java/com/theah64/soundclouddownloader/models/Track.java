@@ -1,5 +1,9 @@
 package com.theah64.soundclouddownloader.models;
 
+import android.support.annotation.Nullable;
+
+import com.theah64.soundclouddownloader.utils.DownloadUtils;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.List;
@@ -131,14 +135,11 @@ public class Track implements Serializable, ITSNode {
     }
 
     @Override
-    public String getSubtitle3() {
-
-        if (isDownloaded && file.exists()) {
-            return "(Saved)";
-        } else if (isDownloaded && !file.exists()) {
-            return "(Saved but moved/deleted)";
+    public String getSubtitle3(@Nullable DownloadUtils downloadUtils) {
+        if (downloadUtils != null) {
+            return downloadUtils.getVerbalStatus(this);
         } else {
-            return null;
+            return DownloadUtils.getSubtitle3(this);
         }
     }
 

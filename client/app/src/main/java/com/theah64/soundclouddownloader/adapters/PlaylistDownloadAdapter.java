@@ -53,7 +53,7 @@ public class PlaylistDownloadAdapter extends RecyclerView.Adapter<PlaylistDownlo
         holder.cbDownload.setChecked(track.isChecked());
         holder.tvSubtitle1.setText(track.getSubtitle1());
         holder.tvSubtitle2.setText(track.getSubtitle2());
-        holder.tvSubtitle3.setText(track.getSubtitle3());
+        holder.tvSubtitle3.setText(track.getSubtitle3(null));
 
         ImageLoader.getInstance().displayImage(track.getArtworkUrl(), holder.ivArtwork);
     }

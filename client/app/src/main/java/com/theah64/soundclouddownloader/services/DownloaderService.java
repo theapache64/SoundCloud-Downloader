@@ -6,9 +6,11 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -111,8 +113,12 @@ public class DownloaderService extends Service {
                             tracksTable.update(Tracks.COLUMN_ID, track.getId(), Tracks.COLUMN_IS_DOWNLOADED, Tracks.TRUE, handler);
                         }
 
+                        final Intent openTrackIntent = new Intent(Intent.ACTION_VIEW);
+                        openTrackIntent.setDataAndType(Uri.fromFile(track.getFile()), "audio/*");
+                        final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, openTrackIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
                         //noinspection ConstantConditions - already checked with track.isExistInStorage;
-                        notification.showNotification(getString(R.string.Track_exists), track.getTitle(), track.getFile().getAbsolutePath(), false);
+                        notification.showNotification(getString(R.string.Track_exists), track.getTitle(), track.getFile().getAbsolutePath(), false, pendingIntent);
 
                     } else {
                         fireApi(track, soundCloudUrl);
@@ -138,7 +144,7 @@ public class DownloaderService extends Service {
 
         if (track == null) {
 
-            notification.showNotification(getString(R.string.initializing_download), soundCloudUrl, null, true);
+            notification.showNotification(getString(R.string.initializing_download), soundCloudUrl, null, true, null);
 
             //Building json download request
             final Request scdRequest = new APIRequestBuilder("/json")
@@ -156,7 +162,7 @@ public class DownloaderService extends Service {
                             getString(R.string.Network_error),
                             getString(R.string.network_error),
                             e.getMessage(),
-                            false
+                            false, null
                     );
                 }
 
@@ -234,7 +240,7 @@ public class DownloaderService extends Service {
                         e.printStackTrace();
                         notification.showNotification(
                                 getString(R.string.Server_error),
-                                getString(R.string.Server_error_occurred), e.getMessage(), false);
+                                getString(R.string.Server_error_occurred), e.getMessage(), false, null);
                         showToast("ERROR: " + e.getMessage());
                     }
                 }
@@ -279,7 +285,7 @@ public class DownloaderService extends Service {
 
         }
 
-        private void showNotification(final String title, final String message, final String info, final boolean showProgress) {
+        private void showNotification(final String title, final String message, final String info, final boolean showProgress, @Nullable PendingIntent pendingIntent) {
 
             if (showProgress) {
                 notBuilder.setProgress(100, 0, true);
@@ -291,6 +297,7 @@ public class DownloaderService extends Service {
                     .setTicker(title)
                     .setContentTitle(title)
                     .setContentText(message)
+                    .setContentIntent(pendingIntent)
                     .setContentInfo(info);
 
             nm.notify(notifId, notBuilder.build());

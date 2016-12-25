@@ -55,7 +55,7 @@ public class Tracks extends BaseTable<Track> {
         cv.put(COLUMN_TITLE, track.getTitle());
         cv.put(COLUMN_SOUNDCLOUD_URL, track.getSoundCloudUrl());
         cv.put(COLUMN_DOWNLOAD_ID, track.getDownloadId());
-        cv.put(COLUMN_ARTWORK_URL, track.getArtWorkUrl());
+        cv.put(COLUMN_ARTWORK_URL, track.getArtworkUrl());
         cv.put(COLUMN_DURATION, track.getDuration());
         cv.put(COLUMN_USERNAME, track.getUsername());
         cv.put(COLUMN_PLAYLIST_ID, track.getPlaylistId());
@@ -169,7 +169,7 @@ public class Tracks extends BaseTable<Track> {
 
                 final String downloadUrl = c.getString(c.getColumnIndex(COLUMN_DOWNLOAD_URL));
 
-                track = new Track(id, title, username, downloadUrl, artworkUrl, downloadId, soundCloudUrl, playlistId, false, isDownloaded, absoluteFilePath != null ? new File(absoluteFilePath) : null, duration);
+                track = new Track( id, title, username, downloadUrl, artworkUrl, downloadId, soundCloudUrl, playlistId, false, isDownloaded, absoluteFilePath != null ? new File(absoluteFilePath) : null, duration);
             }
             c.close();
         }

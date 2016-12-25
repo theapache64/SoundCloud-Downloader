@@ -14,10 +14,15 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.firebase.crash.FirebaseCrash;
+import com.mpatric.mp3agic.ID3v1;
+import com.mpatric.mp3agic.ID3v1Tag;
 import com.mpatric.mp3agic.ID3v2;
+import com.mpatric.mp3agic.ID3v22Tag;
+import com.mpatric.mp3agic.ID3v23Tag;
 import com.mpatric.mp3agic.ID3v24Tag;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
+import com.mpatric.mp3agic.NotSupportedException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -27,6 +32,7 @@ import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.Track;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 
 public class OnDownloadFinishedReceiver extends BroadcastReceiver {
@@ -59,7 +65,7 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
                 final int downloadStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
 
                 if (downloadStatus == DownloadManager.STATUS_SUCCESSFUL) {
-
+                    
                     final Tracks tracksTable = Tracks.getInstance(context);
 
                     if (!tracksTable.update(Tracks.COLUMN_DOWNLOAD_ID, stringDownloadId, Tracks.COLUMN_IS_DOWNLOADED, Tracks.TRUE, handler)) {
@@ -77,16 +83,36 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
 
                             try {
                                 final Mp3File mp3File = new Mp3File(downloadedTrack.getFile().getAbsolutePath());
-                                ID3v2 id3v2Tag = null;
+
+                                ID3v2 id3v2Tag;
                                 if (mp3File.hasId3v2Tag()) {
                                     id3v2Tag = mp3File.getId3v2Tag();
                                 } else {
-                                    id3v2Tag = new ID3v24Tag();
+                                    id3v2Tag = new ID3v22Tag();
                                     mp3File.setId3v2Tag(id3v2Tag);
                                 }
 
+
+                                //Setting album art
+                                final Bitmap logo = BitmapFactory.decodeResource(context.getResources(), R.drawable.logo_tinypng);
+                                final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                logo.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                                final byte[] bitmapBytes = baos.toByteArray();
+                                id3v2Tag.setAlbumImage(bitmapBytes, "image/png");
+                                baos.flush();
+                                baos.close();
+
                                 final String watermark = context.getString(R.string.app_name);
                                 final String downloadedThrough = context.getString(R.string.Downloaded_through_SoundCloud_Downloader);
+
+                                final ID3v1 id3v1 = new ID3v1Tag();
+                                mp3File.setId3v1Tag(id3v1);
+
+                                id3v1.setTitle(downloadedTrack.getTitle());
+                                id3v1.setAlbum(watermark);
+                                id3v1.setTrack(watermark);
+                                id3v1.setArtist(watermark);
+                                id3v1.setComment(downloadedThrough);
 
                                 id3v2Tag.setTitle(downloadedTrack.getTitle());
                                 id3v2Tag.setAlbumArtist(watermark);
@@ -99,18 +125,14 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
                                 id3v2Tag.setArtist(watermark);
                                 id3v2Tag.setTrack(watermark);
 
-                                //Setting album art
-                                final Bitmap logo = BitmapFactory.decodeResource(context.getResources(), R.drawable.logo_tinypng);
-                                final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                logo.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                                final byte[] bitmapBytes = baos.toByteArray();
-                                id3v2Tag.setAlbumImage(bitmapBytes, "image/png");
-                                baos.flush();
-                                baos.close();
+                                final String tempMp3Path = downloadedTrack.getFile().getAbsolutePath() + ".tmp";
+                                mp3File.save(tempMp3Path);
 
-                                
+                                //Deleting old file and replacing with the id3 version.
+                                //noinspection ResultOfMethodCallIgnored
+                                new File(tempMp3Path).renameTo(downloadedTrack.getFile());
 
-                            } catch (IOException | UnsupportedTagException | InvalidDataException e) {
+                            } catch (IOException | UnsupportedTagException | InvalidDataException | NotSupportedException e) {
                                 e.printStackTrace();
                             }
 

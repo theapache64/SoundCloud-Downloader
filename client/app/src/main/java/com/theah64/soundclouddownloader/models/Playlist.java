@@ -1,6 +1,9 @@
 package com.theah64.soundclouddownloader.models;
 
+import android.support.annotation.Nullable;
+
 import com.theah64.soundclouddownloader.utils.CommonUtils;
+import com.theah64.soundclouddownloader.utils.DownloadUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -78,7 +81,7 @@ public class Playlist implements ITSNode, Serializable {
     }
 
     @Override
-    public String getSubtitle3() {
+    public String getSubtitle3(@Nullable DownloadUtils downloadUtils) {
         return tracksDownloaded + " (saved) /" + totalTracks + " (total)";
     }
 

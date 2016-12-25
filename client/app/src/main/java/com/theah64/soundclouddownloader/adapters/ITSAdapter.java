@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.theah64.musicdog.R;
 import com.theah64.soundclouddownloader.models.ITSNode;
+import com.theah64.soundclouddownloader.utils.DownloadUtils;
 
 import java.util.List;
 
@@ -22,10 +23,12 @@ public class ITSAdapter extends RecyclerView.Adapter<ITSAdapter.ViewHolder> {
     private final List<? extends ITSNode> itsNodes;
     private final TracksCallback callback;
     private LayoutInflater inflater;
+    private final DownloadUtils downloadUtils;
 
-    public ITSAdapter(List<? extends ITSNode> itsNodes, TracksCallback callback) {
+    public ITSAdapter(List<? extends ITSNode> itsNodes, TracksCallback callback, DownloadUtils downloadUtils) {
         this.itsNodes = itsNodes;
         this.callback = callback;
+        this.downloadUtils = downloadUtils;
     }
 
     @Override
@@ -49,9 +52,7 @@ public class ITSAdapter extends RecyclerView.Adapter<ITSAdapter.ViewHolder> {
 
         holder.tvSubtitle1.setText(itsNode.getSubtitle1());
         holder.tvSubtitle2.setText(itsNode.getSubtitle2());
-        holder.tvSubtitle3.setText(itsNode.getSubtitle3());
-
-
+        holder.tvSubtitle3.setText(itsNode.getSubtitle3(downloadUtils));
     }
 
     @Override
