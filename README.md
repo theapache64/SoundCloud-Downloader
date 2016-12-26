@@ -2,7 +2,7 @@
 An android application to download tracks/playlists from SoundCloud.
 
 #### TODOs
-- Nothing for now.
+- Integrate APIRequestGateway (provide api-key to each client).
 
 #### Sad part :(
 
