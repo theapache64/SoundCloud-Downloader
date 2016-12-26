@@ -10,11 +10,10 @@
     api_key VARCHAR (10) NOT NULL,
     is_active TINYINT(4)  NOT NULL  DEFAULT 1 ,
     PRIMARY KEY (id),
-   UNIQUE KEY (email)
+   UNIQUE KEY (imei)
   );
 
-  INSERT INTO users (id,email,api_key) VALUES ('1','theapache64@gmail.com','abcd1234');
-  INSERT INTO users (id,email,api_key) VALUES ('2','shifar.shifz@gmail.com','android-client-key');
+  INSERT INTO users (id,name,imei,device_hash,api_key) VALUES ('1','testUser','12345678901234567','theDeviceHash','abcd1234');
 
   CREATE TABLE `requests`(
     id INT(11) NOT NULL AUTO_INCREMENT,
@@ -24,7 +23,6 @@
     PRIMARY KEY(id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
   );
-
 
    CREATE TABLE tracks(
     id INT NOT NULL AUTO_INCREMENT,
@@ -44,6 +42,16 @@
     UNIQUE KEY(soundcloud_track_id)
    );
 
+   CREATE TABLE download_requests(
+      id INT NOT NULL AUTO_INCREMENT,
+      track_id INT NOT NULL,
+      request_id INT NOT NULL,
+      download_link TEXT NOT NULL,
+      PRIMARY KEY(id),
+      FOREIGN KEY (track_id) REFERENCES tracks(id) ON UPDATE CASCADE ON DELETE CASCADE,
+      FOREIGN KEY (request_id) REFERENCES requests(id) ON UPDATE CASCADE ON DELETE CASCADE
+   );
+
   CREATE TABLE `preference` (
     `id`     INT(11)      NOT NULL AUTO_INCREMENT,
     `_key`   VARCHAR(100) NOT NULL,
@@ -61,6 +69,7 @@
     ('filename_format', '%s_theah64.%s'),
     ('apk_url', 'https://github.com/theapache64/SoundCloud-Downloader/releases/download/v1.0/soundclouddownloader.apk'),
     ('is_new_soundcloud_downloader', '1'),
+    ('is_open_api', '0'),
     ('is_direct_download', '0');
 
 

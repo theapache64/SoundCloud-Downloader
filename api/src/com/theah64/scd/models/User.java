@@ -21,6 +21,10 @@ public class User {
         return id;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public String getApiKey() {
         return apiKey;
     }
@@ -36,7 +40,6 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id='" + id + '\'' +
                 ", imei='" + imei + '\'' +
                 ", apiKey='" + apiKey + '\'' +
                 '}';

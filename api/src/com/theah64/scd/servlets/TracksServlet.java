@@ -38,8 +38,7 @@ public final class TracksServlet extends AdvancedBaseServlet {
 
     @Override
     protected boolean isSecureServlet() {
-        //ONE DAY..it'll change to true. Buhahahah
-        return false;
+        return Preference.getInstance().getString(Preference.KEY_IS_OPEN_API).equals(Preference.TRUE);
     }
 
     @Override

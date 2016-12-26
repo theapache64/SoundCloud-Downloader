@@ -3,7 +3,9 @@ package com.theah64.scd.servlets;
 import com.theah64.scd.database.tables.BaseTable;
 import com.theah64.scd.database.tables.Preference;
 import com.theah64.scd.database.tables.Tracks;
+import com.theah64.scd.database.tables.Users;
 import com.theah64.scd.models.Track;
+import com.theah64.scd.utils.HeaderSecurity;
 import com.theah64.scd.utils.NetworkHelper;
 import com.theah64.scd.utils.Request;
 import org.json.JSONException;
@@ -24,7 +26,7 @@ import static com.theah64.scd.core.SoundCloudDownloader.CLIENT_ID;
 @WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + DownloaderServlet.ROUTE})
 public class DownloaderServlet extends HttpServlet {
 
-    private static final String[] REQUIRED_PARAMS = {Tracks.COLUMN_SOUNDCLOUD_TRACK_ID};
+    private static final String[] REQUIRED_PARAMS = {Users.COLUMN_API_KEY, Tracks.COLUMN_SOUNDCLOUD_TRACK_ID};
     public static final String ROUTE = "/download";
 
     @Override
@@ -33,6 +35,8 @@ public class DownloaderServlet extends HttpServlet {
 
         try {
             final Request request = new Request(req, REQUIRED_PARAMS);
+            final String apiKey = request.getStringParameter(Users.COLUMN_API_KEY);
+            final HeaderSecurity hs = new HeaderSecurity(apiKey);
 
             final String soundCloudTrackId = request.getStringParameter(Tracks.COLUMN_SOUNDCLOUD_TRACK_ID);
             final Tracks tracksTable = Tracks.getInstance();
