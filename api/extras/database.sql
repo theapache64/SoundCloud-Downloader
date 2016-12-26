@@ -4,8 +4,10 @@
 
   CREATE TABLE `users`(
     id INT(11) NOT NULL AUTO_INCREMENT,
-    email VARCHAR(100) NOT NULL,
-    api_key VARCHAR (30) NOT NULL,
+    name VARCHAR (150) NOT NULL,
+    imei VARCHAR(18) NOT NULL,
+    device_hash TEXT NOT NULL,
+    api_key VARCHAR (10) NOT NULL,
     is_active TINYINT(4)  NOT NULL  DEFAULT 1 ,
     PRIMARY KEY (id),
    UNIQUE KEY (email)
