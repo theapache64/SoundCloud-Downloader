@@ -157,6 +157,7 @@ public class DownloaderService extends Service {
 
                 @Override
                 public void onFailure(Call call, IOException e) {
+                    e.printStackTrace();
                     showToast("ERROR: " + e.getMessage());
 
                     notification.showNotification(
