@@ -285,7 +285,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
 
     }
 
-    private void playTrack(Track track) {
+    private void playTrack(Track track)  {
 
         if (track.getFile().exists()) {
             //Opening audio file
