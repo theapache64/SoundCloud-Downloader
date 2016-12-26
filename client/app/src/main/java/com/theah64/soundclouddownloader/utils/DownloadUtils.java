@@ -60,35 +60,39 @@ public class DownloadUtils {
 
         Log.d(X, "Requested for verbal status");
 
-        DownloadManager.Query query = new DownloadManager.Query();
-        query.setFilterById(Long.parseLong(track.getDownloadId()));
 
-        final Cursor cursor = dm.query(query);
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
+        if (track.getDownloadId() != null) {
+            DownloadManager.Query query = new DownloadManager.Query();
+            query.setFilterById(Long.parseLong(track.getDownloadId()));
 
-                final int downloadStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+            final Cursor cursor = dm.query(query);
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
 
-                switch (downloadStatus) {
+                    final int downloadStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
 
-                    case DownloadManager.STATUS_FAILED:
-                        return context.getString(R.string.Download_failed);
-                    case DownloadManager.STATUS_PAUSED:
-                        return context.getString(R.string.Download_paused);
-                    case DownloadManager.STATUS_PENDING:
-                        return context.getString(R.string.Download_pending);
+                    switch (downloadStatus) {
 
-                    case DownloadManager.STATUS_RUNNING:
-                        return context.getString(R.string.Downloading);
+                        case DownloadManager.STATUS_FAILED:
+                            return context.getString(R.string.Download_failed);
+                        case DownloadManager.STATUS_PAUSED:
+                            return context.getString(R.string.Download_paused);
+                        case DownloadManager.STATUS_PENDING:
+                            return context.getString(R.string.Download_pending);
 
-                    default:
-                    case DownloadManager.STATUS_SUCCESSFUL:
-                        return getSubtitle3(track);
+                        case DownloadManager.STATUS_RUNNING:
+                            return context.getString(R.string.Downloading);
 
+                        default:
+                        case DownloadManager.STATUS_SUCCESSFUL:
+                            return getSubtitle3(track);
+
+                    }
                 }
+                cursor.close();
             }
-            cursor.close();
         }
+
         return null;
     }
 }

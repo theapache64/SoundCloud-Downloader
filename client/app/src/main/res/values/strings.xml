@@ -54,7 +54,7 @@
     <string name="Download_failed">Download failed</string>
     <string name="Download_paused">Download paused</string>
     <string name="Download_pending">Download pending</string>
-    <string name="Downloading">Downloading...</string>
+    <string name="Downloading">Downloading…</string>
     <string name="Saved">Saved</string>
     <string name="key_is_start_app_on_new_track">is_start_app_on_new_track</string>
     <string name="Open_on_new_track">Open on new track</string>

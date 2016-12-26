@@ -7,16 +7,15 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.crash.FirebaseCrash;
-import com.mpatric.mp3agic.ID3v1;
-import com.mpatric.mp3agic.ID3v1Tag;
 import com.mpatric.mp3agic.ID3v2;
-import com.mpatric.mp3agic.ID3v22Tag;
+import com.mpatric.mp3agic.ID3v24Tag;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.NotSupportedException;
@@ -25,7 +24,6 @@ import com.theah64.musicdog.R;
 import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.utils.App;
-import com.theah64.soundclouddownloader.utils.DownloadUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -74,69 +72,72 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
 
                         //Removing temp signature from file
                         //noinspection ResultOfMethodCallIgnored
-                        new File(downloadedTrack.getFile().getAbsolutePath() + DownloadUtils.TEMP_SIGNATURE).renameTo(downloadedTrack.getFile());
+                        String localUri = Uri.decode(cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)).replaceAll("file://", ""));
+                        Log.d(X, "Local URI: " + localUri);
+                        final boolean isRenamedToReal = new File(localUri).renameTo(downloadedTrack.getFile());
+
+                        if (isRenamedToReal) {
+
+                            Toast.makeText(context, "Track downloaded -> " + downloadedTrack.getTitle(), Toast.LENGTH_SHORT).show();
+
+                            //Changing id3 tags
+                            if (downloadedTrack.isMP3()) {
+
+                                try {
+                                    final Mp3File mp3File = new Mp3File(downloadedTrack.getFile().getAbsolutePath());
+
+                                    ID3v2 id3v2Tag;
+                                    if (mp3File.hasId3v2Tag()) {
+                                        id3v2Tag = mp3File.getId3v2Tag();
+                                        Log.d(X, "hasId3v2Tag");
+                                    } else {
+                                        id3v2Tag = new ID3v24Tag();
+                                        mp3File.setId3v2Tag(id3v2Tag);
+                                        Log.d(X, "Building ID3v24Tag");
+                                    }
 
 
-                        Toast.makeText(context, "Track downloaded -> " + downloadedTrack.getTitle(), Toast.LENGTH_SHORT).show();
+                                    //Setting album art
+                                    final Bitmap logo = BitmapFactory.decodeResource(context.getResources(), R.drawable.logo_tinypng);
+                                    final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                    logo.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                                    final byte[] bitmapBytes = baos.toByteArray();
+                                    id3v2Tag.setAlbumImage(bitmapBytes, "image/png");
 
-                        //Changing id3 tags
-                        if (downloadedTrack.isMP3()) {
+                                    final String watermark = context.getString(R.string.app_name);
+                                    final String downloadedThrough = context.getString(R.string.Downloaded_through_SoundCloud_Downloader);
 
-                            try {
-                                final Mp3File mp3File = new Mp3File(downloadedTrack.getFile().getAbsolutePath());
 
-                                ID3v2 id3v2Tag;
-                                if (mp3File.hasId3v2Tag()) {
-                                    id3v2Tag = mp3File.getId3v2Tag();
-                                } else {
-                                    id3v2Tag = new ID3v22Tag();
-                                    mp3File.setId3v2Tag(id3v2Tag);
+                                    id3v2Tag.setTitle(downloadedTrack.getTitle());
+                                    id3v2Tag.setAlbumArtist(watermark);
+                                    id3v2Tag.setAlbum(watermark);
+                                    id3v2Tag.setComposer(downloadedThrough);
+                                    id3v2Tag.setOriginalArtist(downloadedThrough);
+                                    id3v2Tag.setCopyright(watermark);
+                                    id3v2Tag.setPublisher(watermark);
+                                    id3v2Tag.setUrl(App.GITHUB_URL);
+                                    id3v2Tag.setArtist(watermark);
+                                    id3v2Tag.setTrack(watermark);
+
+                                    final String tempMp3Path = downloadedTrack.getFile().getAbsolutePath() + ".tmp";
+                                    mp3File.save(tempMp3Path);
+
+                                    //Deleting old file and replacing with the id3 version.
+                                    //noinspection ResultOfMethodCallIgnored
+                                    new File(tempMp3Path).renameTo(downloadedTrack.getFile());
+                                    baos.flush();
+                                    baos.close();
+
+                                    Log.i(X, "Changed album art");
+
+                                } catch (IOException | UnsupportedTagException | InvalidDataException | NotSupportedException e) {
+                                    e.printStackTrace();
                                 }
 
-
-                                //Setting album art
-                                final Bitmap logo = BitmapFactory.decodeResource(context.getResources(), R.drawable.logo_tinypng);
-                                final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                logo.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                                final byte[] bitmapBytes = baos.toByteArray();
-                                id3v2Tag.setAlbumImage(bitmapBytes, "image/png");
-                                baos.flush();
-                                baos.close();
-
-                                final String watermark = context.getString(R.string.app_name);
-                                final String downloadedThrough = context.getString(R.string.Downloaded_through_SoundCloud_Downloader);
-
-                                final ID3v1 id3v1 = new ID3v1Tag();
-                                mp3File.setId3v1Tag(id3v1);
-
-                                id3v1.setTitle(downloadedTrack.getTitle());
-                                id3v1.setAlbum(watermark);
-                                id3v1.setTrack(watermark);
-                                id3v1.setArtist(watermark);
-                                id3v1.setComment(downloadedThrough);
-
-                                id3v2Tag.setTitle(downloadedTrack.getTitle());
-                                id3v2Tag.setAlbumArtist(watermark);
-                                id3v2Tag.setAlbum(watermark);
-                                id3v2Tag.setComposer(downloadedThrough);
-                                id3v2Tag.setOriginalArtist(downloadedThrough);
-                                id3v2Tag.setCopyright(watermark);
-                                id3v2Tag.setPublisher(watermark);
-                                id3v2Tag.setUrl(App.GITHUB_URL);
-                                id3v2Tag.setArtist(watermark);
-                                id3v2Tag.setTrack(watermark);
-
-                                final String tempMp3Path = downloadedTrack.getFile().getAbsolutePath() + ".tmp";
-                                mp3File.save(tempMp3Path);
-
-                                //Deleting old file and replacing with the id3 version.
-                                //noinspection ResultOfMethodCallIgnored
-                                new File(tempMp3Path).renameTo(downloadedTrack.getFile());
-
-                            } catch (IOException | UnsupportedTagException | InvalidDataException | NotSupportedException e) {
-                                e.printStackTrace();
                             }
 
+                        } else {
+                            throw new IllegalArgumentException("Failed to rename to real");
                         }
 
                     }

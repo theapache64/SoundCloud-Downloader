@@ -122,8 +122,8 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
                     }
                 };
-                newTrack.setChecked(!newTrack.isExistInStorage());
 
+                newTrack.setChecked(!newTrack.isExistInStorage());
                 String dbTrackId = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, trackSoundCloudUrl, Tracks.COLUMN_ID);
 
                 if (dbTrackId != null) {
@@ -136,8 +136,12 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                     dbTrackId = String.valueOf(tracksTable.add(newTrack, null));
                 }
 
-
                 newTrack.setId(dbTrackId);
+
+                if (newTrack.isExistInStorage() && !newTrack.isDownloaded()) {
+                    tracksTable.update(Tracks.COLUMN_ID, newTrack.getId(), Tracks.COLUMN_IS_DOWNLOADED, Tracks.TRUE, null);
+                }
+
                 trackList.add(newTrack);
             }
 
@@ -155,7 +159,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         rvPlaylist.setLayoutManager(new LinearLayoutManager(this));
 
         //noinspection unchecked
-        adapter = new PlaylistDownloadAdapter(this, trackList, this);
+        adapter = new PlaylistDownloadAdapter(trackList, this);
         rvPlaylist.setAdapter(adapter);
 
         nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -201,7 +205,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
             Log.e(X, "-------------------------------");
             Log.i(X, "Track : " + track);
 
-            if ((track.getFile() == null || !track.getFile().exists()) && track.isChecked()) {
+            if (track.isChecked()) {
                 //Starting download
                 final long downloadId = downloadUtils.addToDownloadQueue(track);
                 if (!tracksTable.update(Tracks.COLUMN_ID, track.getId(), Tracks.COLUMN_DOWNLOAD_ID, String.valueOf(downloadId), null)) {
@@ -209,10 +213,6 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                 }
 
                 Log.i(X, "Added to download queue");
-            } else if (!track.isChecked()) {
-                Log.e(X, "Track unchecked");
-            } else {
-                Log.e(X, "Track exist");
             }
 
             Log.e(X, "-------------------------------");

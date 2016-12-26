@@ -1,6 +1,5 @@
 package com.theah64.soundclouddownloader.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,7 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.theah64.musicdog.R;
 import com.theah64.soundclouddownloader.models.ITSNode;
+import com.theah64.soundclouddownloader.models.Track;
 
 import java.util.List;
 
@@ -23,14 +23,12 @@ import java.util.List;
 public class PlaylistDownloadAdapter extends RecyclerView.Adapter<PlaylistDownloadAdapter.ViewHolder> {
 
     private static final String X = PlaylistDownloadAdapter.class.getSimpleName();
-    private final List<? extends ITSNode> itsNodes;
+    private final List<? extends ITSNode> tracks;
     private final PlaylistListener callback;
-    private final Context context;
     private LayoutInflater inflater;
 
-    public PlaylistDownloadAdapter(Context context, List<? extends ITSNode> tracks, PlaylistListener callback) {
-        this.context = context;
-        this.itsNodes = tracks;
+    public PlaylistDownloadAdapter(List<Track> tracks, PlaylistListener callback) {
+        this.tracks = tracks;
         this.callback = callback;
     }
 
@@ -47,7 +45,7 @@ public class PlaylistDownloadAdapter extends RecyclerView.Adapter<PlaylistDownlo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final ITSNode track = itsNodes.get(position);
+        final ITSNode track = tracks.get(position);
 
         holder.tvTitle.setText(track.getTitle());
         holder.cbDownload.setChecked(track.isChecked());
@@ -56,12 +54,15 @@ public class PlaylistDownloadAdapter extends RecyclerView.Adapter<PlaylistDownlo
         holder.tvSubtitle3.setText(track.getSubtitle3(null));
 
         ImageLoader.getInstance().displayImage(track.getArtworkUrl(), holder.ivArtwork);
+
+
     }
 
     @Override
     public int getItemCount() {
-        return itsNodes.size();
+        return tracks.size();
     }
+
 
     public interface PlaylistListener {
         void onChecked(int position);
@@ -77,7 +78,6 @@ public class PlaylistDownloadAdapter extends RecyclerView.Adapter<PlaylistDownlo
 
         ViewHolder(View itemView) {
             super(itemView);
-
 
             this.cbDownload = (CheckBox) itemView.findViewById(R.id.cbDownload);
             this.ivArtwork = (ImageView) itemView.findViewById(R.id.ivArtwork);
