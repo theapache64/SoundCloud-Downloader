@@ -27,18 +27,13 @@ public final class TracksServlet extends AdvancedBaseServlet {
     private static final String KEY_TRACKS = "tracks";
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
-    }
-
-    @Override
     public boolean isBinaryServlet() {
         return false;
     }
 
     @Override
     protected boolean isSecureServlet() {
-        return Preference.getInstance().getString(Preference.KEY_IS_OPEN_API).equals(Preference.TRUE);
+        return !Preference.getInstance().getString(Preference.KEY_IS_OPEN_API).equals(Preference.TRUE);
     }
 
     @Override
@@ -75,10 +70,8 @@ public final class TracksServlet extends AdvancedBaseServlet {
     private JSONTracks getTracks() throws BaseTable.InsertFailedException, JSONException {
         final Preference prefTable = Preference.getInstance();
         final String userId = isSecureServlet() ? getHeaderSecurity().getUserId() : prefTable.getString(Preference.KEY_DEFAULT_USER_ID);
-        String soundCloudUrl = getStringParameter(Tracks.COLUMN_SOUNDCLOUD_URL);
-        System.out.println("Before:" + soundCloudUrl);
-        soundCloudUrl = soundCloudUrl.replaceAll("^https", "http");
-        System.out.println("After:" + soundCloudUrl);
+        System.out.println("User id is : " + userId);
+        String soundCloudUrl = getStringParameter(Tracks.COLUMN_SOUNDCLOUD_URL).replaceAll("^https", "http");
         final com.theah64.scd.models.Request apiRequest = new com.theah64.scd.models.Request(userId, soundCloudUrl);
         final String requestId = Requests.getInstance().addv3(apiRequest);
         return SoundCloudDownloader.getSoundCloudTracks(requestId, soundCloudUrl);
