@@ -4,14 +4,89 @@
 
   CREATE TABLE `users`(
     id INT(11) NOT NULL AUTO_INCREMENT,
-    name VARCHAR (150) NOT NULL,
+    name VARCHAR (100) NOT NULL,
+    email VARCHAR (150) DEFAULT NULL,
     imei VARCHAR(18) NOT NULL,
     device_hash TEXT NOT NULL,
     api_key VARCHAR (10) NOT NULL,
     is_active TINYINT(4)  NOT NULL  DEFAULT 1 ,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at VARCHAR(50) DEFAULT NULL,
     PRIMARY KEY (id),
    UNIQUE KEY (imei)
   );
+
+  CREATE TABLE users_audit(
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    column_changed VARCHAR (50) NOT NULL,
+    value_changed_from TEXT NOT NULL,
+    value_changed_to TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    FOREIGN KEY(user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
+  );
+
+  /* Change the delimiter so we can use ";" within the CREATE TRIGGER */
+DELIMITER $$
+
+CREATE TRIGGER after_users_update
+AFTER UPDATE ON users
+FOR EACH ROW BEGIN
+
+  IF OLD.name <> NEW.name
+  THEN
+    INSERT INTO users_audit
+    SET
+    user_id = OLD.id,
+    column_changed = 'name',
+    value_changed_from = OLD.name,
+    value_changed_to = NEW.name;
+  END IF;
+
+  IF OLD.email <> NEW.email
+  THEN
+    INSERT INTO users_audit
+    SET
+    user_id = OLD.id,
+    column_changed = 'email',
+    value_changed_from = OLD.email,
+    value_changed_to = NEW.email;
+  END IF;
+
+  IF OLD.imei <> NEW.imei
+  THEN
+    INSERT INTO users_audit
+    SET
+    user_id = OLD.id,
+    column_changed = 'imei',
+    value_changed_from = OLD.imei,
+    value_changed_to = NEW.imei;
+  END IF;
+
+   IF OLD.device_hash <> NEW.device_hash
+  THEN
+    INSERT INTO users_audit
+    SET
+    user_id = OLD.id,
+    column_changed = 'device_hash',
+    value_changed_from = OLD.device_hash,
+    value_changed_to = NEW.device_hash;
+  END IF;
+
+   IF OLD.api_key <> NEW.api_key
+  THEN
+    INSERT INTO users_audit
+    SET
+    user_id = OLD.id,
+    column_changed = 'api_key',
+    value_changed_from = OLD.api_key,
+    value_changed_to = NEW.api_key;
+  END IF;
+
+END$$
+
+DELIMITER ;
 
   INSERT INTO users (id,name,imei,device_hash,api_key) VALUES ('1','testUser','12345678901234567','theDeviceHash','abcd1234');
 

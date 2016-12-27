@@ -87,7 +87,7 @@ public class BaseTable<T> {
     }
 
 
-    public boolean update(T t) {
+    public boolean update(T t) throws UpdateFailedException {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 

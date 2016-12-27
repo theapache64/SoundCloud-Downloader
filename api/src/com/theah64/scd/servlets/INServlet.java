@@ -72,7 +72,8 @@ public class INServlet extends AdvancedBaseServlet {
             //Account not exists, so creating new one
             final String name = getStringParameter(Users.COLUMN_NAME);
             final String imei = getStringParameter(Users.COLUMN_IMEI);
-            user = new User(name, name, imei, getNewApiKey(), deviceHash, false);
+            final String email = getStringParameter(Users.COLUMN_EMAIL);
+            user = new User(name, name, email, imei, getNewApiKey(), deviceHash, false);
             users.add(user);
         }
 
