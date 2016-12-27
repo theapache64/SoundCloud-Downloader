@@ -26,15 +26,17 @@ public class SoundCloudDownloader {
     public static final String CLIENT_ID = "a3e059563d7fd3372b49b37f00a00bcf";
 
     private static final String RESOLVE_TRACK_URL_FORMAT = "https://api.soundcloud.com/resolve.json?url=%s&client_id=" + CLIENT_ID;
-    private static final String DOWNLOAD_TRACK_URL_FORMAT = String.format("%s%s%%s?soundcloud_track_id=%%s", AdvancedBaseServlet.getBaseUrl(), AdvancedBaseServlet.VERSION_CODE);
     private static final String KEY_ARTWORK_URL = "artwork_url";
 
     public static JSONTracks getSoundCloudTracks(final String requestId, String soundCloudUrl) throws JSONException {
 
         System.out.println("Request url : " + soundCloudUrl);
+        final boolean isDirectDownload = Preference.getInstance().getString(Preference.KEY_IS_DIRECT_DOWNLOAD).equals(Preference.TRUE);
 
         if (!isPlaylist(soundCloudUrl)) {
             //It's a track , so checking the data availability in db.
+
+            System.out.println("It's not a playlist");
 
             //It's track
             final Track track = Tracks.getInstance().get(Tracks.COLUMN_SOUNDCLOUD_URL, soundCloudUrl);
@@ -42,7 +44,7 @@ public class SoundCloudDownloader {
             if (track != null) {
                 System.out.println("Getting data from cache");
                 final JSONArray jaTracks = new JSONArray();
-                jaTracks.put(track.toJSONObject());
+                jaTracks.put(track.toJSONObject(isDirectDownload, requestId));
                 return new JSONTracks(null, null, null, jaTracks);
             }
         }
@@ -64,7 +66,6 @@ public class SoundCloudDownloader {
                 String playlistName = null, username = null, playlistArtworkUrl = null;
 
                 final String fileNameFormat = Preference.getInstance().getString(Preference.KEY_FILENAME_FORMAT);
-                final boolean isDirectDownload = Preference.getInstance().getString(Preference.KEY_IS_DIRECT_DOWNLOAD).equals(Preference.TRUE);
 
                 if (joResolve.has("playlist_type")) {
 
@@ -125,17 +126,16 @@ public class SoundCloudDownloader {
             final long duration = joResolvedTrack.getLong("duration");
             final String username = joResolvedTrack.getJSONObject("user").getString("username");
 
-            final String soundCloudUrl = joResolvedTrack.getString("permalink_url");
+            final String soundCloudUrl = joResolvedTrack.getString("permalink_url").replaceAll("^https", "http");
             final String fileName = String.format(fileNameFormat, FileNameUtils.getSanitizedName(title + "_" + soundCloudTrackId), originalFormat);
-            final String downloadUrl = String.format(DOWNLOAD_TRACK_URL_FORMAT, isDirectDownload ? DirectDownloaderServlet.ROUTE : DownloaderServlet.ROUTE, soundCloudTrackId);
 
-            track = new Track(null, requestId, soundCloudUrl, soundCloudTrackId, title, username, downloadUrl, trackArtworkUrl, fileName, originalFormat, duration);
+            track = new Track(null, requestId, soundCloudUrl, soundCloudTrackId, title, username, trackArtworkUrl, fileName, originalFormat, duration);
 
             //New track
-            tracksTable.add(track);
+            final String trackId = tracksTable.addv3(track);
+            track.setId(trackId);
         }
 
-
-        return track.toJSONObject();
+        return track.toJSONObject(isDirectDownload, requestId);
     }
 }

@@ -1,9 +1,7 @@
 package com.theah64.scd.servlets;
 
-import com.theah64.scd.database.tables.BaseTable;
-import com.theah64.scd.database.tables.Preference;
-import com.theah64.scd.database.tables.Tracks;
-import com.theah64.scd.database.tables.Users;
+import com.theah64.scd.database.tables.*;
+import com.theah64.scd.models.DownloadRequest;
 import com.theah64.scd.models.Track;
 import com.theah64.scd.utils.HeaderSecurity;
 import com.theah64.scd.utils.NetworkHelper;
@@ -26,7 +24,7 @@ import static com.theah64.scd.core.SoundCloudDownloader.CLIENT_ID;
 @WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + DownloaderServlet.ROUTE})
 public class DownloaderServlet extends HttpServlet {
 
-    private static final String[] REQUIRED_PARAMS = {Users.COLUMN_API_KEY, Tracks.COLUMN_SOUNDCLOUD_TRACK_ID};
+    private static final String[] REQUIRED_PARAMS = {Users.COLUMN_API_KEY, DownloadRequests.COLUMN_REQUEST_ID, Tracks.COLUMN_ID};
     public static final String ROUTE = "/download";
 
     @Override
@@ -38,9 +36,9 @@ public class DownloaderServlet extends HttpServlet {
             final String apiKey = request.getStringParameter(Users.COLUMN_API_KEY);
             final HeaderSecurity hs = new HeaderSecurity(apiKey);
 
-            final String soundCloudTrackId = request.getStringParameter(Tracks.COLUMN_SOUNDCLOUD_TRACK_ID);
+            final String id = request.getStringParameter(Tracks.COLUMN_ID);
             final Tracks tracksTable = Tracks.getInstance();
-            final Track track = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_TRACK_ID, soundCloudTrackId);
+            final Track track = tracksTable.get(Tracks.COLUMN_ID, id);
 
             if (track != null) {
 
@@ -50,6 +48,8 @@ public class DownloaderServlet extends HttpServlet {
                 System.out.println("Track download url : " + downloadUrl);
 
                 if (downloadUrl != null) {
+                    final String requestId = request.getStringParameter(DownloadRequests.COLUMN_REQUEST_ID);
+                    DownloadRequests.getInstance().add(new DownloadRequest(null, track.getId(), requestId, downloadUrl));
                     resp.sendRedirect(downloadUrl);
                     System.out.println("Track redirected to download url");
                 } else {
@@ -61,7 +61,7 @@ public class DownloaderServlet extends HttpServlet {
                 throw new Request.RequestException("Invalid track id");
             }
 
-        } catch (Request.RequestException e) {
+        } catch (Request.RequestException | BaseTable.InsertFailedException e) {
             e.printStackTrace();
             throw new IOException(e.getMessage());
         }

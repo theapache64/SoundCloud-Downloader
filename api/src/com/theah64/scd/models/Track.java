@@ -1,6 +1,10 @@
 package com.theah64.scd.models;
 
+import com.theah64.scd.database.Connection;
 import com.theah64.scd.database.tables.Tracks;
+import com.theah64.scd.servlets.AdvancedBaseServlet;
+import com.theah64.scd.servlets.DirectDownloaderServlet;
+import com.theah64.scd.servlets.DownloaderServlet;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -9,19 +13,28 @@ import org.json.JSONObject;
  */
 public class Track {
 
-    public static final String KEY_PLAYLIST_NAME = "playlist_name";
 
-    private final String id, requestId, soundcloudUrl, soundcloudTrackId, title, username, downloadUrl, artworkUrl, filename, originalFormat;
+    public static final String KEY_PLAYLIST_NAME = "playlist_name";
+    private static final String KEY_DOWNLOAD_URL = "download_url";
+
+    private String id;
+    private final String requestId;
+    private final String soundcloudUrl;
+    private final String soundcloudTrackId;
+    private final String title;
+    private final String username;
+    private final String artworkUrl;
+    private final String filename;
+    private final String originalFormat;
     private final long duration;
 
-    public Track(String id, String requestId, String soundcloudUrl, String soundcloudTrackId, String title, String username, String downloadUrl, String artworkUrl, String filename, String originalFormat, long duration) {
+    public Track(String id, String requestId, String soundcloudUrl, String soundcloudTrackId, String title, String username, String artworkUrl, String filename, String originalFormat, long duration) {
         this.id = id;
         this.requestId = requestId;
         this.soundcloudUrl = soundcloudUrl;
         this.soundcloudTrackId = soundcloudTrackId;
         this.title = title;
         this.username = username;
-        this.downloadUrl = downloadUrl;
         this.artworkUrl = artworkUrl;
         this.filename = filename;
         this.originalFormat = originalFormat;
@@ -52,10 +65,6 @@ public class Track {
         return username;
     }
 
-    public String getDownloadUrl() {
-        return downloadUrl;
-    }
-
     public String getArtworkUrl() {
         return artworkUrl;
     }
@@ -72,16 +81,26 @@ public class Track {
         return duration;
     }
 
-    public JSONObject toJSONObject() throws JSONException {
+    public JSONObject toJSONObject(final boolean isDirectDownload, final String requestId) throws JSONException {
         final JSONObject joTrack = new JSONObject();
         joTrack.put(Tracks.COLUMN_TITLE, title);
         joTrack.put(Tracks.COLUMN_ORIGINAL_FORMAT, originalFormat);
         joTrack.put(Tracks.COLUMN_FILENAME, filename);
         joTrack.put(Tracks.COLUMN_ARTWORK_URL, artworkUrl);
-        joTrack.put(Tracks.COLUMN_DOWNLOAD_URL, downloadUrl);
+        joTrack.put(KEY_DOWNLOAD_URL, getDownloadUrl(isDirectDownload, requestId, id));
         joTrack.put(Tracks.COLUMN_DURATION, duration);
         joTrack.put(Tracks.COLUMN_USERNAME, username);
         joTrack.put(Tracks.COLUMN_SOUNDCLOUD_URL, soundcloudUrl);
         return joTrack;
+    }
+
+    private static final String DOWNLOAD_TRACK_URL_FORMAT = String.format("%s%s%%s?id=%%s&request_id=%%s", AdvancedBaseServlet.getBaseUrl(), AdvancedBaseServlet.VERSION_CODE);
+
+    private static String getDownloadUrl(final boolean isDirectDownload, String requestId, final String trackId) {
+        return String.format(DOWNLOAD_TRACK_URL_FORMAT, isDirectDownload ? DirectDownloaderServlet.ROUTE : DownloaderServlet.ROUTE, trackId, requestId);
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

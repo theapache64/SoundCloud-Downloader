@@ -72,6 +72,7 @@ public final class TracksServlet extends AdvancedBaseServlet {
         final String userId = isSecureServlet() ? getHeaderSecurity().getUserId() : prefTable.getString(Preference.KEY_DEFAULT_USER_ID);
         System.out.println("User id is : " + userId);
         String soundCloudUrl = getStringParameter(Tracks.COLUMN_SOUNDCLOUD_URL).replaceAll("^https", "http");
+        System.out.println("URL: " + soundCloudUrl);
         final com.theah64.scd.models.Request apiRequest = new com.theah64.scd.models.Request(userId, soundCloudUrl);
         final String requestId = Requests.getInstance().addv3(apiRequest);
         return SoundCloudDownloader.getSoundCloudTracks(requestId, soundCloudUrl);
