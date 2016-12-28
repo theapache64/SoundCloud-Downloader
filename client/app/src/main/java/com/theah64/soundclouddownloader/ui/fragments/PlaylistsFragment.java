@@ -100,13 +100,15 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
 
             //showing no tracks downloaded text view.
             layout.findViewById(R.id.llNoPlaylistsFound).setVisibility(View.VISIBLE);
-            layout.findViewById(R.id.bOpenSoundCloud).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    openSoundCloud();
-                }
-            });
+
         }
+
+        layout.findViewById(R.id.bOpenSoundCloud).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openSoundCloud();
+            }
+        });
 
 
         return layout;
