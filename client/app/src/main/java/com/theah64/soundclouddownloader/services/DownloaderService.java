@@ -308,7 +308,7 @@ public class DownloaderService extends Service {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    private static class Notification {
+    public static class Notification {
 
         private int notifId;
         private NotificationManager nm;
@@ -325,7 +325,7 @@ public class DownloaderService extends Service {
 
         }
 
-        private void showNotification(final String title, final String message, final String info, final boolean showProgress, @Nullable PendingIntent pendingIntent) {
+        public void showNotification(final String title, final String message, final String info, final boolean showProgress, @Nullable PendingIntent pendingIntent) {
 
             if (showProgress) {
                 notBuilder.setProgress(100, 0, true);

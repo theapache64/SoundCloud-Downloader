@@ -1,6 +1,7 @@
 package com.theah64.soundclouddownloader.receivers;
 
 import android.app.DownloadManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +25,7 @@ import com.mpatric.mp3agic.UnsupportedTagException;
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.Track;
+import com.theah64.soundclouddownloader.services.DownloaderService;
 import com.theah64.soundclouddownloader.utils.App;
 
 import java.io.ByteArrayOutputStream;
@@ -35,9 +37,9 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
     private static final String X = OnDownloadFinishedReceiver.class.getSimpleName();
     private final Handler handler = new Handler(Looper.getMainLooper());
 
-
     public OnDownloadFinishedReceiver() {
     }
+
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -151,6 +153,18 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
                                         }
                                     });
 
+
+                            //Shows notification
+                            if (downloadedTrack.getPlaylistId() == null) {
+                                
+                                final Intent openTrackIntent = new Intent(Intent.ACTION_VIEW);
+                                openTrackIntent.setDataAndType(Uri.fromFile(downloadedTrack.getFile()), "audio/*");
+                                final PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, openTrackIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+                                //noinspection ConstantConditions - already checked with track.isExistInStorage;
+                                new DownloaderService.Notification(context)
+                                        .showNotification(context.getString(R.string.Track_exists), downloadedTrack.getTitle(), downloadedTrack.getFile().getAbsolutePath(), false, pendingIntent);
+                            }
 
                         } else {
                             throw new IllegalArgumentException("Failed to rename to real");
