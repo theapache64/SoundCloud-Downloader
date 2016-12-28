@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.theah64.musicdog.R;
+import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.models.ITSNode;
 import com.theah64.soundclouddownloader.models.Track;
 

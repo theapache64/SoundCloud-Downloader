@@ -15,7 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.theah64.musicdog.R;
+import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.ui.activities.BaseAppCompatActivity;
 import com.theah64.soundclouddownloader.utils.App;
 
@@ -44,6 +44,11 @@ public class SettingsActivity extends BaseAppCompatActivity {
                 R.id.flSettingsFragContainer,
                 new SettingsFragment(),
                 SettingsFragment.X).commit();
+    }
+
+    @Override
+    public boolean isSecureActivity() {
+        return true;
     }
 
 

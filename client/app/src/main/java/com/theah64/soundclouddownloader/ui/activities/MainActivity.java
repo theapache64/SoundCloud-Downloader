@@ -6,14 +6,13 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.theah64.musicdog.R;
+import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.adapters.TracksAndPlaylistsViewPagerAdapter;
 import com.theah64.soundclouddownloader.interfaces.MainActivityCallback;
 import com.theah64.soundclouddownloader.services.ClipboardWatchIgniterService;
@@ -32,7 +31,7 @@ import java.util.Locale;
  * TRACK MODEL : https://soundcloud.com/moxet-khan/kuch-khaas-khumariyaan-2-0
  * PLAYLIST MODEL : https://soundcloud.com/abdulwahab849/sets/more
  */
-public class MainActivity extends AppCompatActivity implements MainActivityCallback {
+public class MainActivity extends BaseAppCompatActivity implements MainActivityCallback {
 
 
     private static final String X = MainActivity.class.getSimpleName();
@@ -45,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && !CommonUtils.isMyServiceRunning(this, ClipboardWatchIgniterService.class)) {
             //Supports clipboard listener
@@ -91,6 +91,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallb
 
         tracksTab = tlTracksAndPlaylists.getTabAt(0);
         playlistsTab = tlTracksAndPlaylists.getTabAt(1);
+    }
+
+    @Override
+    public boolean isSecureActivity() {
+        return true;
     }
 
     @Override

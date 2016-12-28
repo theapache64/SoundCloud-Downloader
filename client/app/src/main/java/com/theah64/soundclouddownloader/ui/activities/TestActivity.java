@@ -3,7 +3,7 @@ package com.theah64.soundclouddownloader.ui.activities;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.theah64.musicdog.R;
+import com.theah64.soundclouddownloader.R;
 
 public class TestActivity extends AppCompatActivity {
 

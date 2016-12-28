@@ -11,23 +11,24 @@ import okhttp3.Request;
  */
 public class APIRequestBuilder {
 
-    private static final String BASE_URL = App.IS_DEBUG_MODE ? "http://192.168.0.107:8080/v1" : "http://theapache64.xyz:8080/scd/v1";
+    public static final String BASE_URL = App.IS_DEBUG_MODE ? "http://192.168.0.107:8080/v1" : "http://theapache64.xyz:8080/scd/v1";
 
     private static final String X = APIRequestBuilder.class.getSimpleName();
     private static final String KEY_AUTHORIZATION = "Authorization";
-    private static final String API_KEY = "android-client-key";
     private final Request.Builder requestBuilder = new Request.Builder();
     private final StringBuilder logBuilder = new StringBuilder();
     private final String url;
     private FormBody.Builder params = new FormBody.Builder();
 
-    public APIRequestBuilder(String route) {
+    public APIRequestBuilder(String route, String apikey) {
 
         this.url = BASE_URL + route;
         appendLog("URL", url);
 
-        requestBuilder.addHeader(KEY_AUTHORIZATION, API_KEY);
-        appendLog(KEY_AUTHORIZATION, API_KEY);
+        if (apikey != null) {
+            requestBuilder.addHeader(KEY_AUTHORIZATION, apikey);
+            appendLog(KEY_AUTHORIZATION, apikey);
+        }
     }
 
 

@@ -5,7 +5,7 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
 import android.util.AttributeSet;
 
-import com.theah64.musicdog.R;
+import com.theah64.soundclouddownloader.R;
 
 import java.util.regex.Pattern;
 

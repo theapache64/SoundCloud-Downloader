@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.firebase.crash.FirebaseCrash;
-import com.theah64.musicdog.R;
+import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.adapters.ITSAdapter;
 import com.theah64.soundclouddownloader.database.Playlists;
 import com.theah64.soundclouddownloader.database.Tracks;
@@ -114,7 +114,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
     private void initAdapter() {
         rvPlaylists = (RecyclerView) layout.findViewById(R.id.rvPlaylists);
         rvPlaylists.setLayoutManager(new LinearLayoutManager(getActivity()));
-        itsAdapter = new ITSAdapter(getActivity(),playlists, this, null);
+        itsAdapter = new ITSAdapter(getActivity(), playlists, this, null);
         rvPlaylists.setAdapter(itsAdapter);
         layout.findViewById(R.id.llNoPlaylistsFound).setVisibility(View.GONE);
 
@@ -187,7 +187,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
 
                 if (!existingTracks.isEmpty()) {
                     final Intent shareTracksIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-                    shareTracksIntent.putExtra(Intent.EXTRA_TEXT, String.format("Downloaded via MusicDog (%s)  Playlist: %s ", App.APK_DOWNLOAD_URL, currentPlaylist.getTitle())); //TOOD: Modify sub
+                    shareTracksIntent.putExtra(Intent.EXTRA_TEXT, String.format("Downloaded via SoundCloud Downloader (%s)  Playlist: %s ", App.APK_DOWNLOAD_URL, currentPlaylist.getTitle())); //TOOD: Modify sub
                     shareTracksIntent.setType("audio/*");
                     shareTracksIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, existingTracks);
                     startActivity(shareTracksIntent);

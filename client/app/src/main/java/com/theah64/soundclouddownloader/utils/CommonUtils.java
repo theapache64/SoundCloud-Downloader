@@ -2,6 +2,7 @@ package com.theah64.soundclouddownloader.utils;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
@@ -14,6 +15,11 @@ import java.io.File;
 public class CommonUtils {
 
     private static final String X = CommonUtils.class.getSimpleName();
+
+    static boolean isSupport(final int apiLevel) {
+        return Build.VERSION.SDK_INT >= apiLevel;
+    }
+
 
     public static String getMIMETypeFromUrl(final File file, final String defaultValue) {
 

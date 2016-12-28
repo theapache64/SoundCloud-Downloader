@@ -11,7 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.theah64.musicdog.R;
+import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.widgets.AdvancedEditText;
 import com.theah64.soundclouddownloader.widgets.ValidTextInputLayout;
 

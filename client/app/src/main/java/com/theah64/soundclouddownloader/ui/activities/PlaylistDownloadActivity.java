@@ -18,7 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.theah64.musicdog.R;
+import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.adapters.PlaylistDownloadAdapter;
 import com.theah64.soundclouddownloader.database.Playlists;
 import com.theah64.soundclouddownloader.database.Tracks;
@@ -179,7 +179,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
             @Override
             public void onClick(View view) {
 
-                if (NetworkUtils.isNetwork(PlaylistDownloadActivity.this)) {
+                if (NetworkUtils.hasNetwork(PlaylistDownloadActivity.this)) {
                     nm.notify(notifId, apiNotification.build());
                     startDownload();
                     finish();
@@ -190,6 +190,11 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         });
 
         refreshDownloadButton();
+    }
+
+    @Override
+    public boolean isSecureActivity() {
+        return true;
     }
 
     private void startDownload() {

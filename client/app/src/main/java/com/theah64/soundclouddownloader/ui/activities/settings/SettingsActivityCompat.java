@@ -14,7 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
-import com.theah64.musicdog.R;
+import com.theah64.soundclouddownloader.R;
 
 import static com.theah64.soundclouddownloader.ui.activities.settings.SettingsActivity.SettingsFragment.KEY_STORAGE_LOCATION;
 

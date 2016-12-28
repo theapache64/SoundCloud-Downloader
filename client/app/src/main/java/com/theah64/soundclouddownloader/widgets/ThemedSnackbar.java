@@ -7,7 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.TextView;
 
-import com.theah64.musicdog.R;
+import com.theah64.soundclouddownloader.R;
 
 /**
  * Created by theapache64 on 16/12/16.

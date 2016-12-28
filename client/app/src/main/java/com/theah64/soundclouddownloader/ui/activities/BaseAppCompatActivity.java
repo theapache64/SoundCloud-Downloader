@@ -1,5 +1,6 @@
 package com.theah64.soundclouddownloader.ui.activities;
 
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -11,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.theah64.soundclouddownloader.utils.PrefUtils;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
@@ -19,13 +22,25 @@ import java.io.Serializable;
  * Created by theapache64 on 10/12/16.
  */
 
-public class BaseAppCompatActivity extends AppCompatActivity {
+public abstract class BaseAppCompatActivity extends AppCompatActivity {
     public static final String FATAL_ERROR_NO_SERIALIZABLE_FOUND_WITH_KEY_S = "No serializable found with key %s";
     protected static final String FATAL_ERROR_FORGOT_TO_HANDLE = "Forgot to handle";
     private static final String FATAL_ERROR_S_IS_MISSING = "%s is missing";
     private static final String X = BaseAppCompatActivity.class.getSimpleName();
     public Menu menu;
 
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (isSecureActivity()) {
+            if (!PrefUtils.getInstance(this).getPref().getBoolean(SplashActivity.KEY_IS_ALL_PERMISSION_SET, false)) {
+                throw new IllegalArgumentException("Must start first launch through SplashActivity");
+            }
+        }
+    }
+
+    public abstract boolean isSecureActivity();
 
     @Override
     public void setSupportActionBar(@Nullable Toolbar toolbar) {
@@ -35,7 +50,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     }
 
 
-   
     @NotNull
     protected final String getStringOrThrow(final String key) {
         final String value = getIntent().getStringExtra(key);

@@ -16,7 +16,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.theah64.musicdog.R;
+import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.database.Playlists;
 import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.Playlist;
@@ -25,6 +25,7 @@ import com.theah64.soundclouddownloader.ui.activities.MainActivity;
 import com.theah64.soundclouddownloader.ui.activities.PlaylistDownloadActivity;
 import com.theah64.soundclouddownloader.ui.activities.settings.SettingsActivity;
 import com.theah64.soundclouddownloader.utils.APIRequestBuilder;
+import com.theah64.soundclouddownloader.utils.APIRequestGateway;
 import com.theah64.soundclouddownloader.utils.APIResponse;
 import com.theah64.soundclouddownloader.utils.App;
 import com.theah64.soundclouddownloader.utils.DownloadUtils;
@@ -51,6 +52,7 @@ public class DownloaderService extends Service {
 
     public static final String KEY_NOTIFICATION_ID = "my_notification_id";
     private static final String X = DownloaderService.class.getSimpleName();
+    private static final String DOWNLOAD_URL_FORMAT = String.format("%s/download?request_id=%%s&id=%%s&api_key=%%s", APIRequestBuilder.BASE_URL);
     private final Handler handler = new Handler(Looper.getMainLooper());
     private Tracks tracksTable;
     private Notification notification;
@@ -139,123 +141,138 @@ public class DownloaderService extends Service {
         return START_STICKY;
     }
 
-    private void fireApi(Track track, final String soundCloudUrl) {
+    private void fireApi(final Track track, final String soundCloudUrl) {
 
         final DownloadUtils downloadUtils = new DownloadUtils(DownloaderService.this);
 
         if (track == null) {
 
-            notification.showNotification(getString(R.string.initializing_download), soundCloudUrl, null, true, null);
+            notification.showNotification(getString(R.string.Registering_device), null, null, true, null);
 
-            //Building json download request
-            final Request scdRequest = new APIRequestBuilder("/json")
-                    .addParam("soundcloud_url", soundCloudUrl)
-                    .build();
-
-            //Processing request
-            OkHttpUtils.getInstance().getClient().newCall(scdRequest).enqueue(new Callback() {
-
+            new APIRequestGateway(this, new APIRequestGateway.APIRequestGatewayCallback() {
                 @Override
-                public void onFailure(Call call, IOException e) {
-                    e.printStackTrace();
-                    showToast("ERROR: " + e.getMessage());
+                public void onReadyToRequest(final String apiKey) {
 
-                    notification.showNotification(
-                            getString(R.string.Network_error),
-                            getString(R.string.network_error),
-                            e.getMessage(),
-                            false, null
-                    );
-                }
+                    notification.showNotification(getString(R.string.initializing_download), soundCloudUrl, null, true, null);
 
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    try {
+                    //Building json download request
+                    final Request scdRequest = new APIRequestBuilder("/json", apiKey)
+                            .addParam("soundcloud_url", soundCloudUrl)
+                            .build();
 
-                        final APIResponse apiResponse = new APIResponse(OkHttpUtils.logAndGetStringBody(response));
+                    //Processing request
+                    OkHttpUtils.getInstance().getClient().newCall(scdRequest).enqueue(new Callback() {
 
-                        final JSONObject joData = apiResponse.getJSONObjectData();
-                        final JSONArray jaTracks = joData.getJSONArray("tracks");
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            e.printStackTrace();
+                            showToast("ERROR: " + e.getMessage());
 
-
-                        if (!joData.has(Track.KEY_PLAYLIST_NAME)) {
-
-                            //Managing new track
-                            final JSONObject joTrack = jaTracks.getJSONObject(0);
-                            final String downloadUrl = joTrack.getString("download_url");
-                            final String title = joTrack.getString("title");
-
-                            String artworkUrl = null;
-                            if (joTrack.has(Tracks.COLUMN_ARTWORK_URL)) {
-                                artworkUrl = joTrack.getString(Tracks.COLUMN_ARTWORK_URL);
-                                Log.d(X, title + " has artwork " + artworkUrl);
-                            } else {
-                                Log.e(X, title + " hasn't artwork url ");
-                            }
-
-                            final String username = joTrack.getString(Tracks.COLUMN_USERNAME);
-                            final long duration = joTrack.getLong(Tracks.COLUMN_DURATION);
-
-                            final String fileName = joTrack.getString("filename");
-                            final String baseStorageLocation = PrefUtils.getInstance(DownloaderService.this).getPref().getString(SettingsActivity.SettingsFragment.KEY_STORAGE_LOCATION, App.getDefaultStorageLocation());
-                            final String absFilePath = String.format("%s/%s", baseStorageLocation, fileName);
-
-                            final Track newtrack = new Track(null, title, username, downloadUrl, artworkUrl, null, soundCloudUrl, null, false, false, new File(absFilePath), duration);
-                            final long downloadId = downloadUtils.addToDownloadQueue(newtrack);
-
-                            //Starting download
-                            newtrack.setDownloadId(String.valueOf(downloadId));
-
-                            //Adding track to database -
-                            tracksTable.add(newtrack, handler);
-                            showToast(getString(R.string.s_added_to_download_queue, newtrack.getTitle()));
-
-                            //Checking pref
-                            final boolean isOpenOnNewTrack = PrefUtils.getInstance(DownloaderService.this).getPref().getBoolean(PrefUtils.KEY_IS_START_ON_NEW_TRACK, false);
-
-                            if (isOpenOnNewTrack) {
-                                final Intent mainIntent = new Intent(DownloaderService.this, MainActivity.class);
-                                mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(mainIntent);
-                            }
-
-                        } else {
-
-                            //It's a playlist
-                            showToast("Playlist ready!");
-
-                            final String playlistName = joData.getString("playlist_name");
-                            final String username = joData.getString("username");
-
-                            String artworkUrl = null;
-                            if (joData.has(Playlists.COLUMN_ARTWORK_URL)) {
-                                artworkUrl = joData.getString(Playlists.COLUMN_ARTWORK_URL);
-                            }
-
-                            final Intent playListDownloadIntent = new Intent(DownloaderService.this, PlaylistDownloadActivity.class);
-
-                            playListDownloadIntent.putExtra(Playlist.KEY, new Playlist(null, playlistName, username, soundCloudUrl, artworkUrl, -1, -1, -1));
-                            playListDownloadIntent.putExtra(PlaylistDownloadActivity.KEY_TRACKS, jaTracks.toString());
-
-
-                            playListDownloadIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                            startActivity(playListDownloadIntent);
-
+                            notification.showNotification(
+                                    getString(R.string.Network_error),
+                                    getString(R.string.network_error),
+                                    e.getMessage(),
+                                    false, null
+                            );
                         }
 
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            try {
 
-                        notification.dismiss();
+                                final APIResponse apiResponse = new APIResponse(OkHttpUtils.logAndGetStringBody(response));
 
-                    } catch (APIResponse.APIException | JSONException e) {
-                        e.printStackTrace();
-                        notification.showNotification(
-                                getString(R.string.Server_error),
-                                getString(R.string.Server_error_occurred), e.getMessage(), false, null);
-                        showToast("ERROR: " + e.getMessage());
-                    }
+                                final JSONObject joData = apiResponse.getJSONObjectData();
+                                final JSONArray jaTracks = joData.getJSONArray("tracks");
+                                final String requestId = joData.getString("request_id");
+
+                                if (!joData.has(Track.KEY_PLAYLIST_NAME)) {
+
+                                    //Managing new track
+                                    final JSONObject joTrack = jaTracks.getJSONObject(0);
+                                    final String title = joTrack.getString("title");
+
+                                    String artworkUrl = null;
+                                    if (joTrack.has(Tracks.COLUMN_ARTWORK_URL)) {
+                                        artworkUrl = joTrack.getString(Tracks.COLUMN_ARTWORK_URL);
+                                        Log.d(X, title + " has artwork " + artworkUrl);
+                                    } else {
+                                        Log.e(X, title + " hasn't artwork url ");
+                                    }
+
+                                    final String username = joTrack.getString(Tracks.COLUMN_USERNAME);
+                                    final long duration = joTrack.getLong(Tracks.COLUMN_DURATION);
+
+                                    final String fileName = joTrack.getString("filename");
+                                    final String baseStorageLocation = PrefUtils.getInstance(DownloaderService.this).getPref().getString(SettingsActivity.SettingsFragment.KEY_STORAGE_LOCATION, App.getDefaultStorageLocation());
+                                    final String absFilePath = String.format("%s/%s", baseStorageLocation, fileName);
+
+                                    final String trackId = joTrack.getString("id");
+                                    final String downloadUrl = String.format(DOWNLOAD_URL_FORMAT, requestId, trackId, apiKey);
+                                    final Track newtrack = new Track(null, title, username, downloadUrl, artworkUrl, null, soundCloudUrl, null, false, false, new File(absFilePath), duration);
+                                    final long downloadId = downloadUtils.addToDownloadQueue(newtrack);
+
+                                    //Starting download
+                                    newtrack.setDownloadId(String.valueOf(downloadId));
+
+                                    //Adding track to database -
+                                    tracksTable.add(newtrack, handler);
+                                    showToast(getString(R.string.s_added_to_download_queue, newtrack.getTitle()));
+
+                                    //Checking pref
+                                    final boolean isOpenOnNewTrack = PrefUtils.getInstance(DownloaderService.this).getPref().getBoolean(PrefUtils.KEY_IS_START_ON_NEW_TRACK, false);
+
+                                    if (isOpenOnNewTrack) {
+                                        final Intent mainIntent = new Intent(DownloaderService.this, MainActivity.class);
+                                        mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(mainIntent);
+                                    }
+
+                                } else {
+
+                                    //It's a playlist
+                                    showToast("Playlist ready!");
+
+                                    final String playlistName = joData.getString("playlist_name");
+                                    final String username = joData.getString("username");
+
+                                    String artworkUrl = null;
+                                    if (joData.has(Playlists.COLUMN_ARTWORK_URL)) {
+                                        artworkUrl = joData.getString(Playlists.COLUMN_ARTWORK_URL);
+                                    }
+
+                                    final Intent playListDownloadIntent = new Intent(DownloaderService.this, PlaylistDownloadActivity.class);
+
+                                    playListDownloadIntent.putExtra(Playlist.KEY, new Playlist(null, playlistName, username, soundCloudUrl, artworkUrl, -1, -1, -1));
+                                    playListDownloadIntent.putExtra(PlaylistDownloadActivity.KEY_TRACKS, jaTracks.toString());
+
+
+                                    playListDownloadIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                                    startActivity(playListDownloadIntent);
+
+                                }
+
+
+                                notification.dismiss();
+
+                            } catch (APIResponse.APIException | JSONException e) {
+                                e.printStackTrace();
+                                notification.showNotification(
+                                        getString(R.string.Server_error),
+                                        getString(R.string.Server_error_occurred), e.getMessage(), false, null);
+                                showToast("ERROR: " + e.getMessage());
+                            }
+                        }
+
+                    });
+
                 }
 
+                @Override
+                public void onFailed(String reason) {
+                    notification.showNotification(getString(R.string.Error), getString(R.string.Failed_to_register_device), reason, false, null);
+                }
             });
 
         } else {

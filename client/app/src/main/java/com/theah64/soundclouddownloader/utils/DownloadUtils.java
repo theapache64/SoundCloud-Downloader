@@ -7,7 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
-import com.theah64.musicdog.R;
+import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.models.Track;
 
 import java.io.File;
