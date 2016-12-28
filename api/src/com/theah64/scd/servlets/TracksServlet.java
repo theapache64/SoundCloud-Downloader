@@ -60,6 +60,7 @@ public final class TracksServlet extends AdvancedBaseServlet {
 
 
             joTrack.put(KEY_TRACKS, jTracks.getJSONArrayTracks());
+            joTrack.put(Tracks.COLUMN_REQUEST_ID, jTracks.getRequestId());
 
             getWriter().write(new APIResponse("Request processed", joTrack).getResponse());
         } else {

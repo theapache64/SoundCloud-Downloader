@@ -2,13 +2,9 @@ package com.theah64.scd.core;
 
 import com.theah64.scd.database.tables.BaseTable;
 import com.theah64.scd.database.tables.Preference;
-import com.theah64.scd.database.tables.Requests;
 import com.theah64.scd.database.tables.Tracks;
 import com.theah64.scd.models.JSONTracks;
 import com.theah64.scd.models.Track;
-import com.theah64.scd.servlets.AdvancedBaseServlet;
-import com.theah64.scd.servlets.DirectDownloaderServlet;
-import com.theah64.scd.servlets.DownloaderServlet;
 import com.theah64.scd.utils.FileNameUtils;
 import com.theah64.scd.utils.NetworkHelper;
 import org.json.JSONArray;
@@ -31,8 +27,6 @@ public class SoundCloudDownloader {
     public static JSONTracks getSoundCloudTracks(final String requestId, String soundCloudUrl) throws JSONException {
 
         System.out.println("Request url : " + soundCloudUrl);
-        final boolean isDirectDownload = Preference.getInstance().getString(Preference.KEY_IS_DIRECT_DOWNLOAD).equals(Preference.TRUE);
-
         if (!isPlaylist(soundCloudUrl)) {
             //It's a track , so checking the data availability in db.
 
@@ -44,8 +38,8 @@ public class SoundCloudDownloader {
             if (track != null) {
                 System.out.println("Getting data from cache");
                 final JSONArray jaTracks = new JSONArray();
-                jaTracks.put(track.toJSONObject(isDirectDownload, requestId));
-                return new JSONTracks(null, null, null, jaTracks);
+                jaTracks.put(track.toJSONObject());
+                return new JSONTracks(null, null, null, jaTracks, requestId);
             }
         }
 
@@ -80,14 +74,14 @@ public class SoundCloudDownloader {
                     final JSONArray jaResolvedTracks = joResolve.getJSONArray(JSONTracks.KEY_TRACKS);
 
                     for (int i = 0; i < jaResolvedTracks.length(); i++) {
-                        jaTracks.put(getResolvedTrack(jaResolvedTracks.getJSONObject(i), fileNameFormat, requestId, isDirectDownload));
+                        jaTracks.put(getResolvedTrack(jaResolvedTracks.getJSONObject(i), fileNameFormat, requestId));
                     }
 
                 } else {
-                    jaTracks.put(getResolvedTrack(joResolve, fileNameFormat, requestId, isDirectDownload));
+                    jaTracks.put(getResolvedTrack(joResolve, fileNameFormat, requestId));
                 }
 
-                return new JSONTracks(playlistName, username, playlistArtworkUrl, jaTracks);
+                return new JSONTracks(playlistName, username, playlistArtworkUrl, jaTracks, requestId);
 
             } catch (JSONException | BaseTable.InsertFailedException e) {
                 e.printStackTrace();
@@ -105,7 +99,7 @@ public class SoundCloudDownloader {
     }
 
 
-    private static JSONObject getResolvedTrack(JSONObject joResolvedTrack, String fileNameFormat, final String requestId, final boolean isDirectDownload) throws JSONException, BaseTable.InsertFailedException {
+    private static JSONObject getResolvedTrack(JSONObject joResolvedTrack, String fileNameFormat, final String requestId) throws JSONException, BaseTable.InsertFailedException {
 
         //Url is a single track
         final String soundCloudTrackId = String.valueOf(joResolvedTrack.getInt("id"));
@@ -136,6 +130,6 @@ public class SoundCloudDownloader {
             track.setId(trackId);
         }
 
-        return track.toJSONObject(isDirectDownload, requestId);
+        return track.toJSONObject();
     }
 }

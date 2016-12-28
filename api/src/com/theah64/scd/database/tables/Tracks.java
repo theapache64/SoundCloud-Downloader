@@ -21,6 +21,7 @@ public class Tracks extends BaseTable<Track> {
     public static final String COLUMN_USERNAME = "username";
     public static final String COLUMN_SOUNDCLOUD_URL = "soundcloud_url";
     public static final String COLUMN_SOUNDCLOUD_TRACK_ID = "soundcloud_track_id";
+    public static final String COLUMN_REQUEST_ID = "request_id";
     private static Tracks instance;
 
     private Tracks() {
@@ -42,7 +43,7 @@ public class Tracks extends BaseTable<Track> {
         try {
             final PreparedStatement ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
-            ps.setString(1, track.getRequestId());
+            ps.setString(1, track.getPrimaryRequestId());
             ps.setString(2, track.getSoundcloudUrl());
             ps.setString(3, track.getSoundcloudTrackId());
             ps.setString(4, track.getTitle());

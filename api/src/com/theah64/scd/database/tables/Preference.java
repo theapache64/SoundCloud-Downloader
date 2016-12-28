@@ -19,7 +19,6 @@ public class Preference extends BaseTable<String> {
     public static final String KEY_DEFAULT_USER_ID = "default_user_id";
     public static final String KEY_FILENAME_FORMAT = "filename_format";
     public static final String KEY_IS_DEBUG_DOWNLOAD = "is_debug_download";
-    public static final String KEY_IS_DIRECT_DOWNLOAD = "is_direct_download";
     public static final String KEY_APK_URL = "apk_url";
     public static final String KEY_IS_OPEN_API = "is_open_api";
     private static Preference instance = new Preference();

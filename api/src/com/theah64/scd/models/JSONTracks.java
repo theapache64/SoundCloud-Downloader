@@ -11,12 +11,14 @@ public class JSONTracks {
 
     private final String playlistName, username, artworkUrl;
     private final JSONArray jaTracks;
+    private final String requestId;
 
-    public JSONTracks(String playlistName, String username, String artworkUrl, JSONArray jaTracks) {
+    public JSONTracks(String playlistName, String username, String artworkUrl, JSONArray jaTracks, String requestId) {
         this.playlistName = playlistName;
         this.username = username;
         this.artworkUrl = artworkUrl;
         this.jaTracks = jaTracks;
+        this.requestId = requestId;
     }
 
     public String getPlaylistName() {
@@ -33,5 +35,9 @@ public class JSONTracks {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getRequestId() {
+        return requestId;
     }
 }
