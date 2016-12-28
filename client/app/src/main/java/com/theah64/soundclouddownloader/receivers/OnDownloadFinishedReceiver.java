@@ -69,16 +69,21 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
 
                     if (downloadedTrack != null) {
 
-
                         //Removing temp signature from file
                         //noinspection ResultOfMethodCallIgnored
                         String localUri = Uri.decode(cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)).replaceAll("file://", ""));
                         Log.d(X, "Local URI: " + localUri);
                         final boolean isRenamedToReal = new File(localUri).renameTo(downloadedTrack.getFile());
+                        Log.d(X, "Real file : " + downloadedTrack.getFile().getAbsolutePath());
 
                         if (isRenamedToReal) {
 
                             Toast.makeText(context, "Track downloaded -> " + downloadedTrack.getTitle(), Toast.LENGTH_SHORT).show();
+
+                            Intent scanIntent =
+                                    new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                            intent.setData(Uri.fromFile(downloadedTrack.getFile()));
+                            context.sendBroadcast(scanIntent);
 
                             //Changing id3 tags
                             if (downloadedTrack.isMP3()) {

@@ -18,7 +18,7 @@ import java.io.File;
 public class DownloadUtils {
 
     private static final String X = DownloadUtils.class.getSimpleName();
-    public static final String TEMP_SIGNATURE = ".tmp.mp3";
+    private static final String TEMP_SIGNATURE = ".tmp";
     private final DownloadManager dm;
     private final Context context;
 
@@ -47,11 +47,12 @@ public class DownloadUtils {
         downloadRequest.setDescription(track.getDownloadUrl());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            downloadRequest.allowScanningByMediaScanner();
-            downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+            downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
         }
 
-        downloadRequest.setDestinationUri(Uri.fromFile(new File(track.getFile().getAbsolutePath() + TEMP_SIGNATURE)));
+        final File tempFile = new File(track.getFile().getAbsolutePath() + TEMP_SIGNATURE);
+        Log.d(X, "Temp file : " + tempFile.getAbsolutePath());
+        downloadRequest.setDestinationUri(Uri.fromFile(tempFile));
         return dm.enqueue(downloadRequest);
 
     }
