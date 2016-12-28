@@ -24,7 +24,7 @@ import okhttp3.Response;
  */
 public class APIRequestGateway {
 
-    private static final String KEY_API_KEY = "api_key";
+    public static final String KEY_API_KEY = "api_key";
 
     private static final String X = APIRequestGateway.class.getSimpleName();
     private final Activity activity;

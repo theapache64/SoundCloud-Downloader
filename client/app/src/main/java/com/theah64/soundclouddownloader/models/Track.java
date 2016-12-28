@@ -2,6 +2,7 @@ package com.theah64.soundclouddownloader.models;
 
 import android.support.annotation.Nullable;
 
+import com.theah64.soundclouddownloader.utils.APIRequestBuilder;
 import com.theah64.soundclouddownloader.utils.DownloadUtils;
 
 import java.io.File;
@@ -16,9 +17,9 @@ import java.util.concurrent.TimeUnit;
 public class Track implements Serializable, ITSNode {
 
     public static final String KEY_TITLE = "title";
-    public static final String KEY_DOWNLOAD_URL = "download_url";
     public static final String KEY_FILENAME = "filename";
     public static final String KEY_PLAYLIST_NAME = "playlist_name";
+    public static final String DOWNLOAD_URL_FORMAT = String.format("%s/download?request_id=%%s&id=%%s&api_key=%%s", APIRequestBuilder.BASE_URL);
     private final String title, username;
     private final String downloadUrl;
     private final String artWorkUrl;

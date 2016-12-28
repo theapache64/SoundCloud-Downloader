@@ -52,7 +52,6 @@ public class DownloaderService extends Service {
 
     public static final String KEY_NOTIFICATION_ID = "my_notification_id";
     private static final String X = DownloaderService.class.getSimpleName();
-    private static final String DOWNLOAD_URL_FORMAT = String.format("%s/download?request_id=%%s&id=%%s&api_key=%%s", APIRequestBuilder.BASE_URL);
     private final Handler handler = new Handler(Looper.getMainLooper());
     private Tracks tracksTable;
     private Notification notification;
@@ -208,7 +207,7 @@ public class DownloaderService extends Service {
                                     final String absFilePath = String.format("%s/%s", baseStorageLocation, fileName);
 
                                     final String trackId = joTrack.getString("id");
-                                    final String downloadUrl = String.format(DOWNLOAD_URL_FORMAT, requestId, trackId, apiKey);
+                                    final String downloadUrl = String.format(Track.DOWNLOAD_URL_FORMAT, requestId, trackId, apiKey);
                                     final Track newtrack = new Track(null, title, username, downloadUrl, artworkUrl, null, soundCloudUrl, null, false, false, new File(absFilePath), duration);
                                     final long downloadId = downloadUtils.addToDownloadQueue(newtrack);
 
@@ -244,6 +243,7 @@ public class DownloaderService extends Service {
                                     final Intent playListDownloadIntent = new Intent(DownloaderService.this, PlaylistDownloadActivity.class);
 
                                     playListDownloadIntent.putExtra(Playlist.KEY, new Playlist(null, playlistName, username, soundCloudUrl, artworkUrl, -1, -1, -1));
+                                    playListDownloadIntent.putExtra(PlaylistDownloadActivity.KEY_REQUEST_ID, joData.getString(PlaylistDownloadActivity.KEY_REQUEST_ID));
                                     playListDownloadIntent.putExtra(PlaylistDownloadActivity.KEY_TRACKS, jaTracks.toString());
 
 

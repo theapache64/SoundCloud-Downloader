@@ -25,9 +25,11 @@ import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.Playlist;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.ui.activities.settings.SettingsActivity;
+import com.theah64.soundclouddownloader.utils.APIRequestGateway;
 import com.theah64.soundclouddownloader.utils.App;
 import com.theah64.soundclouddownloader.utils.DownloadUtils;
 import com.theah64.soundclouddownloader.utils.NetworkUtils;
+import com.theah64.soundclouddownloader.utils.PrefUtils;
 import com.theah64.soundclouddownloader.utils.Random;
 
 import org.json.JSONArray;
@@ -42,6 +44,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
     public static final String KEY_TRACKS = "tracks";
     private static final String X = PlaylistDownloadActivity.class.getSimpleName();
+    public static final String KEY_REQUEST_ID = "request_id";
     private List<Track> trackList;
     private FloatingActionButton fabDownloadPlaylist;
 
@@ -70,6 +73,13 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        final String requestId = getStringOrThrow(KEY_REQUEST_ID);
+        final String apiKey = PrefUtils.getInstance(this).getPref().getString(APIRequestGateway.KEY_API_KEY, null);
+
+        if (apiKey == null) {
+            throw new IllegalArgumentException("No api_key found");
+        }
+
         final Playlist playlist = (Playlist) getSerializableOrThrow(Playlist.KEY);
         actionBar.setTitle(playlist.getTitle());
 
@@ -92,10 +102,13 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
                 final JSONObject joTrack = jaTracks.getJSONObject(i);
 
+                final String trackId = joTrack.getString(Tracks.COLUMN_ID);
                 final String title = joTrack.getString(Track.KEY_TITLE);
                 final String fileName = joTrack.getString(Track.KEY_FILENAME);
                 final String trackSoundCloudUrl = joTrack.getString(Tracks.COLUMN_SOUNDCLOUD_URL);
-                final String downloadUrl = joTrack.getString(Track.KEY_DOWNLOAD_URL);
+
+                final String downloadUrl = String.format(Track.DOWNLOAD_URL_FORMAT, requestId, trackId, apiKey);
+
                 String trackArtWorkUrl = null;
 
                 if (joTrack.has(Tracks.COLUMN_ARTWORK_URL)) {
