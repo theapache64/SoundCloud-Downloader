@@ -14,13 +14,12 @@ public class Preference extends BaseTable<String> {
 
     public static final String COLUMN_KEY = "_key";
     private static final String COLUMN_VALUE = "_value";
+    public static final String KEY_GMAIL_USERNAME = "gmail_username";
+    public static final String KEY_GMAIL_PASSWORD = "gmail_password";
     public static final String KEY_ADMIN_EMAIL = "admin_email";
-    public static final String KEY_TEST_API_KEY = "test_api_key";
-    public static final String KEY_DEFAULT_USER_ID = "default_user_id";
     public static final String KEY_FILENAME_FORMAT = "filename_format";
     public static final String KEY_IS_DEBUG_DOWNLOAD = "is_debug_download";
     public static final String KEY_APK_URL = "apk_url";
-    public static final String KEY_IS_OPEN_API = "is_open_api";
     private static Preference instance = new Preference();
 
     private Preference() {

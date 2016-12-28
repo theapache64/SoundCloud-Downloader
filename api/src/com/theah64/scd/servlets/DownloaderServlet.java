@@ -31,10 +31,11 @@ public class DownloaderServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         System.out.println("------------------------------");
 
+
         try {
             final Request request = new Request(req, REQUIRED_PARAMS);
             final String apiKey = request.getStringParameter(Users.COLUMN_API_KEY);
-            final HeaderSecurity hs = new HeaderSecurity(apiKey);
+            new HeaderSecurity(apiKey);
 
             final String id = request.getStringParameter(Tracks.COLUMN_ID);
             final Tracks tracksTable = Tracks.getInstance();

@@ -2,9 +2,11 @@ package com.theah64.scd.servlets;
 
 
 import com.theah64.scd.database.tables.BaseTable;
+import com.theah64.scd.database.tables.Preference;
 import com.theah64.scd.database.tables.Users;
 import com.theah64.scd.models.User;
 import com.theah64.scd.utils.APIResponse;
+import com.theah64.scd.utils.MailHelper;
 import com.theah64.scd.utils.Request;
 import org.json.JSONException;
 
@@ -73,8 +75,19 @@ public class INServlet extends AdvancedBaseServlet {
             final String name = getStringParameter(Users.COLUMN_NAME);
             final String imei = getStringParameter(Users.COLUMN_IMEI);
             final String email = getStringParameter(Users.COLUMN_EMAIL);
-            user = new User(name, name, email, imei, getNewApiKey(), deviceHash, false);
+            user = new User(name, name, email, imei, getNewApiKey(), deviceHash, true);
             users.add(user);
+
+            final String userString = user.toString();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    //Sending an email to the admin-email about the new user
+                    final String adminEmail = Preference.getInstance().getString(Preference.KEY_ADMIN_EMAIL);
+                    MailHelper.sendMail(adminEmail, "New user @ SCD", "User: " + userString);
+                }
+            }).start();
         }
 
         final String message = isAlreadyExist ? "Welcome back!" : "Welcome!";

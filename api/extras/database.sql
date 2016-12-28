@@ -2,6 +2,8 @@ DROP DATABASE IF EXISTS scd;
 CREATE DATABASE scd;
 USE scd;
 
+ALTER DATABASE `scd` DEFAULT CHARSET=utf8 COLLATE utf8_general_ci;
+
 CREATE TABLE `users`(
   id INT(11) NOT NULL AUTO_INCREMENT,
   name VARCHAR (100) NOT NULL,
@@ -134,14 +136,11 @@ CREATE TABLE `preference` (
 );
 
 INSERT INTO preference (_key, _value) VALUES
-  ('default_user_id', '1'),
   ('gmail_username', 'mymailer64@gmail.com'),
   ('gmail_password', 'mypassword64'),
   ('admin_email', 'theapache64@gmail.com'),
   ('is_debug_download', '0'),
   ('filename_format', '%s_theah64.%s'),
-  ('apk_url', 'https://github.com/theapache64/SoundCloud-Downloader/releases/download/v1.0/soundclouddownloader.apk'),
-  ('is_new_soundcloud_downloader', '1'),
-  ('is_open_api', '0');
+  ('apk_url', 'https://github.com/theapache64/SoundCloud-Downloader/releases/download/v1.0/soundclouddownloader.apk');
 
 

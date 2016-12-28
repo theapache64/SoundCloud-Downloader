@@ -42,15 +42,20 @@ public class User {
         return isActive;
     }
 
+    public String getIMEI() {
+        return imei;
+    }
+
     @Override
     public String toString() {
         return "User{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
                 ", imei='" + imei + '\'' +
                 ", apiKey='" + apiKey + '\'' +
+                ", deviceHash='" + deviceHash + '\'' +
+                ", isActive=" + isActive +
                 '}';
-    }
-
-    public String getIMEI() {
-        return imei;
     }
 }
