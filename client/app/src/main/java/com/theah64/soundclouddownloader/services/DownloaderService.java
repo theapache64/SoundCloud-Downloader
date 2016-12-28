@@ -30,6 +30,7 @@ import com.theah64.soundclouddownloader.utils.APIRequestGateway;
 import com.theah64.soundclouddownloader.utils.APIResponse;
 import com.theah64.soundclouddownloader.utils.App;
 import com.theah64.soundclouddownloader.utils.DownloadUtils;
+import com.theah64.soundclouddownloader.utils.NetworkUtils;
 import com.theah64.soundclouddownloader.utils.OkHttpUtils;
 import com.theah64.soundclouddownloader.utils.PrefUtils;
 import com.theah64.soundclouddownloader.utils.Random;
@@ -153,6 +154,11 @@ public class DownloaderService extends Service {
     }
 
     private void fireApi(final Track track, final String soundCloudUrl) {
+
+        if (!NetworkUtils.hasNetwork(this)) {
+            Toast.makeText(this, R.string.network_error, Toast.LENGTH_LONG).show();
+            return;
+        }
 
         final DownloadUtils downloadUtils = new DownloadUtils(DownloaderService.this);
 

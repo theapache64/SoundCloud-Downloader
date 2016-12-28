@@ -74,17 +74,13 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
 
                         //Removing temp signature from file
                         //noinspection ResultOfMethodCallIgnored
-                        String localUri = Uri.decode(cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)).replaceAll("file://", ""));
-                        Log.d(X, "Local URI: " + localUri);
-
-                        final boolean isRenamedToReal = new File(localUri).renameTo(downloadedTrack.getFile());
-                        Log.d(X, "Real file : " + downloadedTrack.getFile().getAbsolutePath());
+                        String tempFilePath = Uri.decode(cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)).replaceAll("file://", ""));
+                        final boolean isRenamedToReal = new File(tempFilePath).renameTo(downloadedTrack.getFile());
 
                         if (isRenamedToReal) {
 
                             Toast.makeText(context, "Track downloaded -> " + downloadedTrack.getTitle(), Toast.LENGTH_SHORT).show();
-
-
+                            
                             //Changing id3 tags
                             if (downloadedTrack.isMP3()) {
 
@@ -143,7 +139,7 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
                             //Adding new file to media.
                             MediaScannerConnection.scanFile(
                                     context.getApplicationContext(),
-                                    new String[]{localUri, downloadedTrack.getFile().getAbsolutePath()},
+                                    new String[]{tempFilePath, downloadedTrack.getFile().getAbsolutePath()},
                                     null,
                                     new MediaScannerConnection.OnScanCompletedListener() {
                                         @Override
@@ -156,7 +152,8 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
 
                             //Shows notification
                             if (downloadedTrack.getPlaylistId() == null) {
-                                
+
+                                //It's just a track
                                 final Intent openTrackIntent = new Intent(Intent.ACTION_VIEW);
                                 openTrackIntent.setDataAndType(Uri.fromFile(downloadedTrack.getFile()), "audio/*");
                                 final PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, openTrackIntent, PendingIntent.FLAG_CANCEL_CURRENT);
