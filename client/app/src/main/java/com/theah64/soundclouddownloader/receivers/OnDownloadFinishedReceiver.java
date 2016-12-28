@@ -27,6 +27,7 @@ import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.services.DownloaderService;
 import com.theah64.soundclouddownloader.utils.App;
+import com.theah64.soundclouddownloader.utils.SingletonToast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -77,7 +78,7 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
 
                         if (isRenamedToReal) {
 
-                            Toast.makeText(context, "Track downloaded -> " + downloadedTrack.getTitle(), Toast.LENGTH_SHORT).show();
+                            SingletonToast.makeText(context, "Track downloaded -> " + downloadedTrack.getTitle(), Toast.LENGTH_SHORT).show();
 
                             //Changing id3 tags
                             if (downloadedTrack.isMP3()) {

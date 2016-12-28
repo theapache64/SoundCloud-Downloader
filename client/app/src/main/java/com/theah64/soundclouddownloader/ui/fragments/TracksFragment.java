@@ -30,6 +30,7 @@ import com.theah64.soundclouddownloader.services.DownloaderService;
 import com.theah64.soundclouddownloader.utils.App;
 import com.theah64.soundclouddownloader.utils.CommonUtils;
 import com.theah64.soundclouddownloader.utils.DownloadUtils;
+import com.theah64.soundclouddownloader.utils.SingletonToast;
 import com.theah64.soundclouddownloader.widgets.ThemedSnackbar;
 
 import java.util.ArrayList;
@@ -227,7 +228,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
                     startActivity(sendIntent);
 
                 } else {
-                    Toast.makeText(getActivity(), R.string.File_not_found, Toast.LENGTH_SHORT).show();
+                    SingletonToast.makeText(getActivity(), R.string.File_not_found, Toast.LENGTH_SHORT).show();
                 }
 
                 return true;
@@ -264,7 +265,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
                 downloadIntent.putExtra(Tracks.COLUMN_SOUNDCLOUD_URL, track.getSoundCloudUrl());
                 getActivity().startService(downloadIntent);
 
-                Toast.makeText(getActivity(), R.string.initializing_download, Toast.LENGTH_SHORT).show();
+                SingletonToast.makeText(getActivity(), R.string.initializing_download, Toast.LENGTH_SHORT).show();
 
                 return true;
 
@@ -275,7 +276,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
                 if (storageIntent.resolveActivityInfo(getActivity().getPackageManager(), 0) != null) {
                     getActivity().startActivity(storageIntent);
                 } else {
-                    Toast.makeText(getActivity(), R.string.No_file_browser_found, Toast.LENGTH_SHORT).show();
+                    SingletonToast.makeText(getActivity(), R.string.No_file_browser_found, Toast.LENGTH_SHORT).show();
                 }
                 return true;
 
@@ -294,7 +295,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
             startActivity(playIntent);
 
         } else {
-            Toast.makeText(getActivity(), R.string.File_not_found, Toast.LENGTH_SHORT).show();
+            SingletonToast.makeText(getActivity(), R.string.File_not_found, Toast.LENGTH_SHORT).show();
         }
 
     }

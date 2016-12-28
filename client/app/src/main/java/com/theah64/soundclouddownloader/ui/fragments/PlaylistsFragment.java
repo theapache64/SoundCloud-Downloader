@@ -29,6 +29,7 @@ import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.services.DownloaderService;
 import com.theah64.soundclouddownloader.ui.activities.PlaylistTracksActivity;
 import com.theah64.soundclouddownloader.utils.App;
+import com.theah64.soundclouddownloader.utils.SingletonToast;
 import com.theah64.soundclouddownloader.widgets.ThemedSnackbar;
 
 import java.util.ArrayList;
@@ -145,7 +146,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
             playlistTracksIntent.putExtra(Playlist.KEY, playlist);
             startActivity(playlistTracksIntent);
         } else {
-            Toast.makeText(getActivity(), R.string.Empty_playlist, Toast.LENGTH_SHORT).show();
+            SingletonToast.makeText(getActivity(), R.string.Empty_playlist, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -187,15 +188,15 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
 
                 if (!existingTracks.isEmpty()) {
                     final Intent shareTracksIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-                    shareTracksIntent.putExtra(Intent.EXTRA_TEXT, String.format("Downloaded via SoundCloud Downloader (%s)  Playlist: %s ", App.APK_DOWNLOAD_URL, currentPlaylist.getTitle())); //TOOD: Modify sub
+                    shareTracksIntent.putExtra(Intent.EXTRA_TEXT, String.format("Downloaded via SoundCloud Downloader (%s)  Playlist: %s ", App.APK_DOWNLOAD_URL, currentPlaylist.getTitle()));
                     shareTracksIntent.setType("audio/*");
                     shareTracksIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, existingTracks);
                     startActivity(shareTracksIntent);
 
-                    Toast.makeText(getActivity(), getResources().getQuantityString(R.plurals.sharing_d_tracks, existingTracks.size(), existingTracks.size()), Toast.LENGTH_SHORT).show();
+                    SingletonToast.makeText(getActivity(), getResources().getQuantityString(R.plurals.sharing_d_tracks, existingTracks.size(), existingTracks.size()), Toast.LENGTH_SHORT).show();
 
                 } else {
-                    Toast.makeText(getActivity(), R.string.No_tracks_downloaded, Toast.LENGTH_SHORT).show();
+                    SingletonToast.makeText(getActivity(), R.string.No_tracks_downloaded, Toast.LENGTH_SHORT).show();
                 }
 
                 return true;
@@ -218,7 +219,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
 
                 getActivity().startService(downloadIntent);
 
-                Toast.makeText(getActivity(), R.string.initializing_download, Toast.LENGTH_SHORT).show();
+                SingletonToast.makeText(getActivity(), R.string.initializing_download, Toast.LENGTH_SHORT).show();
 
 
                 return true;

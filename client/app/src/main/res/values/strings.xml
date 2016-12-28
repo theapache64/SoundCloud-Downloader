@@ -66,4 +66,5 @@
     <string name="Registering_device">Registering device</string>
     <string name="Please_start_the_application_first">Please start the application first</string>
     <string name="Track_downloaded">Track downloaded</string>
+    <string name="You_must_accept_all_the_permissions">You must accept all the permissions</string>
 </resources>

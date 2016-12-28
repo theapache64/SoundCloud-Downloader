@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.theah64.soundclouddownloader.BuildConfig;
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.utils.PrefUtils;
+import com.theah64.soundclouddownloader.utils.SingletonToast;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -77,7 +78,7 @@ public class SplashActivity extends AppCompatActivity {
             if (isAllPermissionGranted) {
                 doNormalSplashWork();
             } else {
-                Toast.makeText(SplashActivity.this, "You must accept all the permissions.", Toast.LENGTH_SHORT).show();
+                SingletonToast.makeText(SplashActivity.this, R.string.You_must_accept_all_the_permissions, Toast.LENGTH_SHORT).show();
                 finish();
             }
         }

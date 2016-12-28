@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -34,6 +33,7 @@ import com.theah64.soundclouddownloader.utils.NetworkUtils;
 import com.theah64.soundclouddownloader.utils.OkHttpUtils;
 import com.theah64.soundclouddownloader.utils.PrefUtils;
 import com.theah64.soundclouddownloader.utils.Random;
+import com.theah64.soundclouddownloader.utils.SingletonToast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,16 +67,13 @@ public class DownloaderService extends Service {
         return PendingIntent.getService(context, 2, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
-    public void showToast(final @StringRes int stringRes) {
-        showToast(getString(stringRes));
-    }
 
     private void showToast(final String message) {
         Log.d(X, "Message : " + message);
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                SingletonToast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -98,7 +95,7 @@ public class DownloaderService extends Service {
 
             if (PrefUtils.getInstance(this).getPref().getBoolean(SplashActivity.KEY_IS_ALL_PERMISSION_SET, false)) {
 
-                Toast.makeText(this, R.string.initializing_download, Toast.LENGTH_SHORT).show();
+                SingletonToast.makeText(this, R.string.initializing_download, Toast.LENGTH_SHORT).show();
 
                 //Converting url to https
                 final String soundCloudUrl = intent.getStringExtra(Tracks.COLUMN_SOUNDCLOUD_URL);
@@ -138,7 +135,7 @@ public class DownloaderService extends Service {
                 }
 
             } else {
-                Toast.makeText(this, getString(R.string.Please_start_the_application_first), Toast.LENGTH_SHORT).show();
+                SingletonToast.makeText(this, getString(R.string.Please_start_the_application_first), Toast.LENGTH_SHORT).show();
                 final Intent splashIntent = new Intent(this, SplashActivity.class);
                 splashIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(splashIntent);
@@ -155,7 +152,7 @@ public class DownloaderService extends Service {
     private void fireApi(final Track track, final String soundCloudUrl) {
 
         if (!NetworkUtils.hasNetwork(this)) {
-            Toast.makeText(this, R.string.network_error, Toast.LENGTH_LONG).show();
+            SingletonToast.makeText(this, R.string.network_error, Toast.LENGTH_LONG).show();
             return;
         }
 

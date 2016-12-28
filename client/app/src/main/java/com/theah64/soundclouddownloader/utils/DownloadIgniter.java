@@ -30,7 +30,7 @@ public class DownloadIgniter {
 
         } else {
             //Invalid sound cloud url
-            Toast.makeText(context, R.string.Invalid_soundcloud_URL, Toast.LENGTH_SHORT).show();
+            SingletonToast.makeText(context, R.string.Invalid_soundcloud_URL, Toast.LENGTH_SHORT).show();
         }
     }
 

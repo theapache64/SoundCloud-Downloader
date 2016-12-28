@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.ui.activities.BaseAppCompatActivity;
 import com.theah64.soundclouddownloader.utils.App;
+import com.theah64.soundclouddownloader.utils.SingletonToast;
 
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -86,7 +87,6 @@ public class SettingsActivity extends BaseAppCompatActivity {
         public static final String X = SettingsFragment.class.getSimpleName();
         public static final String KEY_STORAGE_LOCATION = "storage_location";
         public static final String KEY_DEVELOPED_BY = "developed_by";
-        private static final int RQ_CODE_STORAGE_LOCATION = 1;
         private SharedPreferences defaultSharedPref;
         private Preference prefStorageLocation;
 
@@ -142,7 +142,7 @@ public class SettingsActivity extends BaseAppCompatActivity {
                     if (storageIntent.resolveActivityInfo(context.getPackageManager(), 0) != null) {
                         context.startActivity(storageIntent);
                     } else {
-                        Toast.makeText(context, R.string.No_file_browser_found, Toast.LENGTH_SHORT).show();
+                        SingletonToast.makeText(context, R.string.No_file_browser_found, Toast.LENGTH_SHORT).show();
                     }
                     return true;
 

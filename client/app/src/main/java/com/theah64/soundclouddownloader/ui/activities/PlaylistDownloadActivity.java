@@ -31,6 +31,7 @@ import com.theah64.soundclouddownloader.utils.DownloadUtils;
 import com.theah64.soundclouddownloader.utils.NetworkUtils;
 import com.theah64.soundclouddownloader.utils.PrefUtils;
 import com.theah64.soundclouddownloader.utils.Random;
+import com.theah64.soundclouddownloader.utils.SingletonToast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -197,7 +198,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                     startDownload();
                     finish();
                 } else {
-                    Toast.makeText(PlaylistDownloadActivity.this, R.string.network_error, Toast.LENGTH_LONG).show();
+                    SingletonToast.makeText(PlaylistDownloadActivity.this, R.string.network_error, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -236,7 +237,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
             Log.e(X, "-------------------------------");
         }
 
-        Toast.makeText(this, R.string.download_started, Toast.LENGTH_LONG).show();
+        SingletonToast.makeText(this, R.string.download_started, Toast.LENGTH_LONG).show();
         nm.cancel(notifId);
     }
 

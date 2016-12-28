@@ -3,14 +3,11 @@ package com.theah64.soundclouddownloader.ui.activities;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.utils.PrefUtils;
 
@@ -84,27 +81,6 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
             throw new IllegalArgumentException(String.format("No parcelable found with the key %s", key));
         }
         return ob;
-    }
-
-    public void toast(@StringRes int message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
-    public void toast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
-    protected void enableBackNavigation() {
-        final ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setDisplayHomeAsUpEnabled(true);
-    }
-
-    protected void enableBackNavigation(final String title) {
-        final ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(title);
     }
 
     //Enabling back navigation
