@@ -23,6 +23,7 @@ import com.theah64.soundclouddownloader.models.Playlist;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.ui.activities.MainActivity;
 import com.theah64.soundclouddownloader.ui.activities.PlaylistDownloadActivity;
+import com.theah64.soundclouddownloader.ui.activities.SplashActivity;
 import com.theah64.soundclouddownloader.ui.activities.settings.SettingsActivity;
 import com.theah64.soundclouddownloader.utils.APIRequestBuilder;
 import com.theah64.soundclouddownloader.utils.APIRequestGateway;
@@ -94,43 +95,54 @@ public class DownloaderService extends Service {
                 notification.getNotificationManager().cancel(clipNotifId);
             }
 
-            //Converting url to https
-            final String soundCloudUrl = intent.getStringExtra(Tracks.COLUMN_SOUNDCLOUD_URL);
+            if (PrefUtils.getInstance(this).getPref().getBoolean(SplashActivity.KEY_IS_ALL_PERMISSION_SET, false)) {
 
-            if (soundCloudUrl != null) {
 
-                if (!Playlist.isPlaylist(soundCloudUrl)) {
+                Toast.makeText(this, R.string.initializing_download, Toast.LENGTH_SHORT).show();
 
-                    //It's a track
-                    tracksTable = Tracks.getInstance(this);
+                //Converting url to https
+                final String soundCloudUrl = intent.getStringExtra(Tracks.COLUMN_SOUNDCLOUD_URL);
 
-                    //Checking if the track had solved before.
-                    final Track track = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, soundCloudUrl);
+                if (soundCloudUrl != null) {
 
-                    if (track != null && track.isExistInStorage()) {
-                        //track exist in db and storage
+                    if (!Playlist.isPlaylist(soundCloudUrl)) {
 
-                        //Checking if the track file is true
-                        if (!track.isDownloaded()) {
-                            tracksTable.update(Tracks.COLUMN_ID, track.getId(), Tracks.COLUMN_IS_DOWNLOADED, Tracks.TRUE, handler);
+                        //It's a track
+                        tracksTable = Tracks.getInstance(this);
+
+                        //Checking if the track had solved before.
+                        final Track track = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, soundCloudUrl);
+
+                        if (track != null && track.isExistInStorage()) {
+                            //track exist in db and storage
+
+                            //Checking if the track file is true
+                            if (!track.isDownloaded()) {
+                                tracksTable.update(Tracks.COLUMN_ID, track.getId(), Tracks.COLUMN_IS_DOWNLOADED, Tracks.TRUE, handler);
+                            }
+
+                            final Intent openTrackIntent = new Intent(Intent.ACTION_VIEW);
+                            openTrackIntent.setDataAndType(Uri.fromFile(track.getFile()), "audio/*");
+                            final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, openTrackIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+                            //noinspection ConstantConditions - already checked with track.isExistInStorage;
+                            notification.showNotification(getString(R.string.Track_exists), track.getTitle(), track.getFile().getAbsolutePath(), false, pendingIntent);
+
+                        } else {
+                            fireApi(track, soundCloudUrl);
                         }
 
-                        final Intent openTrackIntent = new Intent(Intent.ACTION_VIEW);
-                        openTrackIntent.setDataAndType(Uri.fromFile(track.getFile()), "audio/*");
-                        final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, openTrackIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-                        //noinspection ConstantConditions - already checked with track.isExistInStorage;
-                        notification.showNotification(getString(R.string.Track_exists), track.getTitle(), track.getFile().getAbsolutePath(), false, pendingIntent);
-
                     } else {
-                        fireApi(track, soundCloudUrl);
+                        fireApi(null, soundCloudUrl);
                     }
-
-                } else {
-                    fireApi(null, soundCloudUrl);
                 }
-            }
 
+            } else {
+                Toast.makeText(this, getString(R.string.Please_start_the_application_first), Toast.LENGTH_SHORT).show();
+                final Intent splashIntent = new Intent(this, SplashActivity.class);
+                splashIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(splashIntent);
+            }
 
         } else {
             Log.e(X, "Intent can't be null");

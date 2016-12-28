@@ -64,4 +64,5 @@
     <string name="Error">ERROR!</string>
     <string name="Failed_to_register_device">Failed to register device</string>
     <string name="Registering_device">Registering device</string>
+    <string name="Please_start_the_application_first">Please start the application first</string>
 </resources>

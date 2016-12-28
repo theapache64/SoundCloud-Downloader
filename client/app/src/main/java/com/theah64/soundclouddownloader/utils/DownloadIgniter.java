@@ -6,7 +6,6 @@ import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.database.Tracks;
-import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.services.DownloaderService;
 
 import java.util.HashSet;
@@ -19,24 +18,15 @@ import java.util.regex.Pattern;
  */
 
 public class DownloadIgniter {
+
     public static void ignite(final Context context, String data) {
 
         final String url = UrlParser.parse(data);
         if (url != null && url.contains("soundcloud.com/")) {
 
-            //Checking if the track contains in the db and track exists
-            final Track track = Tracks.getInstance(context).get(Tracks.COLUMN_SOUNDCLOUD_URL, url);
-
-            if (track != null && track.getFile().exists()) {
-                //Track exist
-                Toast.makeText(context, context.getString(R.string.Existing_track_s, track.getTitle()), Toast.LENGTH_SHORT).show();
-            } else {
-
-                final Intent downloadIntent = new Intent(context, DownloaderService.class);
-                downloadIntent.putExtra(Tracks.COLUMN_SOUNDCLOUD_URL, url);
-                context.startService(downloadIntent);
-                Toast.makeText(context, R.string.initializing_download, Toast.LENGTH_SHORT).show();
-            }
+            final Intent downloadIntent = new Intent(context, DownloaderService.class);
+            downloadIntent.putExtra(Tracks.COLUMN_SOUNDCLOUD_URL, url);
+            context.startService(downloadIntent);
 
         } else {
             //Invalid sound cloud url
@@ -44,7 +34,7 @@ public class DownloadIgniter {
         }
     }
 
-    public static class UrlParser {
+    static class UrlParser {
 
         // Pattern for recognizing a URL, based off RFC 3986
         private static final Pattern urlPattern = Pattern.compile(
