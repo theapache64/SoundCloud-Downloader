@@ -156,7 +156,7 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
 
                                 //noinspection ConstantConditions - already checked with track.isExistInStorage;
                                 new DownloaderService.Notification(context)
-                                        .showNotification(context.getString(R.string.Track_exists), downloadedTrack.getTitle(), downloadedTrack.getFile().getAbsolutePath(), false, pendingIntent);
+                                        .showNotification(context.getString(R.string.Track_downloaded), downloadedTrack.getTitle() + "\n" + downloadedTrack.getFile().getAbsolutePath(), false, pendingIntent);
                             }
 
                         } else {

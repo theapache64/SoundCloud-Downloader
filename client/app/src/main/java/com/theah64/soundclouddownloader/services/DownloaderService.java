@@ -127,7 +127,7 @@ public class DownloaderService extends Service {
                             final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, openTrackIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
                             //noinspection ConstantConditions - already checked with track.isExistInStorage;
-                            notification.showNotification(getString(R.string.Track_exists), track.getTitle(), track.getFile().getAbsolutePath(), false, pendingIntent);
+                            notification.showNotification(getString(R.string.Track_exists), track.getTitle() + "\n" + track.getFile().getAbsolutePath(), false, pendingIntent);
 
                         } else {
                             fireApi(track, soundCloudUrl);
@@ -164,13 +164,13 @@ public class DownloaderService extends Service {
 
         if (track == null) {
 
-            notification.showNotification(getString(R.string.Registering_device), null, null, true, null);
+            notification.showNotification(getString(R.string.Registering_device), null, true, null);
 
             new APIRequestGateway(this, new APIRequestGateway.APIRequestGatewayCallback() {
                 @Override
                 public void onReadyToRequest(final String apiKey) {
 
-                    notification.showNotification(getString(R.string.initializing_download), soundCloudUrl, null, true, null);
+                    notification.showNotification(getString(R.string.initializing_download), soundCloudUrl, true, null);
 
                     //Building json download request
                     final Request scdRequest = new APIRequestBuilder("/json", apiKey)
@@ -187,8 +187,7 @@ public class DownloaderService extends Service {
 
                             notification.showNotification(
                                     getString(R.string.Network_error),
-                                    getString(R.string.network_error),
-                                    e.getMessage(),
+                                    getString(R.string.network_error) + "\n" + e.getMessage(),
                                     false, null
                             );
                         }
@@ -255,7 +254,7 @@ public class DownloaderService extends Service {
 
                                         //noinspection ConstantConditions - already checked with track.isExistInStorage;
                                         notification
-                                                .showNotification(getString(R.string.Track_exists), theTrack.getTitle(), theTrack.getFile().getAbsolutePath(), false, pendingIntent);
+                                                .showNotification(getString(R.string.Track_exists), theTrack.getTitle() + "\n" + theTrack.getFile().getAbsolutePath(), false, pendingIntent);
 
                                     }
 
@@ -295,7 +294,7 @@ public class DownloaderService extends Service {
                                 e.printStackTrace();
                                 notification.showNotification(
                                         getString(R.string.Server_error),
-                                        getString(R.string.Server_error_occurred), e.getMessage(), false, null);
+                                        getString(R.string.Server_error_occurred) + "\n" + e.getMessage(), false, null);
                                 showToast("ERROR: " + e.getMessage());
                             }
                         }
@@ -306,7 +305,7 @@ public class DownloaderService extends Service {
 
                 @Override
                 public void onFailed(String reason) {
-                    notification.showNotification(getString(R.string.Error), getString(R.string.Failed_to_register_device), reason, false, null);
+                    notification.showNotification(getString(R.string.Error), getString(R.string.Failed_to_register_device) + "\n" + reason, false, null);
                 }
             });
 
@@ -348,7 +347,7 @@ public class DownloaderService extends Service {
 
         }
 
-        public void showNotification(final String title, final String message, final String info, final boolean showProgress, @Nullable PendingIntent pendingIntent) {
+        public void showNotification(final String title, final String message, final boolean showProgress, @Nullable PendingIntent pendingIntent) {
 
             if (showProgress) {
                 notBuilder.setProgress(100, 0, true);
@@ -359,9 +358,9 @@ public class DownloaderService extends Service {
             notBuilder
                     .setTicker(title)
                     .setContentTitle(title)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                     .setContentText(message)
-                    .setContentIntent(pendingIntent)
-                    .setContentInfo(info);
+                    .setContentIntent(pendingIntent);
 
             nm.notify(notifId, notBuilder.build());
         }
