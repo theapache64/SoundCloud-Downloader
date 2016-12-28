@@ -25,7 +25,7 @@ public class Track implements Serializable, ITSNode {
     private final String artWorkUrl;
     private final String soundCloudUrl;
     private final String playlistId;
-    private final boolean isDownloaded;
+    private boolean isDownloaded;
     private final long duration;
     private final String durationInHHMMSS;
     private String id;
@@ -189,5 +189,9 @@ public class Track implements Serializable, ITSNode {
 
     public boolean isMP3() {
         return file.getAbsolutePath().endsWith(".mp3");
+    }
+
+    public void setIsDownloaded(boolean isDownloaded) {
+        this.isDownloaded = isDownloaded;
     }
 }

@@ -45,7 +45,6 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         final long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
         final String stringDownloadId = String.valueOf(downloadId);
-        Log.d(X, "Download finished :  id : " + downloadId);
 
         DownloadManager.Query query = new DownloadManager.Query();
         query.setFilterById(downloadId);
@@ -53,7 +52,6 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
         final DownloadManager dm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         final Cursor cursor = dm.query(query);
 
-        Log.d(X, "Cursor : " + cursor);
         if (cursor != null) {
 
             if (cursor.moveToFirst()) {
@@ -80,7 +78,7 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
                         if (isRenamedToReal) {
 
                             Toast.makeText(context, "Track downloaded -> " + downloadedTrack.getTitle(), Toast.LENGTH_SHORT).show();
-                            
+
                             //Changing id3 tags
                             if (downloadedTrack.isMP3()) {
 
@@ -90,11 +88,9 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
                                     ID3v2 id3v2Tag;
                                     if (mp3File.hasId3v2Tag()) {
                                         id3v2Tag = mp3File.getId3v2Tag();
-                                        Log.d(X, "hasId3v2Tag");
                                     } else {
                                         id3v2Tag = new ID3v24Tag();
                                         mp3File.setId3v2Tag(id3v2Tag);
-                                        Log.d(X, "Building ID3v24Tag");
                                     }
 
 

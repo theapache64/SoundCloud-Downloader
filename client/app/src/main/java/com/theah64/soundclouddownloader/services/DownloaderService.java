@@ -226,24 +226,41 @@ public class DownloaderService extends Service {
 
                                     final String trackId = joTrack.getString("id");
                                     final String downloadUrl = String.format(Track.DOWNLOAD_URL_FORMAT, requestId, trackId, apiKey);
-                                    final Track newtrack = new Track(null, title, username, downloadUrl, artworkUrl, null, soundCloudUrl, null, false, false, new File(absFilePath), duration);
-                                    final long downloadId = downloadUtils.addToDownloadQueue(newtrack);
+                                    final Track theTrack = new Track(null, title, username, downloadUrl, artworkUrl, null, soundCloudUrl, null, false, false, new File(absFilePath), duration);
 
-                                    //Starting download
-                                    newtrack.setDownloadId(String.valueOf(downloadId));
+                                    if (!theTrack.isExistInStorage()) {
+
+                                        final long downloadId = downloadUtils.addToDownloadQueue(theTrack);
+                                        //Starting download
+                                        theTrack.setDownloadId(String.valueOf(downloadId));
+
+                                        showToast(getString(R.string.s_added_to_download_queue, theTrack.getTitle()));
+
+                                        //Checking pref
+                                        final boolean isOpenOnNewTrack = PrefUtils.getInstance(DownloaderService.this).getPref().getBoolean(PrefUtils.KEY_IS_START_ON_NEW_TRACK, false);
+
+                                        if (isOpenOnNewTrack) {
+                                            final Intent mainIntent = new Intent(DownloaderService.this, MainActivity.class);
+                                            mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            startActivity(mainIntent);
+                                        }
+
+                                    } else {
+                                        theTrack.setIsDownloaded(true);
+
+                                        //It's just a track
+                                        final Intent openTrackIntent = new Intent(Intent.ACTION_VIEW);
+                                        openTrackIntent.setDataAndType(Uri.fromFile(theTrack.getFile()), "audio/*");
+                                        final PendingIntent pendingIntent = PendingIntent.getActivity(DownloaderService.this, 0, openTrackIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+                                        //noinspection ConstantConditions - already checked with track.isExistInStorage;
+                                        notification
+                                                .showNotification(getString(R.string.Track_exists), theTrack.getTitle(), theTrack.getFile().getAbsolutePath(), false, pendingIntent);
+
+                                    }
 
                                     //Adding track to database -
-                                    tracksTable.add(newtrack, handler);
-                                    showToast(getString(R.string.s_added_to_download_queue, newtrack.getTitle()));
-
-                                    //Checking pref
-                                    final boolean isOpenOnNewTrack = PrefUtils.getInstance(DownloaderService.this).getPref().getBoolean(PrefUtils.KEY_IS_START_ON_NEW_TRACK, false);
-
-                                    if (isOpenOnNewTrack) {
-                                        final Intent mainIntent = new Intent(DownloaderService.this, MainActivity.class);
-                                        mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        startActivity(mainIntent);
-                                    }
+                                    tracksTable.add(theTrack, handler);
 
                                 } else {
 

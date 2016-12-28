@@ -18,7 +18,7 @@ CREATE TABLE tracks(
 	download_url TEXT NOT NULL,
 	artwork_url TEXT DEFAULT NULL,
 	abs_file_path TEXT NOT NULL,
-    is_downloaded INTEGER CHECK(is_downloaded IN (0,1)) NOT NULL DEFAULT 0,
+    is_downloaded INTEGER CHECK(is_downloaded IN (0,1)) NOT NULL,
 	playlist_id INTEGER DEFAULT NULL,
 	download_id INTEGER DEFAULT NULL,
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
