@@ -5,7 +5,6 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
-import android.telephony.TelephonyManager;
 import android.util.Patterns;
 
 import java.util.regex.Pattern;

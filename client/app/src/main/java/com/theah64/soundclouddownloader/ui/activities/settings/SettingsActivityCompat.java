@@ -1,8 +1,6 @@
 package com.theah64.soundclouddownloader.ui.activities.settings;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -12,11 +10,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.R;
-
-import static com.theah64.soundclouddownloader.ui.activities.settings.SettingsActivity.SettingsFragment.KEY_STORAGE_LOCATION;
 
 /**
  * This class used as a compatible version of SettingsActivity
