@@ -36,6 +36,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+
         ((TextView) findViewById(R.id.tvAppVersion)).setText(String.format("v%s", BuildConfig.VERSION_NAME));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -89,6 +90,7 @@ public class SplashActivity extends AppCompatActivity {
 
         //Setting permission flag to true
         PrefUtils.getInstance(this).getEditor().putBoolean(KEY_IS_ALL_PERMISSION_SET, true).commit();
+
 
         //Checking if the api key exists
         new Handler().postDelayed(new Runnable() {

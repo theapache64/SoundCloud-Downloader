@@ -17,13 +17,10 @@ public class SingletonToast {
     }
 
     public static Toast makeText(final Context context, final String message, final int duration) {
-
         if (toast == null) {
-            toast = Toast.makeText(context.getApplicationContext(), "", Toast.LENGTH_LONG);
+            toast = Toast.makeText(context, message, duration);
         }
 
-        toast.cancel();
-        toast.setDuration(duration);
         toast.setText(message);
         return toast;
     }
