@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -73,6 +74,7 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
                         //noinspection ResultOfMethodCallIgnored
                         String localUri = Uri.decode(cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)).replaceAll("file://", ""));
                         Log.d(X, "Local URI: " + localUri);
+
                         final boolean isRenamedToReal = new File(localUri).renameTo(downloadedTrack.getFile());
                         Log.d(X, "Real file : " + downloadedTrack.getFile().getAbsolutePath());
 
@@ -80,10 +82,6 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
 
                             Toast.makeText(context, "Track downloaded -> " + downloadedTrack.getTitle(), Toast.LENGTH_SHORT).show();
 
-                            Intent scanIntent =
-                                    new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                            intent.setData(Uri.fromFile(downloadedTrack.getFile()));
-                            context.sendBroadcast(scanIntent);
 
                             //Changing id3 tags
                             if (downloadedTrack.isMP3()) {
@@ -138,8 +136,21 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
                                 } catch (IOException | UnsupportedTagException | InvalidDataException | NotSupportedException e) {
                                     e.printStackTrace();
                                 }
-
                             }
+
+                            //Adding new file to media.
+                            MediaScannerConnection.scanFile(
+                                    context.getApplicationContext(),
+                                    new String[]{downloadedTrack.getFile().getAbsolutePath()},
+                                    null,
+                                    new MediaScannerConnection.OnScanCompletedListener() {
+                                        @Override
+                                        public void onScanCompleted(String path, Uri uri) {
+                                            Log.d(X,
+                                                    "file " + path + " was scanned successfully: " + uri);
+                                        }
+                                    });
+
 
                         } else {
                             throw new IllegalArgumentException("Failed to rename to real");
