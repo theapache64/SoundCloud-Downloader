@@ -98,6 +98,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
 
         } else {
 
+
             //showing no tracks downloaded text view.
             layout.findViewById(R.id.llNoPlaylistsFound).setVisibility(View.VISIBLE);
 
