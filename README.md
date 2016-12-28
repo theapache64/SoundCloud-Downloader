@@ -3,7 +3,7 @@ An android application to download tracks/playlists from SoundCloud.
 
 #### TODOs
 
-- Custom notificaton on track/playlist download . Click on a track plays the current downloaded track and multiple tracks starts the playlist track activity. (core condition -> If the track is from a playlist or not)
+- Need to improve core algorithm. (RUN A DETAILED WALK THROUGH EVERY IF'S AND ELSE'S)
 
 #### Sad part :(
 
