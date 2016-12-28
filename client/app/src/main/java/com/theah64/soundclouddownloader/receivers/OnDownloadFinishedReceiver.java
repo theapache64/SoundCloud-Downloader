@@ -141,7 +141,7 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
                             //Adding new file to media.
                             MediaScannerConnection.scanFile(
                                     context.getApplicationContext(),
-                                    new String[]{downloadedTrack.getFile().getAbsolutePath()},
+                                    new String[]{localUri, downloadedTrack.getFile().getAbsolutePath()},
                                     null,
                                     new MediaScannerConnection.OnScanCompletedListener() {
                                         @Override
