@@ -63,6 +63,7 @@ public class DownloadUtils {
 
 
         if (track.getDownloadId() != null) {
+
             DownloadManager.Query query = new DownloadManager.Query();
             query.setFilterById(Long.parseLong(track.getDownloadId()));
 
@@ -94,6 +95,6 @@ public class DownloadUtils {
             }
         }
 
-        return null;
+        return getSubtitle3(track);
     }
 }

@@ -98,7 +98,6 @@ public class DownloaderService extends Service {
 
             if (PrefUtils.getInstance(this).getPref().getBoolean(SplashActivity.KEY_IS_ALL_PERMISSION_SET, false)) {
 
-
                 Toast.makeText(this, R.string.initializing_download, Toast.LENGTH_SHORT).show();
 
                 //Converting url to https
@@ -244,6 +243,8 @@ public class DownloaderService extends Service {
                                             startActivity(mainIntent);
                                         }
 
+                                        notification.dismiss();
+
                                     } else {
                                         theTrack.setIsDownloaded(true);
 
@@ -285,10 +286,10 @@ public class DownloaderService extends Service {
 
                                     startActivity(playListDownloadIntent);
 
+
+                                    notification.dismiss();
                                 }
 
-
-                                notification.dismiss();
 
                             } catch (APIResponse.APIException | JSONException e) {
                                 e.printStackTrace();
