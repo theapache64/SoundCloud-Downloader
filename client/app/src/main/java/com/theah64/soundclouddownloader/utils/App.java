@@ -67,7 +67,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         initImageLoader(this);
-        DEFAULT_STORAGE_LOCATION = Environment.getExternalStorageDirectory() + File.separator + FOLDER_NAME;
+        DEFAULT_STORAGE_LOCATION = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC) + File.separator + FOLDER_NAME;
     }
 
     public TrackListener getMainTrackListener() {
