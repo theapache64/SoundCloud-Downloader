@@ -2,6 +2,7 @@ package com.theah64.soundclouddownloader.ui.activities;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -54,6 +55,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
     private NotificationCompat.Builder apiNotification;
     private PlaylistDownloadAdapter adapter;
     private Tracks tracksTable;
+    private Playlist playlist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +83,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
             throw new IllegalArgumentException("No api_key found");
         }
 
-        final Playlist playlist = (Playlist) getSerializableOrThrow(Playlist.KEY);
+        playlist = (Playlist) getSerializableOrThrow(Playlist.KEY);
         actionBar.setTitle(playlist.getTitle());
 
         final Playlists playlistsTable = Playlists.getInstance(this);
@@ -98,6 +100,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
             tracksTable = Tracks.getInstance(this);
             final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+
 
             for (int i = 0; i < jaTracks.length(); i++) {
 
@@ -158,6 +161,8 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
                 trackList.add(newTrack);
             }
+
+            playlist.setTotalTracks(trackList.size());
 
             actionBar.setSubtitle(getResources().getQuantityString(R.plurals.d_tracks, trackList.size(), trackList.size()));
 
@@ -239,6 +244,14 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
         SingletonToast.makeText(this, R.string.download_started, Toast.LENGTH_LONG).show();
         nm.cancel(notifId);
+
+        if (playlist.getTotalTracks() > 0) {
+            //Showing playlist tracks
+            final Intent playlistTracksAct = new Intent(this, PlaylistTracksActivity.class);
+            playlistTracksAct.putExtra(Playlist.KEY, playlist);
+            startActivity(playlistTracksAct);
+        }
+
     }
 
     @Override

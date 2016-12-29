@@ -20,7 +20,8 @@ public class Playlist implements ITSNode, Serializable {
     private final String sanitizedTitle;
     private final String url;
     private final String artworkUrl;
-    private final int totalTracks, tracksDownloaded;
+    private int totalTracks;
+    private final int tracksDownloaded;
     private final String totalDurationInHHMMSS;
     private String id;
     private List<Track> tracks;
@@ -108,5 +109,10 @@ public class Playlist implements ITSNode, Serializable {
 
     public void setTracks(List<Track> tracks) {
         this.tracks = tracks;
+    }
+
+
+    public void setTotalTracks(int totalTracks) {
+        this.totalTracks = totalTracks;
     }
 }
