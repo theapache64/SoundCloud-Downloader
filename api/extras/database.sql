@@ -2,7 +2,6 @@ DROP DATABASE IF EXISTS scd;
 CREATE DATABASE scd;
 USE scd;
 
-ALTER DATABASE `scd` CHARACTER SET utf8 COLLATE utf8mb4_general_ci;
 
 CREATE TABLE `users`(
   id INT(11) NOT NULL AUTO_INCREMENT,
@@ -106,7 +105,7 @@ CREATE TABLE `requests`(
   soundcloud_track_id BIGINT NOT NULL,
   title TEXT CHARACTER SET UTF8 NOT NULL,
   duration BIGINT NOT NULL,
-  username VARCHAR (255) NOT NULL,
+  username VARCHAR (255) CHARACTER SET UTF8 NOT NULL,
   artwork_url TEXT,
   filename  TEXT CHARACTER SET UTF8 NOT NULL,
   original_format VARCHAR(10) NOT NULL,
