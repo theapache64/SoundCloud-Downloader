@@ -154,7 +154,7 @@ public class DownloaderService extends Service {
             SingletonToast.makeText(this, R.string.network_error, Toast.LENGTH_LONG).show();
             return;
         }
-        
+
         final DownloadUtils downloadUtils = new DownloadUtils(DownloaderService.this);
 
         if (track == null) {
@@ -222,6 +222,7 @@ public class DownloaderService extends Service {
 
                                     final String trackId = joTrack.getString("id");
                                     final String downloadUrl = String.format(Track.DOWNLOAD_URL_FORMAT, requestId, trackId, apiKey);
+
                                     final Track theTrack = new Track(null, title, username, downloadUrl, artworkUrl, null, soundCloudUrl, null, false, false, new File(absFilePath), duration);
 
                                     if (!theTrack.isExistInStorage()) {

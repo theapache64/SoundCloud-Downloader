@@ -58,16 +58,19 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
             if (cursor.moveToFirst()) {
 
                 final int downloadStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+                final int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
+
+                Log.d(X, "Download status : " + downloadStatus + " - REASON : " + reason);
+
+                final Tracks tracksTable = Tracks.getInstance(context);
+                final Track downloadedTrack = tracksTable.get(Tracks.COLUMN_DOWNLOAD_ID, stringDownloadId);
 
                 if (downloadStatus == DownloadManager.STATUS_SUCCESSFUL) {
-
-                    final Tracks tracksTable = Tracks.getInstance(context);
 
                     if (!tracksTable.update(Tracks.COLUMN_DOWNLOAD_ID, stringDownloadId, Tracks.COLUMN_IS_DOWNLOADED, Tracks.TRUE, handler)) {
                         FirebaseCrash.log("Failed to update download status");
                     }
 
-                    final Track downloadedTrack = tracksTable.get(Tracks.COLUMN_DOWNLOAD_ID, stringDownloadId);
 
                     if (downloadedTrack != null) {
 
@@ -167,8 +170,12 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
                     }
 
 
-                } else {
-                    Log.e(X, "Download status : " + downloadStatus);
+                } else if (downloadStatus == DownloadManager.STATUS_FAILED) {
+
+                    Log.e(X, "Download failed: " + reason);
+                    new DownloaderService.Notification(context)
+                            .showNotification(context.getString(R.string.Download_failed), reason + "\n" + downloadedTrack.getTitle() + "\n" + downloadedTrack.getFile().getAbsolutePath(), false, null);
+
                 }
 
             }
