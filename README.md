@@ -1,6 +1,10 @@
 # SoundCloud Downloader
 An android application to download tracks/playlists from SoundCloud.
 
+### Demo
+
+[![IMAGE](https://raw.githubusercontent.com/theapache64/SoundCloud-Downloader/master/youtube.png)](https://www.youtube.com/watch?v=qv0OWufJOoU)
+
 #### TODOs
 
 - Need to improve core algorithm. (RUN A DETAILED WALK THROUGH EVERY IF'S AND ELSE'S)
