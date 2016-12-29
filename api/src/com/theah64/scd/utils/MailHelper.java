@@ -1,7 +1,6 @@
 package com.theah64.scd.utils;
 
 
-import com.theah64.scd.database.Connection;
 import com.theah64.scd.database.tables.Preference;
 
 import javax.mail.*;
@@ -16,8 +15,10 @@ public class MailHelper {
 
     private static String gmailUsername, gmailPassword;
 
-    public static boolean sendMail(String email, final String subject, String message) {
+    public static boolean sendMail(String email, String message) {
 
+
+        System.out.println("Sending email to " + email);
 
         if (gmailUsername == null || gmailPassword == null) {
             final Preference preference = Preference.getInstance();
@@ -26,6 +27,10 @@ public class MailHelper {
             gmailPassword = preference.getString(Preference.KEY_GMAIL_PASSWORD);
         }
 
+        System.out.println("u:" + gmailUsername);
+        System.out.println("p:" + gmailPassword);
+
+
         final Properties properties = new Properties();
         properties.put("mail.smtp.host", "smtp.gmail.com");
         properties.put("mail.smtp.auth", "true");
@@ -33,7 +38,7 @@ public class MailHelper {
         properties.put("mail.smtp.socketFactory.port", "465");
         properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 
-        Session session = Session.getDefaultInstance(properties, new Authenticator() {
+        Session session = Session.getInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(gmailUsername, gmailPassword);
@@ -44,14 +49,17 @@ public class MailHelper {
         try {
             mimeMessage.setFrom(new InternetAddress(gmailUsername));
             mimeMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
-            mimeMessage.setSubject(subject);
+            mimeMessage.setSubject("New user @ SCD");
             mimeMessage.setText(message);
 
             Transport.send(mimeMessage);
+            System.out.println("Mail sent :" + message);
             return true;
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+
+        System.out.println("Failed to send mail");
 
         return false;
     }

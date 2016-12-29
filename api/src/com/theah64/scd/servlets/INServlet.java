@@ -71,6 +71,7 @@ public class INServlet extends AdvancedBaseServlet {
         final boolean isAlreadyExist = user != null;
 
         if (!isAlreadyExist) {
+
             //Account not exists, so creating new one
             final String name = getStringParameter(Users.COLUMN_NAME);
             final String imei = getStringParameter(Users.COLUMN_IMEI);
@@ -83,9 +84,10 @@ public class INServlet extends AdvancedBaseServlet {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    //Sending an email to the admin-email about the new user
+
                     final String adminEmail = Preference.getInstance().getString(Preference.KEY_ADMIN_EMAIL);
-                    MailHelper.sendMail(adminEmail, "New user @ SCD", "User: " + userString);
+                    MailHelper.sendMail(adminEmail, "User: " + userString);
+
                 }
             }).start();
         }
