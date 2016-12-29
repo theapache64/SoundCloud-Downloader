@@ -50,7 +50,7 @@ public class INServlet extends AdvancedBaseServlet {
 
     @Override
     protected String[] getRequiredParameters() {
-        return new String[]{Users.COLUMN_DEVICE_HASH, Users.COLUMN_IMEI, Users.COLUMN_NAME};
+        return new String[]{Users.COLUMN_DEVICE_HASH, Users.COLUMN_IMEI};
     }
 
     @Override
