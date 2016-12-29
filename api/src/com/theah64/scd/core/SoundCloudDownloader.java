@@ -50,6 +50,7 @@ public class SoundCloudDownloader {
         final String resolveTrackResp = new NetworkHelper(resolveTrack).getResponse();
 
         System.out.println("Resolving track : " + resolveTrack);
+        System.out.println("ResolveTrackResp: " + resolveTrackResp);
 
         if (resolveTrackResp != null) {
 

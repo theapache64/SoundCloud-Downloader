@@ -2,7 +2,7 @@ DROP DATABASE IF EXISTS scd;
 CREATE DATABASE scd;
 USE scd;
 
-ALTER DATABASE `scd` DEFAULT CHARSET=utf8 COLLATE utf8_general_ci;
+ALTER DATABASE `scd` CHARACTER SET utf8 COLLATE utf8mb4_general_ci;
 
 CREATE TABLE `users`(
   id INT(11) NOT NULL AUTO_INCREMENT,
@@ -104,11 +104,11 @@ CREATE TABLE `requests`(
   request_id INT NOT NULL,
   soundcloud_url TEXT NOT NULL,
   soundcloud_track_id BIGINT NOT NULL,
-  title TEXT NOT NULL,
+  title TEXT CHARACTER SET UTF8 NOT NULL,
   duration BIGINT NOT NULL,
   username VARCHAR (255) NOT NULL,
   artwork_url TEXT,
-  filename TEXT NOT NULL,
+  filename  TEXT CHARACTER SET UTF8 NOT NULL,
   original_format VARCHAR(10) NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(id),
@@ -142,5 +142,3 @@ INSERT INTO preference (_key, _value) VALUES
   ('is_debug_download', '0'),
   ('filename_format', '%s_theah64.%s'),
   ('apk_url', 'https://github.com/theapache64/SoundCloud-Downloader/releases/download/v1.0/soundclouddownloader.apk');
-
-
