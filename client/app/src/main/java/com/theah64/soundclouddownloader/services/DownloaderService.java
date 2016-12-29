@@ -95,7 +95,6 @@ public class DownloaderService extends Service {
 
             if (PrefUtils.getInstance(this).getPref().getBoolean(SplashActivity.KEY_IS_ALL_PERMISSION_SET, false)) {
 
-                SingletonToast.makeText(this, R.string.initializing_download, Toast.LENGTH_SHORT).show();
 
                 //Converting url to https
                 final String soundCloudUrl = intent.getStringExtra(Tracks.COLUMN_SOUNDCLOUD_URL);
@@ -155,10 +154,12 @@ public class DownloaderService extends Service {
             SingletonToast.makeText(this, R.string.network_error, Toast.LENGTH_LONG).show();
             return;
         }
-
+        
         final DownloadUtils downloadUtils = new DownloadUtils(DownloaderService.this);
 
         if (track == null) {
+
+            SingletonToast.makeText(this, R.string.initializing_download, Toast.LENGTH_SHORT).show();
 
             notification.showNotification(getString(R.string.Registering_device), null, true, null);
 
