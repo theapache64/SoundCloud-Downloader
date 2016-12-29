@@ -1,7 +1,9 @@
 package com.theah64.scd.servlets;
 
 import com.theah64.scd.database.tables.BaseTable;
+import com.theah64.scd.database.tables.SCClients;
 import com.theah64.scd.database.tables.Tracks;
+import com.theah64.scd.models.SCClient;
 import com.theah64.scd.models.Track;
 import com.theah64.scd.utils.APIResponse;
 import com.theah64.scd.utils.Request;
@@ -38,7 +40,6 @@ public class DirectDownloaderServlet extends AdvancedBaseServlet {
         return true;
     }
 
-
     @Override
     protected boolean isSecureServlet() {
         return false;
@@ -62,7 +63,8 @@ public class DirectDownloaderServlet extends AdvancedBaseServlet {
 
         if (track != null) {
 
-            final String soundcloudDownloadUrl = getSoundCloudDownloadUrl(track.getSoundcloudTrackId());
+            final SCClient scClient = SCClients.getInstance().getLeastUsedClient();
+            final String soundcloudDownloadUrl = getSoundCloudDownloadUrl(scClient, track.getSoundcloudTrackId());
 
             if (soundcloudDownloadUrl != null) {
 

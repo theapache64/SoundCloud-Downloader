@@ -38,7 +38,7 @@ public class Tracks extends BaseTable<Track> {
     @Override
     public String addv3(Track track) throws InsertFailedException {
         String trackId = null;
-        final String query = "INSERT INTO tracks (request_id, soundcloud_url, soundcloud_track_id, title, duration, username,artwork_url,filename,original_format) VALUES (?,?,?,?,?,?,?,?,?);";
+        final String query = "INSERT INTO tracks (request_id, soundcloud_url, soundcloud_track_id, title, duration, username,artwork_url,filename,original_format,client_id) VALUES (?,?,?,?,?,?,?,?,?,?);";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -52,6 +52,7 @@ public class Tracks extends BaseTable<Track> {
             ps.setString(7, track.getArtworkUrl());
             ps.setString(8, track.getFilename());
             ps.setString(9, track.getOriginalFormat());
+            ps.setString(10, track.getClientId());
             ps.executeUpdate();
 
             final ResultSet rs = ps.getGeneratedKeys();
@@ -101,7 +102,7 @@ public class Tracks extends BaseTable<Track> {
                 final String originalFormat = rs.getString(COLUMN_ORIGINAL_FORMAT);
                 final long duration = rs.getLong(COLUMN_DURATION);
 
-                track = new Track(id, null, soundcloudUrl, soundCloudTrackId, title, username, artworkUrl, filename, originalFormat, duration);
+                track = new Track(id, null, soundcloudUrl, soundCloudTrackId, title, username, artworkUrl, filename, originalFormat, duration, null);
             }
 
             rs.close();

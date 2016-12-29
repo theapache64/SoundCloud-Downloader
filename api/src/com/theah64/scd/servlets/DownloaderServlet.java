@@ -2,6 +2,7 @@ package com.theah64.scd.servlets;
 
 import com.theah64.scd.database.tables.*;
 import com.theah64.scd.models.DownloadRequest;
+import com.theah64.scd.models.SCClient;
 import com.theah64.scd.models.Track;
 import com.theah64.scd.utils.HeaderSecurity;
 import com.theah64.scd.utils.NetworkHelper;
@@ -15,8 +16,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-import static com.theah64.scd.core.SoundCloudDownloader.CLIENT_ID;
 
 /**
  * Created by theapache64 on 8/12/16.
@@ -44,13 +43,14 @@ public class DownloaderServlet extends HttpServlet {
             if (track != null) {
 
                 System.out.println("Handling track : " + track.getTitle());
-                final String downloadUrl = getSoundCloudDownloadUrl(track.getSoundcloudTrackId());
+                final SCClient scClient = SCClients.getInstance().getLeastUsedClient();
+                final String downloadUrl = getSoundCloudDownloadUrl(scClient, track.getSoundcloudTrackId());
 
                 System.out.println("Track download url : " + downloadUrl);
 
                 if (downloadUrl != null) {
                     final String requestId = request.getStringParameter(DownloadRequests.COLUMN_REQUEST_ID);
-                    DownloadRequests.getInstance().add(new DownloadRequest(null, track.getId(), requestId, downloadUrl));
+                    DownloadRequests.getInstance().add(new DownloadRequest(null, track.getId(), requestId, scClient.getId(), downloadUrl));
                     resp.sendRedirect(downloadUrl);
                     System.out.println("Track redirected to download url");
                 } else {
@@ -71,15 +71,19 @@ public class DownloaderServlet extends HttpServlet {
     }
 
 
-    private static final String STREAM_TRACK_URL_FORMAT = "https://api.soundcloud.com/i1/tracks/%s/streams?client_id=" + CLIENT_ID;
+    private static final String STREAM_TRACK_URL_FORMAT = "https://api.soundcloud.com/i1/tracks/%s/streams?client_id=%s";
 
-    static String getSoundCloudDownloadUrl(String trackId) {
+    private static String getStreamTrackUrl(final String scTrackId, final String clientId) {
+        return String.format(STREAM_TRACK_URL_FORMAT, scTrackId, clientId);
+    }
+
+    static String getSoundCloudDownloadUrl(final SCClient scClient, String trackId) {
 
         if (Preference.getInstance().getString(Preference.KEY_IS_DEBUG_DOWNLOAD).equals(Preference.TRUE)) {
             return AdvancedBaseServlet.getBaseUrl() + "/jaan_kesi.mp3";
         }
 
-        final String trackDownloadUrl = String.format(STREAM_TRACK_URL_FORMAT, trackId);
+        final String trackDownloadUrl = getStreamTrackUrl(trackId, scClient.getClientId());
         final String downloadTrackResp = new NetworkHelper(trackDownloadUrl).getResponse();
 
         if (downloadTrackResp != null) {

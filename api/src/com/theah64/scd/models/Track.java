@@ -23,8 +23,9 @@ public class Track {
     private final String filename;
     private final String originalFormat;
     private final long duration;
+    private final String clientId;
 
-    public Track(String id, String primaryRequestId, String soundcloudUrl, String soundcloudTrackId, String title, String username, String artworkUrl, String filename, String originalFormat, long duration) {
+    public Track(String id, String primaryRequestId, String soundcloudUrl, String soundcloudTrackId, String title, String username, String artworkUrl, String filename, String originalFormat, long duration, String clientId) {
         this.id = id;
         this.primaryRequestId = primaryRequestId;
         this.soundcloudUrl = soundcloudUrl;
@@ -35,6 +36,7 @@ public class Track {
         this.filename = filename;
         this.originalFormat = originalFormat;
         this.duration = duration;
+        this.clientId = clientId;
     }
 
     public String getId() {
@@ -75,6 +77,10 @@ public class Track {
 
     public long getDuration() {
         return duration;
+    }
+
+    public String getClientId() {
+        return clientId;
     }
 
     public JSONObject toJSONObject() throws JSONException {

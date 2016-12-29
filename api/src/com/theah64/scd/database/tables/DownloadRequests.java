@@ -27,13 +27,14 @@ public class DownloadRequests extends BaseTable<DownloadRequest> {
     @Override
     public boolean add(DownloadRequest request) throws InsertFailedException {
         boolean isAdded = false;
-        final String query = "INSERT INTO download_requests (track_id, request_id, download_url) VALUES (?,?,?);";
+        final String query = "INSERT INTO download_requests (track_id, request_id,client_id, download_url) VALUES (?,?,?,?);";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1, request.getTrackId());
             ps.setString(2, request.getRequestId());
-            ps.setString(3, request.getDownloadLink());
+            ps.setString(3, request.getClientId());
+            ps.setString(4, request.getDownloadLink());
             isAdded = ps.executeUpdate() == 1;
             ps.close();
         } catch (SQLException e) {
