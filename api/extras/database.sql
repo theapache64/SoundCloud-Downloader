@@ -140,4 +140,4 @@ INSERT INTO preference (_key, _value) VALUES
   ('admin_email', 'theapache64@gmail.com'),
   ('is_debug_download', '0'),
   ('filename_format', '%s_theah64.%s'),
-  ('apk_url', 'https://github.com/theapache64/SoundCloud-Downloader/releases/download/v1.0/soundclouddownloader.apk');
+  ('apk_url', 'https://github.com/theapache64/SoundCloud-Downloader/releases/download/v1.0.3/soundclouddownloader_v1.0.3.apk');
