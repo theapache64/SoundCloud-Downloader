@@ -169,7 +169,6 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
 
                 } else {
                     Log.e(X, "Download status : " + downloadStatus);
-                    throw new IllegalArgumentException("TSH: Download status : " + downloadStatus);
                 }
 
             }
