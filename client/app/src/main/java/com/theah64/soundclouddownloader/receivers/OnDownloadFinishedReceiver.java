@@ -174,8 +174,10 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
 
                     Log.e(X, "Download failed: " + reason);
                     new DownloaderService.Notification(context)
-                            .showNotification(context.getString(R.string.Download_failed), reason + "\n" + downloadedTrack.getTitle() + "\n" + downloadedTrack.getFile().getAbsolutePath(), false, null);
+                            .showNotification(context.getString(R.string.Download_failed), downloadedTrack.getTitle() + "\n" + downloadedTrack.getFile().getAbsolutePath(), false, null);
 
+                } else {
+                    Log.e(X, "Download status " + downloadStatus + " - REASON : " + reason);
                 }
 
             }
