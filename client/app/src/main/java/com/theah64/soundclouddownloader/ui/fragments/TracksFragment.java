@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.adapters.ITSAdapter;
@@ -228,7 +227,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
                     startActivity(sendIntent);
 
                 } else {
-                    SingletonToast.makeText(getActivity(), R.string.File_not_found, Toast.LENGTH_SHORT).show();
+                    SingletonToast.makeText(getActivity(), R.string.File_not_found).show();
                 }
 
                 return true;
@@ -265,7 +264,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
                 downloadIntent.putExtra(Tracks.COLUMN_SOUNDCLOUD_URL, track.getSoundCloudUrl());
                 getActivity().startService(downloadIntent);
 
-                SingletonToast.makeText(getActivity(), R.string.initializing_download, Toast.LENGTH_SHORT).show();
+                SingletonToast.makeText(getActivity(), R.string.initializing_download).show();
 
                 return true;
 
@@ -276,7 +275,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
                 if (storageIntent.resolveActivityInfo(getActivity().getPackageManager(), 0) != null) {
                     getActivity().startActivity(storageIntent);
                 } else {
-                    SingletonToast.makeText(getActivity(), R.string.No_file_browser_found, Toast.LENGTH_SHORT).show();
+                    SingletonToast.makeText(getActivity(), R.string.No_file_browser_found).show();
                 }
                 return true;
 
@@ -295,7 +294,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
             startActivity(playIntent);
 
         } else {
-            SingletonToast.makeText(getActivity(), R.string.File_not_found, Toast.LENGTH_SHORT).show();
+            SingletonToast.makeText(getActivity(), R.string.File_not_found).show();
         }
 
     }

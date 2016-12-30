@@ -12,15 +12,16 @@ public class SingletonToast {
 
     private static Toast toast;
 
-    public static Toast makeText(final Context context, @StringRes final int message, final int duration) {
-        return makeText(context, context.getString(message), duration);
+    public static Toast makeText(final Context context, @StringRes final int message) {
+        return makeText(context, context.getString(message));
     }
 
-    public static Toast makeText(final Context context, final String message, final int duration) {
+    public static Toast makeText(final Context context, final String message) {
         if (toast == null) {
-            toast = Toast.makeText(context, message, duration);
+            toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
         }
 
+        toast.setDuration(Toast.LENGTH_LONG);
         toast.setText(message);
         return toast;
     }

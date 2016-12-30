@@ -2,7 +2,6 @@ package com.theah64.soundclouddownloader.utils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.database.Tracks;
@@ -30,7 +29,7 @@ public class DownloadIgniter {
 
         } else {
             //Invalid sound cloud url
-            SingletonToast.makeText(context, R.string.Invalid_soundcloud_URL, Toast.LENGTH_SHORT);
+            SingletonToast.makeText(context, R.string.Invalid_soundcloud_URL);
         }
     }
 

@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.adapters.PlaylistDownloadAdapter;
@@ -223,7 +222,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                     startDownload();
                     finish();
                 } else {
-                    SingletonToast.makeText(PlaylistDownloadActivity.this, R.string.network_error, Toast.LENGTH_LONG).show();
+                    SingletonToast.makeText(PlaylistDownloadActivity.this, R.string.network_error).show();
                 }
             }
         });
@@ -262,7 +261,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
             Log.e(X, "-------------------------------");
         }
 
-        SingletonToast.makeText(this, R.string.download_started, Toast.LENGTH_LONG).show();
+        SingletonToast.makeText(this, R.string.download_started).show();
         nm.cancel(notifId);
 
         if (playlist.getTotalTracks() > 0) {

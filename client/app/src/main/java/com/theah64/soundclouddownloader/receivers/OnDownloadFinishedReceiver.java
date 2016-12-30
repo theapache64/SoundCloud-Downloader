@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.firebase.crash.FirebaseCrash;
 import com.mpatric.mp3agic.ID3v2;
@@ -81,7 +80,7 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
 
                         if (isRenamedToReal) {
 
-                            SingletonToast.makeText(context, "Track downloaded -> " + downloadedTrack.getTitle(), Toast.LENGTH_SHORT).show();
+                            SingletonToast.makeText(context, "Track downloaded -> " + downloadedTrack.getTitle()).show();
 
                             //Changing id3 tags
                             if (downloadedTrack.isMP3()) {

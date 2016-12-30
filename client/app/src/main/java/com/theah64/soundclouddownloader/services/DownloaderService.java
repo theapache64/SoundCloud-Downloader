@@ -13,7 +13,6 @@ import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.database.Playlists;
@@ -73,7 +72,7 @@ public class DownloaderService extends Service {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                SingletonToast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                SingletonToast.makeText(getApplicationContext(), message).show();
             }
         });
     }
@@ -134,7 +133,7 @@ public class DownloaderService extends Service {
                 }
 
             } else {
-                SingletonToast.makeText(this, getString(R.string.Please_start_the_application_first), Toast.LENGTH_SHORT).show();
+                SingletonToast.makeText(this, getString(R.string.Please_start_the_application_first)).show();
                 final Intent splashIntent = new Intent(this, SplashActivity.class);
                 splashIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(splashIntent);
@@ -151,7 +150,7 @@ public class DownloaderService extends Service {
     private void fireApi(final Track track, final String soundCloudUrl) {
 
         if (!NetworkUtils.hasNetwork(this)) {
-            SingletonToast.makeText(this, R.string.network_error, Toast.LENGTH_LONG).show();
+            SingletonToast.makeText(this, R.string.network_error).show();
             return;
         }
 
@@ -159,7 +158,7 @@ public class DownloaderService extends Service {
 
         if (track == null) {
 
-            SingletonToast.makeText(this, R.string.initializing_download, Toast.LENGTH_SHORT).show();
+            SingletonToast.makeText(this, R.string.initializing_download).show();
 
             notification.showNotification(getString(R.string.Registering_device), null, true, null);
 

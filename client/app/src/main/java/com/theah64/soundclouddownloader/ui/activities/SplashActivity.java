@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.BuildConfig;
 import com.theah64.soundclouddownloader.R;
@@ -79,7 +78,7 @@ public class SplashActivity extends AppCompatActivity {
             if (isAllPermissionGranted) {
                 doNormalSplashWork();
             } else {
-                SingletonToast.makeText(SplashActivity.this, R.string.You_must_accept_all_the_permissions, Toast.LENGTH_SHORT).show();
+                SingletonToast.makeText(SplashActivity.this, R.string.You_must_accept_all_the_permissions).show();
                 finish();
             }
         }

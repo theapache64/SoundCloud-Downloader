@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.firebase.crash.FirebaseCrash;
 import com.theah64.soundclouddownloader.R;
@@ -150,7 +149,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
             playlistTracksIntent.putExtra(Playlist.KEY, playlist);
             startActivity(playlistTracksIntent);
         } else {
-            SingletonToast.makeText(getActivity(), R.string.Empty_playlist, Toast.LENGTH_SHORT).show();
+            SingletonToast.makeText(getActivity(), R.string.Empty_playlist).show();
         }
     }
 
@@ -197,10 +196,10 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
                     shareTracksIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, existingTracks);
                     startActivity(shareTracksIntent);
 
-                    SingletonToast.makeText(getActivity(), getResources().getQuantityString(R.plurals.sharing_d_tracks, existingTracks.size(), existingTracks.size()), Toast.LENGTH_SHORT).show();
+                    SingletonToast.makeText(getActivity(), getResources().getQuantityString(R.plurals.sharing_d_tracks, existingTracks.size(), existingTracks.size())).show();
 
                 } else {
-                    SingletonToast.makeText(getActivity(), R.string.No_tracks_downloaded, Toast.LENGTH_SHORT).show();
+                    SingletonToast.makeText(getActivity(), R.string.No_tracks_downloaded).show();
                 }
 
                 return true;
@@ -223,7 +222,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
 
                 getActivity().startService(downloadIntent);
 
-                SingletonToast.makeText(getActivity(), R.string.initializing_download, Toast.LENGTH_SHORT).show();
+                SingletonToast.makeText(getActivity(), R.string.initializing_download).show();
 
 
                 return true;

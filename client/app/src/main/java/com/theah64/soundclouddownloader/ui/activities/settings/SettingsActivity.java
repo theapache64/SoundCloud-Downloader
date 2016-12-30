@@ -13,7 +13,6 @@ import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.ui.activities.BaseAppCompatActivity;
@@ -142,7 +141,7 @@ public class SettingsActivity extends BaseAppCompatActivity {
                     if (storageIntent.resolveActivityInfo(context.getPackageManager(), 0) != null) {
                         context.startActivity(storageIntent);
                     } else {
-                        SingletonToast.makeText(context, R.string.No_file_browser_found, Toast.LENGTH_SHORT).show();
+                        SingletonToast.makeText(context, R.string.No_file_browser_found).show();
                     }
                     return true;
 
