@@ -124,13 +124,18 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
                 final String baseStorageLocation = pref.getString(SettingsActivity.SettingsFragment.KEY_STORAGE_LOCATION, App.getDefaultStorageLocation());
                 final String absoluteFilePath = String.format("%s/%s/%s", baseStorageLocation, playlist.getSanitizedTitle(), fileName);
+
+                final Track dbTrack = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, trackSoundCloudUrl);
+
                 final Track newTrack = new Track(null, title, username, downloadUrl, trackArtWorkUrl, null, trackSoundCloudUrl, playlist.getId(), true, false, new File(absoluteFilePath), duration) {
                     @Override
                     public String getSubtitle3(final DownloadUtils downloadUtils) {
 
                         if (isExistInStorage()) {
                             //noinspection ConstantConditions
-                            return "#Existing track ../" + getFile().getParentFile().getName() + "/" + getFile().getName();
+                            return "#Existing p-track ../" + getFile().getParentFile().getName() + "/" + getFile().getName();
+                        } else if (dbTrack != null && dbTrack.isExistInStorage()) {
+                            return "#Existing track ../" + dbTrack.getFile().getParentFile().getName() + "/" + dbTrack.getFile().getName();
                         } else if (isDownloaded() && !isExistInStorage()) {
                             return "(Saved but moved/deleted)";
                         } else {
@@ -140,14 +145,18 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                     }
                 };
 
-                newTrack.setChecked(!newTrack.isExistInStorage());
-                String dbTrackId = tracksTable.get(Tracks.COLUMN_SOUNDCLOUD_URL, trackSoundCloudUrl, Tracks.COLUMN_ID);
 
-                if (dbTrackId != null) {
+                newTrack.setChecked(!newTrack.isExistInStorage() && !(dbTrack != null && dbTrack.isExistInStorage()));
+
+                String dbTrackId;
+                if (dbTrack != null) {
+
                     //Track exist in db,so updating playlist id
-                    if (!tracksTable.update(Tracks.COLUMN_ID, dbTrackId, Tracks.COLUMN_PLAYLIST_ID, playlist.getId(), null)) {
+                    if (!dbTrack.getPlaylistId().equals(playlist.getId()) && !tracksTable.update(Tracks.COLUMN_ID, dbTrack.getId(), Tracks.COLUMN_PLAYLIST_ID, playlist.getId(), null)) {
                         throw new IllegalArgumentException("Failed to update playlist id");
                     }
+
+                    dbTrackId = dbTrack.getId();
 
                 } else {
                     dbTrackId = String.valueOf(tracksTable.add(newTrack, null));

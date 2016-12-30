@@ -170,7 +170,7 @@ public class Tracks extends BaseTable<Track> {
 
                 final String downloadUrl = c.getString(c.getColumnIndex(COLUMN_DOWNLOAD_URL));
 
-                track = new Track(id, title, username, downloadUrl, artworkUrl, downloadId, soundCloudUrl, playlistId, false, isDownloaded, absoluteFilePath != null ? new File(absoluteFilePath) : null, duration);
+                track = new Track(id, title, username, downloadUrl, artworkUrl, downloadId, soundCloudUrl, playlistId, false, isDownloaded, new File(absoluteFilePath), duration);
             }
             c.close();
         }

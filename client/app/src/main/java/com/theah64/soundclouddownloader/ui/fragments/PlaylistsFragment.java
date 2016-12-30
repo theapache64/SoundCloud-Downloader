@@ -76,6 +76,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
 
         final PlaylistListener playlistListener = app.getPlaylistListener();
         if (this.equals(playlistListener)) {
+            Log.d(X, "Destroying playlist listener");
             app.setPlaylistListener(null);
         }
 
@@ -261,19 +262,21 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
     @Override
     public void onPlaylistUpdated(String playlistId) {
 
+
         //Finding the updated track
         for (int i = 0; i < playlists.size(); i++) {
 
             final Playlist playlist = playlists.get(i);
 
             if (playlist.getId().equals(playlistId)) {
-                Log.d(X, "Found updated currentPlaylist : " + playlist);
+                Log.d(X, "Found updated playlist : " + playlist);
 
                 playlists.remove(i);
                 playlists.add(i, playlistsTable.get(Playlists.COLUMN_ID, playlist.getId()));
                 itsAdapter.notifyItemChanged(i);
                 return;
             }
+
         }
 
 
