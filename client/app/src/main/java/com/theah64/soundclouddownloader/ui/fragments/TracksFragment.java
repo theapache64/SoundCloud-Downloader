@@ -286,7 +286,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
 
     }
 
-    private void playTrack(Track track)  {
+    private void playTrack(Track track) {
 
         if (track.getFile().exists()) {
             //Opening audio file
@@ -332,18 +332,26 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
     @Override
     public void onTrackRemoved(@NonNull Track removedTrack) {
         final int removedTrackPosition = Track.getTrackPosition(trackList, removedTrack.getId());
-        trackList.remove(removedTrackPosition);
-        itsAdapter.notifyItemRemoved(removedTrackPosition);
+        if (removedTrackPosition != -1) {
+            trackList.remove(removedTrackPosition);
+            itsAdapter.notifyItemRemoved(removedTrackPosition);
 
-        updateTabsAndNothingFounds();
+            updateTabsAndNothingFounds();
+        } else {
+            Log.e(X, "TSH: Couldn't find track " + removedTrack.getId());
+        }
     }
 
     @Override
     public void onTrackUpdated(@NonNull Track updatedTrack) {
         final int updatedTrackPosition = Track.getTrackPosition(trackList, updatedTrack.getId());
-        trackList.remove(updatedTrackPosition);
-        trackList.add(updatedTrackPosition, updatedTrack);
-        itsAdapter.notifyItemChanged(updatedTrackPosition);
+        if (updatedTrackPosition != -1) {
+            trackList.remove(updatedTrackPosition);
+            trackList.add(updatedTrackPosition, updatedTrack);
+            itsAdapter.notifyItemChanged(updatedTrackPosition);
+        } else {
+            Log.e(X, "TSH: Couldn't find track " + updatedTrack.getId());
+        }
     }
 
 

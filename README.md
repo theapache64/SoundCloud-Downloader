@@ -10,6 +10,7 @@ An android application to download tracks/playlists from SoundCloud.
 - Need to improve core algorithm. (RUN A DETAILED WALK THROUGH EVERY IF'S AND ELSE'S)
 - Build a chrome extension to download from soundcloud website (client : chrome) to android device.
 - DownloadManager says ERROR-16 with reason 1001 on API level 16 (as far as i know).
+- Playlist duration seems wrong.
 
 #### Sad part :(
 

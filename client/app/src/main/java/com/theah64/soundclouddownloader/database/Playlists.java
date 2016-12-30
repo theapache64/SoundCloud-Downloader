@@ -83,7 +83,7 @@ public class Playlists extends BaseTable<Playlist> {
 
         List<Playlist> playlists = null;
 
-        final Cursor c = this.getReadableDatabase().rawQuery("SELECT p.id,SUM(t.duration) AS total_duration,p.username, p.title,p.soundcloud_url, p.artwork_url, COUNT(DISTINCT t.id) AS total_tracks, COUNT(DISTINCT dt.id) AS downloaded_tracks FROM playlists p LEFT JOIN tracks t ON t.playlist_id = p.id LEFT JOIN tracks dt ON dt.playlist_id = p.id AND dt.is_downloaded = 1 GROUP BY p.id ORDER BY p.id DESC", null);
+        final Cursor c = this.getReadableDatabase().rawQuery("SELECT p.id,SUM(DISTINCT t.duration) AS total_duration,p.username, p.title,p.soundcloud_url, p.artwork_url, COUNT(DISTINCT t.id) AS total_tracks, COUNT(DISTINCT dt.id) AS downloaded_tracks FROM playlists p LEFT JOIN tracks t ON t.playlist_id = p.id LEFT JOIN tracks dt ON dt.playlist_id = p.id AND dt.is_downloaded = 1 GROUP BY p.id ORDER BY p.id DESC", null);
         if (c != null && c.moveToFirst()) {
 
             playlists = new ArrayList<>(c.getCount());

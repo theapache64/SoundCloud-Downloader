@@ -55,7 +55,7 @@ public class Track implements Serializable, ITSNode {
 
     static String calculateHMS(long duration) {
 
-        final boolean hasMoreThanHours = TimeUnit.HOURS.toMillis(1) <= duration;
+        final boolean hasMoreThanHours = duration >= TimeUnit.HOURS.toMillis(1);
 
         String hms;
 
@@ -80,7 +80,7 @@ public class Track implements Serializable, ITSNode {
                 return i;
             }
         }
-        throw new IllegalArgumentException("failed to find track id" + trackId);
+        return -1;
     }
 
     public String getId() {
