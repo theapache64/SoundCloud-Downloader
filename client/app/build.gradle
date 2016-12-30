@@ -18,10 +18,8 @@ android {
             signingConfig getSigningConfig()
             applicationVariants.all { variant ->
                 variant.outputs.each { output ->
-                    def date = new Date();
-                    def formattedDate = date.format('yyyyMMddHHmmss')
                     output.outputFile = new File(output.outputFile.parent,
-                            output.outputFile.name.replace("app-release", "scd_v_1.0.5_" + formattedDate)
+                            output.outputFile.name.replace("app-release", "soundclouddownloader")
                     )
                 }
             }
