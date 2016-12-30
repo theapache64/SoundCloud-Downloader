@@ -136,7 +136,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                             return "#Existing p-track ../" + getFile().getParentFile().getName() + "/" + getFile().getName();
                         } else if (dbTrack != null && dbTrack.isExistInStorage()) {
                             return "#Existing track ../" + dbTrack.getFile().getParentFile().getName() + "/" + dbTrack.getFile().getName();
-                        } else if (isDownloaded() && !isExistInStorage()) {
+                        } else if ((isDownloaded() && !isExistInStorage()) || dbTrack != null && dbTrack.isDownloaded() && !dbTrack.isExistInStorage()) {
                             return "(Saved but moved/deleted)";
                         } else {
                             return null;
@@ -145,8 +145,19 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                     }
                 };
 
+                Log.d(X, "---------------------------");
 
-                newTrack.setChecked(!newTrack.isExistInStorage() && !(dbTrack != null && dbTrack.isExistInStorage()));
+                Log.d(X, newTrack.getTitle());
+                Log.d(X, "!newTrack.isExistInStorage() " + !newTrack.isExistInStorage());
+                Log.d(X, "!(dbTrack != null && dbTrack.isExistInStorage())" + !(dbTrack != null && dbTrack.isExistInStorage()));
+                Log.d(X, "!dbTrack.isDownloaded()" + (dbTrack != null && !dbTrack.isDownloaded()));
+
+                final boolean isChecked = newTrack.isExistInStorage() || (dbTrack != null && dbTrack.isExistInStorage()) || (dbTrack != null && dbTrack.isDownloaded());
+                Log.d(X, "isChecked: " + isChecked);
+                newTrack.setChecked(!isChecked);
+
+                Log.d(X, "---------------------------");
+
 
                 String dbTrackId;
                 if (dbTrack != null) {
