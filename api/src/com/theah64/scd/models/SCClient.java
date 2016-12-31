@@ -29,4 +29,14 @@ public class SCClient {
     public int getTotalHits() {
         return totalHits;
     }
+
+    @Override
+    public String toString() {
+        return "SCClient{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", clientId='" + clientId + '\'' +
+                ", totalHits=" + totalHits +
+                '}';
+    }
 }

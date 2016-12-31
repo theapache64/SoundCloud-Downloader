@@ -106,7 +106,9 @@ CREATE TABLE sc_clients(
   UNIQUE KEY (name)
 );
 
-INSERT INTO sc_clients (name,client_id) VALUE ('scd_chrome_ext','a3e059563d7fd3372b49b37f00a00bcf');
+INSERT INTO sc_clients (name,client_id)
+VALUE ('scd_chrome_ext_1','a3e059563d7fd3372b49b37f00a00bcf'),
+ ('scd_chrome_ext_2','5c120c30964a7647d2fedbb38f97bf63');
 
 CREATE TABLE tracks(
   id INT NOT NULL AUTO_INCREMENT,
@@ -155,4 +157,4 @@ INSERT INTO preference (_key, _value) VALUES
 ('admin_email', 'theapache64@gmail.com'),
 ('is_debug_download', '0'),
 ('filename_format', '%s_theah64.%s'),
-('apk_url', 'https://github.com/theapache64/SoundCloud-Downloader/releases/download/v1.0.5/soundclouddownloader_v1.0.5.apk');
+('apk_url', 'https://raw.githubusercontent.com/theapache64/SoundCloud-Downloader/master/client/app/soundclouddownloader.apk');

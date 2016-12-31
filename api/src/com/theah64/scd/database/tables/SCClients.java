@@ -28,8 +28,11 @@ public class SCClients extends BaseTable<SCClient> {
     }
 
     public SCClient getLeastUsedClient() {
+
+        System.out.println("Getting least-used-sc-client");
+
         SCClient client = null;
-        final String query = "SELECT scc.id, scc.name, scc.client_id, (COUNT(t.id) + COUNT(dr.id)) AS total_hits FROM sc_clients scc LEFT JOIN tracks t ON t.client_id = scc.id LEFT JOIN download_requests dr ON dr.client_id = scc.id GROUP BY scc.id ORDER BY total_hits LIMIT 1;";
+        final String query = "SELECT scc.id, scc.name, scc.client_id, (COUNT(DISTINCT t.id) + COUNT(DISTINCT dr.id)) AS total_hits FROM sc_clients scc LEFT JOIN tracks t ON t.client_id = scc.id LEFT JOIN download_requests dr ON dr.client_id = scc.id GROUP BY scc.id ORDER BY total_hits LIMIT 1;";
         final Connection con = com.theah64.scd.database.Connection.getConnection();
         try {
             final Statement stmt = con.createStatement();
@@ -42,6 +45,8 @@ public class SCClients extends BaseTable<SCClient> {
                 final int totalHits = rs.getInt(COLUMN_AS_TOTAL_HITS);
 
                 client = new SCClient(id, name, clientId, totalHits);
+
+                System.out.println("Found least-used-sc-client : " + client);
             }
 
             rs.close();
