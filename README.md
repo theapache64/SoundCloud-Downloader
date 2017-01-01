@@ -11,7 +11,7 @@ You can download the latest stable APK from [here](http://tinyurl.com/soundcloud
 
 #### TODOs
 
-- 
+- Nothing for now. 
 
 #### Sad part :(
 
