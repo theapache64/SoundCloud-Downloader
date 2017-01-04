@@ -1,4 +1,6 @@
-<%--
+<%@ page import="java.util.List" %>
+<%@ page import="com.theah64.scd.models.User" %>
+<%@ page import="com.theah64.scd.database.tables.Users" %><%--
   Created by IntelliJ IDEA.
   User: theapache64
   Date: 8/12/16
@@ -28,12 +30,52 @@ final boolean isActive = rs.getBoolean(COLUMN_IS_ACTIVE);--%>
 <div class="container">
     <h2>SoundCloudDownloader statistics</h2>
     <p>Shows live status of the soundclouddownloader.</p>
-    <table class="table">
+    <table class="table table-striped table-bordered table-hover">
         <thead>
         <tr>
-            <td></td>
+            <td>ID</td>
+            <td>Name</td>
+            <td>IMEI</td>
+            <td>EMail</td>
+            <td>Total requests</td>
+            <td>Total downloads</td>
+            <td>Total tracks</td>
+            <td>Last hit</td>
+            <td>isActive</td>
         </tr>
         </thead>
+        <tbody>
+
+        <%
+            final List<User> users = Users.getInstance().getAll();
+            if (users != null) {
+                for (final User user : users) {
+        %>
+        <tr>
+            <td><%=user.getId()%>
+            </td>
+            <td><%=user.getName()%>
+            </td>
+            <td><%=user.getIMEI()%>
+            </td>
+            <td><%=user.getEmail()%>
+            </td>
+            <td><%=user.getTotalRequests()%>
+            </td>
+            <td><%=user.getTotalDownloads()%>
+            </td>
+            <td><%=user.getTotalTracks()%>
+            </td>
+            <td><a target="_blank" href="<%=user.getLastHit()%>">Click here</a>
+            </td>
+            <td><%=user.isActive() ? "YES" : "NO"%>
+            </td>
+        </tr>
+        <%
+                }
+            }
+        %>
+        </tbody>
     </table>
 
 </div>

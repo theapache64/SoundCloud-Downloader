@@ -12,10 +12,11 @@ You can download the latest stable APK from [here](http://tinyurl.com/soundcloud
 #### TODOs
 
 - Nothing for now. 
+- Algorithm walk through.
 
 #### Sad part :(
 
-- 2 times suspended and 1 time rejected from Google PlayStore
+- 2 times suspended and 1 time rejected from Google PlayStore.
 
 #### Bugs ?
 
