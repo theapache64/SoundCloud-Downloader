@@ -5,19 +5,34 @@ package com.theah64.scd.models;
  */
 public class User {
 
-    private final String id, name, email, imei, apiKey, deviceHash;
+    private final String id, name, email, imei, apiKey, deviceHash, lastHit;
     private final boolean isActive;
-    private final int totalHits;
+    private final long totalRequests, totalDownloads, totalTracks;
 
-    public User(String id, String name, String email, String imei, String apiKey, String deviceHash, int totalHits, boolean isActive) {
+    public User(String id, String name, String email, String imei, String apiKey, String deviceHash, String lastHit, boolean isActive, long totalRequests, long totalDownloads, long totalTracks) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.imei = imei;
         this.apiKey = apiKey;
         this.deviceHash = deviceHash;
-        this.totalHits = totalHits;
+        this.lastHit = lastHit;
+        this.totalRequests = totalRequests;
         this.isActive = isActive;
+        this.totalDownloads = totalDownloads;
+        this.totalTracks = totalTracks;
+    }
+
+    public String getLastHit() {
+        return lastHit;
+    }
+
+    public long getTotalDownloads() {
+        return totalDownloads;
+    }
+
+    public long getTotalTracks() {
+        return totalTracks;
     }
 
     public String getEmail() {
@@ -48,8 +63,8 @@ public class User {
         return imei;
     }
 
-    public int getTotalHits() {
-        return totalHits;
+    public long getTotalRequests() {
+        return totalRequests;
     }
 
     @Override
@@ -61,8 +76,11 @@ public class User {
                 ", imei='" + imei + '\'' +
                 ", apiKey='" + apiKey + '\'' +
                 ", deviceHash='" + deviceHash + '\'' +
+                ", lastHit='" + lastHit + '\'' +
                 ", isActive=" + isActive +
-                ", totalHits=" + totalHits +
+                ", totalRequests=" + totalRequests +
+                ", totalDownloads=" + totalDownloads +
+                ", totalTracks=" + totalTracks +
                 '}';
     }
 }

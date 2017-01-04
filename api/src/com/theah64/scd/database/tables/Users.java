@@ -21,7 +21,10 @@ public class Users extends BaseTable<User> {
     public static final String COLUMN_IMEI = "imei";
     public static final String COLUMN_DEVICE_HASH = "device_hash";
     public static final String COLUMN_EMAIL = "email";
-    private static final String COLUMN_AS_TOTAL_HITS = "total_hits";
+    private static final String COLUMN_AS_TOTAL_REQUESTS = "total_requests";
+    private static final String COLUMN_AS_TOTAL_DOWNLOADS = "total_downloads";
+    private static final String COLUMN_AS_TOTAL_TRACKS = "total_tracks";
+    private static final String COLUMN_AS_LAST_HIT = "last_hit";
 
     private Users() {
         super("users");
@@ -31,10 +34,11 @@ public class Users extends BaseTable<User> {
         return instance;
     }
 
+
     @Override
     public List<User> getAll(String whereColumn, String whereColumnValue) {
         List<User> users = null;
-        final String query = "SELECT u.id,u.email,COUNT(DISTINCT r.id) AS total_hits,u.is_active FROM users u LEFT JOIN requests r ON r.user_id = u.id GROUP BY u.id ORDER BY total_hits DESC;";
+        final String query = "SELECT u.id,u.name,u.email,u.imei,COUNT(DISTINCT r.id) AS total_hits,COUNT(DISTINCT dr.id) AS total_downloads, COUNT(DISTINCT t.id) AS total_tracks,u.is_active,(SELECT soundcloud_url FROM requests WHERE user_id = u.id ORDER BY id DESC LIMIT 1 ) AS last_hit FROM users u LEFT JOIN requests r ON r.user_id = u.id LEFT JOIN download_requests dr ON dr.request_id = r.id LEFT JOIN tracks t ON t.request_id = r.id GROUP BY u.id ORDER BY total_hits DESC;";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final Statement stmt = con.createStatement();
@@ -44,11 +48,17 @@ public class Users extends BaseTable<User> {
                 users = new ArrayList<>();
                 do {
                     final String id = rs.getString(COLUMN_ID);
+                    final String name = rs.getString(COLUMN_NAME);
+                    final String imei = rs.getString(COLUMN_IMEI);
                     final String email = rs.getString(COLUMN_EMAIL);
-                    final int totalHits = rs.getInt(COLUMN_AS_TOTAL_HITS);
+                    final long totalRequests = rs.getLong(COLUMN_AS_TOTAL_REQUESTS);
+                    final long totalDownloads = rs.getLong(COLUMN_AS_TOTAL_DOWNLOADS);
+                    final long totalTracks = rs.getLong(COLUMN_AS_TOTAL_TRACKS);
+                    final String lastHit = rs.getString(COLUMN_AS_LAST_HIT);
                     final boolean isActive = rs.getBoolean(COLUMN_IS_ACTIVE);
 
-                    users.add(new User(id, email, null, null, null, null, totalHits, isActive));
+
+                    users.add(new User(id, name, email, imei, null, null, lastHit, isActive, totalRequests, totalDownloads, totalTracks));
                 } while (rs.next());
             }
 
@@ -126,7 +136,7 @@ public class Users extends BaseTable<User> {
                 final String apiKey = rs.getString(COLUMN_API_KEY);
                 final boolean isActive = rs.getBoolean(COLUMN_IS_ACTIVE);
 
-                user = new User(id, name, email, imei, apiKey, deviceHash, totalHits, isActive);
+                user = new User(id, name, email, imei, apiKey, deviceHash, null, isActive, 0, 0, 0);
             }
 
             rs.close();
