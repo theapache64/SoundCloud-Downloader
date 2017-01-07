@@ -64,7 +64,7 @@ public final class TracksServlet extends AdvancedBaseServlet {
 
             getWriter().write(new APIResponse("Request processed", joTrack).getResponse());
         } else {
-            getWriter().write(new APIResponse("Invalid soundcloud url").getResponse());
+            getWriter().write(new APIResponse("Track unavailable to download.Please try another one.").getResponse());
         }
     }
 

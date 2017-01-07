@@ -12,7 +12,7 @@ import java.sql.SQLException;
  */
 public class Preference extends BaseTable<String> {
 
-    public static final String COLUMN_KEY = "_key";
+    private static final String COLUMN_KEY = "_key";
     private static final String COLUMN_VALUE = "_value";
     public static final String KEY_GMAIL_USERNAME = "gmail_username";
     public static final String KEY_GMAIL_PASSWORD = "gmail_password";
