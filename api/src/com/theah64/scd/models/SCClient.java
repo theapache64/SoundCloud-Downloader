@@ -6,12 +6,14 @@ package com.theah64.scd.models;
 public class SCClient {
     private final String id, name, clientId;
     private final int totalHits;
+    private final boolean isActive;
 
-    public SCClient(String id, String name, String clientId, int totalHits) {
+    public SCClient(String id, String name, String clientId, int totalHits, boolean isActive) {
         this.id = id;
         this.name = name;
         this.clientId = clientId;
         this.totalHits = totalHits;
+        this.isActive = isActive;
     }
 
     public String getId() {
@@ -28,6 +30,10 @@ public class SCClient {
 
     public int getTotalHits() {
         return totalHits;
+    }
+
+    public boolean isActive() {
+        return isActive;
     }
 
     @Override

@@ -101,10 +101,12 @@ CREATE TABLE sc_clients(
   id INT NOT NULL AUTO_INCREMENT,
   name VARCHAR (100) NOT NULL,
   client_id TEXT NOT NULL,
+  is_active TINYINT(4) NOT NULL DEFAULT 1,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   UNIQUE KEY (name)
 );
+
 
 INSERT INTO sc_clients (name,client_id)
 VALUE ('scd_chrome_ext_1','a3e059563d7fd3372b49b37f00a00bcf'),
@@ -128,6 +130,7 @@ CREATE TABLE tracks(
   FOREIGN KEY (client_id) REFERENCES sc_clients(id) ON UPDATE CASCADE ON DELETE CASCADE,
   UNIQUE KEY(soundcloud_track_id)
 );
+
 
 CREATE TABLE download_requests(
   id INT NOT NULL AUTO_INCREMENT,

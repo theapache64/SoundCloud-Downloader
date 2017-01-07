@@ -1,6 +1,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.theah64.scd.models.User" %>
-<%@ page import="com.theah64.scd.database.tables.Users" %><%--
+<%@ page import="com.theah64.scd.database.tables.Users" %>
+<%@ page import="com.theah64.scd.models.SCClient" %>
+<%@ page import="com.theah64.scd.database.tables.SCClients" %><%--
   Created by IntelliJ IDEA.
   User: theapache64
   Date: 8/12/16
@@ -28,8 +30,8 @@ final long totalTracks = rs.getLong(COLUMN_AS_TOTAL_TRACKS);
 final String lastHit = rs.getString(COLUMN_AS_LAST_HIT);
 final boolean isActive = rs.getBoolean(COLUMN_IS_ACTIVE);--%>
 <div class="container">
-    <h2>SoundCloudDownloader statistics</h2>
-    <p>Shows live status of the soundclouddownloader.</p>
+    <h2>SoundCloudDownloader</h2>
+    <p>User statistics</p>
     <table class="table table-striped table-bordered table-hover">
         <thead>
         <tr>
@@ -70,6 +72,48 @@ final boolean isActive = rs.getBoolean(COLUMN_IS_ACTIVE);--%>
             </td>
             <td><%=user.isActive() ? "YES" : "NO"%>
             </td>
+        </tr>
+        <%
+                }
+            }
+        %>
+        </tbody>
+    </table>
+
+    <p>Client statistics</p>
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <td>ID</td>
+            <td>Name</td>
+            <td>Total hits</td>
+            <td>isActive</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <%
+            final List<SCClient> clients = SCClients.getInstance().getAll();
+            if (clients != null) {
+                for (final SCClient scClient : clients) {
+        %>
+        <tr>
+            <td>
+                <%=scClient.getId()%>
+            </td>
+
+            <td>
+                <%=scClient.getName()%>
+            </td>
+
+            <td>
+                <%=scClient.getTotalHits()%>
+            </td>
+
+            <td>
+                <%=scClient.isActive()%>
+            </td>
+
         </tr>
         <%
                 }

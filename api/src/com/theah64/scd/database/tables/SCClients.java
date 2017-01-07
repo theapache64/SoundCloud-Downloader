@@ -1,11 +1,14 @@
 package com.theah64.scd.database.tables;
 
+import com.sun.istack.internal.NotNull;
 import com.theah64.scd.models.SCClient;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by theapache64 on 29/12/16.
@@ -27,12 +30,59 @@ public class SCClients extends BaseTable<SCClient> {
         return instance;
     }
 
+    @NotNull
+    public List<SCClient> getAll() {
+        List<SCClient> clients = null;
+        final String query = "SELECT s.id,s.name,s.client_id,s.is_active, ((SELECT COUNT(t.id) FROM tracks t WHERE t.client_id = s.id) + (SELECT COUNT(dr.id) FROM download_requests dr WHERE dr.client_id = s.id)) AS total_hits FROM sc_clients s;";
+
+        final Connection con = com.theah64.scd.database.Connection.getConnection();
+        try {
+            final Statement stmt = con.createStatement();
+            final ResultSet rs = stmt.executeQuery(query);
+
+            if (rs.first()) {
+
+                clients = new ArrayList<>();
+
+                do {
+
+                    final String id = rs.getString(COLUMN_ID);
+                    final String name = rs.getString(COLUMN_NAME);
+                    final String clientId = rs.getString(COLUMN_CLIENT_ID);
+                    final boolean isActive = rs.getBoolean(COLUMN_IS_ACTIVE);
+                    final int totalHits = rs.getInt(COLUMN_AS_TOTAL_HITS);
+
+                    clients.add(new SCClient(id, name, clientId, totalHits, isActive));
+
+                } while (rs.next());
+            }
+
+            rs.close();
+            stmt.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (clients == null) {
+            throw new IllegalArgumentException("Clients can't be null");
+        }
+        return clients;
+    }
+
     public SCClient getLeastUsedClient() {
 
         System.out.println("Getting least-used-sc-client");
 
         SCClient client = null;
-        final String query = "SELECT scc.id, scc.name, scc.client_id, (COUNT(DISTINCT t.id) + COUNT(DISTINCT dr.id)) AS total_hits FROM sc_clients scc LEFT JOIN tracks t ON t.client_id = scc.id LEFT JOIN download_requests dr ON dr.client_id = scc.id GROUP BY scc.id ORDER BY total_hits LIMIT 1;";
+        final String query = "SELECT s.id,s.name,s.client_id, ((SELECT COUNT(t.id) FROM tracks t WHERE t.client_id = s.id) + (SELECT COUNT(dr.id) FROM download_requests dr WHERE dr.client_id = s.id)) AS total_hits FROM sc_clients s WHERE is_active =1 ORDER BY total_hits LIMIT 1;";
+
         final Connection con = com.theah64.scd.database.Connection.getConnection();
         try {
             final Statement stmt = con.createStatement();
@@ -44,7 +94,7 @@ public class SCClients extends BaseTable<SCClient> {
                 final String clientId = rs.getString(COLUMN_CLIENT_ID);
                 final int totalHits = rs.getInt(COLUMN_AS_TOTAL_HITS);
 
-                client = new SCClient(id, name, clientId, totalHits);
+                client = new SCClient(id, name, clientId, totalHits, true);
 
                 System.out.println("Found least-used-sc-client : " + client);
             }
