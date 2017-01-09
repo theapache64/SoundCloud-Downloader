@@ -30,11 +30,12 @@ public class DownloaderServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         System.out.println("------------------------------");
 
-
         try {
             final Request request = new Request(req, REQUIRED_PARAMS);
             final String apiKey = request.getStringParameter(Users.COLUMN_API_KEY);
             new HeaderSecurity(apiKey);
+
+            System.out.println("RequestUrl : " + getRequestUrl(req));
 
             final String id = request.getStringParameter(Tracks.COLUMN_ID);
             final Tracks tracksTable = Tracks.getInstance();
@@ -68,6 +69,16 @@ public class DownloaderServlet extends HttpServlet {
         }
 
         System.out.println("------------------------------");
+    }
+
+    private static String getRequestUrl(HttpServletRequest request) {
+        StringBuffer requestURL = request.getRequestURL();
+        String queryString = request.getQueryString();
+        if (queryString == null) {
+            return requestURL.toString();
+        } else {
+            return requestURL.append('?').append(queryString).toString();
+        }
     }
 
 
