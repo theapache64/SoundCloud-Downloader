@@ -1,5 +1,6 @@
 package com.theah64.soundclouddownloader.utils;
 
+import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Build;
@@ -16,22 +17,28 @@ public class ClipboardUtils {
     private static final String X = ClipboardUtils.class.getSimpleName();
 
     public static String getSoundCloudUrl(final Context context) {
-        final String clipboardData;
+        String clipboardData = null;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             final ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboardData = clipboardManager.getPrimaryClip().getItemAt(0).getText().toString();
+            final ClipData.Item clipData = clipboardManager.getPrimaryClip().getItemAt(0);
+            if (clipData != null) {
+                clipboardData = clipData.getText().toString();
+            }
         } else {
             clipboardData = ((android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE)).getText().toString();
         }
 
-        System.out.println("Clipboard: " + clipboardData);
+        if (clipboardData != null) {
 
-        final Set<String> urls = DownloadIgniter.UrlParser.parseUrls(clipboardData);
-        if (urls != null) {
-            for (final String url : urls) {
-                if (url.matches(SOUNDCLOUD_URL_REGEX)) {
-                    return url;
+            System.out.println("Clipboard: " + clipboardData);
+
+            final Set<String> urls = DownloadIgniter.UrlParser.parseUrls(clipboardData);
+            if (urls != null) {
+                for (final String url : urls) {
+                    if (url.matches(SOUNDCLOUD_URL_REGEX)) {
+                        return url;
+                    }
                 }
             }
         }

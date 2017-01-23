@@ -288,11 +288,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
     private void playTrack(Track track) {
 
         if (track.getFile().exists()) {
-            //Opening audio file
-            final Intent playIntent = new Intent(Intent.ACTION_VIEW);
-            playIntent.setDataAndType(Uri.fromFile(track.getFile()), "audio/*");
-            startActivity(playIntent);
-
+            CommonUtils.open(getActivity(), track.getFile());
         } else {
             SingletonToast.makeText(getActivity(), R.string.File_not_found).show();
         }

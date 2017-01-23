@@ -1,7 +1,9 @@
 package com.theah64.soundclouddownloader.utils;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
@@ -50,5 +52,15 @@ public class CommonUtils {
 
     public static String getSanitizedName(final String fileName) {
         return fileName.replaceAll("[^\\w]", "_").replaceAll("[_]{2,}", "_");
+    }
+
+    public static void open(Activity activity, File file) {
+        //Opening audio file
+        final Intent playIntent = new Intent(Intent.ACTION_VIEW);
+        playIntent.setDataAndType(UriCompat.fromFile(activity, file), "audio/*");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            playIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
+        activity.startActivity(playIntent);
     }
 }
