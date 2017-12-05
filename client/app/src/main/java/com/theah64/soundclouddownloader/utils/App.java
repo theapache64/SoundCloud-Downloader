@@ -11,6 +11,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.theah64.bugmailer.core.BugMailer;
+import com.theah64.bugmailer.core.BugMailerConfig;
+import com.theah64.bugmailer.exceptions.BugMailerException;
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.interfaces.PlaylistListener;
 import com.theah64.soundclouddownloader.interfaces.TrackListener;
@@ -68,6 +71,12 @@ public class App extends Application {
         super.onCreate();
         initImageLoader(this);
         DEFAULT_STORAGE_LOCATION = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC) + File.separator + FOLDER_NAME;
+
+        try {
+            BugMailer.init(this, new BugMailerConfig("theapache64@gmail.com"));
+        } catch (BugMailerException e) {
+            e.printStackTrace();
+        }
     }
 
     public TrackListener getMainTrackListener() {

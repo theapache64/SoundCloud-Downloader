@@ -14,13 +14,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import com.google.firebase.crash.FirebaseCrash;
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.ID3v24Tag;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.NotSupportedException;
 import com.mpatric.mp3agic.UnsupportedTagException;
+import com.theah64.bugmailer.core.BugMailer;
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.Track;
@@ -67,7 +67,7 @@ public class OnDownloadFinishedReceiver extends BroadcastReceiver {
                 if (downloadStatus == DownloadManager.STATUS_SUCCESSFUL) {
 
                     if (!tracksTable.update(Tracks.COLUMN_DOWNLOAD_ID, stringDownloadId, Tracks.COLUMN_IS_DOWNLOADED, Tracks.TRUE, handler)) {
-                        FirebaseCrash.log("Failed to update download status");
+                        BugMailer.report(new Throwable("Failed to update download status"));
                     }
 
 

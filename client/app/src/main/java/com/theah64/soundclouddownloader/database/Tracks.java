@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.google.firebase.crash.FirebaseCrash;
+import com.theah64.bugmailer.core.BugMailer;
 import com.theah64.soundclouddownloader.models.Track;
 
 import java.io.File;
@@ -183,7 +183,7 @@ public class Tracks extends BaseTable<Track> {
         final boolean isUpdated = super.update(whereColumn, whereColumnValue, columnToUpdate, valueToUpdate);
 
         if (!isUpdated) {
-            FirebaseCrash.log(String.format("whereColumn:%s whereColumnValue:%s columnToUpdate:%s valueToUpdate:%s", whereColumn, whereColumnValue, columnToUpdate, valueToUpdate));
+            BugMailer.report(new Throwable(String.format("whereColumn:%s whereColumnValue:%s columnToUpdate:%s valueToUpdate:%s", whereColumn, whereColumnValue, columnToUpdate, valueToUpdate)));
         }
 
         final Track track = get(whereColumn, whereColumnValue);
@@ -200,7 +200,7 @@ public class Tracks extends BaseTable<Track> {
                 onTrackUpdated(track);
             }
         } else {
-            FirebaseCrash.log("Couldn't find track with column " + whereColumn + ", value " + whereColumnValue);
+            BugMailer.report(new Throwable("Couldn't find track with column " + whereColumn + ", value " + whereColumnValue));
         }
 
         return true;
@@ -233,7 +233,7 @@ public class Tracks extends BaseTable<Track> {
         final boolean isUpdated = this.getWritableDatabase().update(TABLE_NAME_TRACKS, cv, COLUMN_ID + " = ?", new String[]{track.getId()}) > 0;
 
         if (!isUpdated) {
-            FirebaseCrash.log("Failed to update the track");
+            BugMailer.report(new Throwable("Failed to update the track"));
             return false;
         }
 
@@ -257,7 +257,7 @@ public class Tracks extends BaseTable<Track> {
         final Track track = get(whereColumn, whereColumnValue);
 
         if (track == null) {
-            FirebaseCrash.log("failed to find track with " + whereColumn + '=' + whereColumnValue);
+            BugMailer.report(new Throwable("failed to find track with " + whereColumn + '=' + whereColumnValue));
             return false;
         }
 
