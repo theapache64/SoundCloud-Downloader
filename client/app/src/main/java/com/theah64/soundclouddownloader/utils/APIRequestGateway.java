@@ -92,7 +92,7 @@ public class APIRequestGateway {
         OkHttpUtils.getInstance().getClient().newCall(inRequest).enqueue(new Callback() {
 
             @Override
-            public void onFailure(Call call, final IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull final IOException e) {
                 e.printStackTrace();
                 if (activity != null) {
                     activity.runOnUiThread(new Runnable() {
@@ -107,7 +107,7 @@ public class APIRequestGateway {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
 
                 try {
 
