@@ -18,7 +18,7 @@ import okhttp3.Request;
  */
 public class APIRequestBuilder implements BugMailerNode {
 
-    public static final String BASE_URL = App.IS_DEBUG_MODE ? "http://192.168.0.107:8080/v1" : "http://theapache64.cf:8080/scd/v1";
+    public static final String BASE_URL = App.IS_DEBUG_MODE ? "http://192.168.0.107:8080/v1" : "http://theapache64.com/scd/v1";
 
     private static final String X = APIRequestBuilder.class.getSimpleName();
     private static final String CURL_DATA_KEY = " --data \"";
