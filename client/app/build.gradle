@@ -5,10 +5,10 @@ android {
     buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.theah64.soundclouddownloader"
-        minSdkVersion 11
+        minSdkVersion 14
         targetSdkVersion 25
-        versionCode 7
-        versionName "1.2"
+        versionCode 107
+        versionName "1.0.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -33,7 +33,7 @@ dependencies {
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.android.support:support-v4:25.4.0'
     compile 'com.mpatric:mp3agic:0.8.1'
-    compile 'com.theah64.bugmailer:bugmailer:1.1.2'
+    compile 'com.theah64.bugmailer:bugmailer:1.1.4'
     testCompile 'junit:junit:4.12'
 }
 

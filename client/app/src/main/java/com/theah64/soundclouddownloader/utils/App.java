@@ -25,10 +25,10 @@ import java.io.File;
  */
 public class App extends Application {
 
-    public static final boolean IS_DEBUG_MODE = false;
     public static final String APK_DOWNLOAD_URL = "http://tinyurl.com/soundclouddownloader-apk";
     private static final String FOLDER_NAME = "SoundCloud Downloader";
     public static final String GITHUB_URL = "https://github.com/theapache64/soundcloud-downloader";
+    public static final boolean IS_DEBUG_MODE = false;
     private static String DEFAULT_STORAGE_LOCATION;
     private TrackListener mainTrackListener = null, playlistTrackListener = null;
     private PlaylistListener playlistListener = null;

@@ -7,7 +7,7 @@ An android application to download tracks/playlists from SoundCloud.
 
 ### Download
 
-You can download the latest stable APK from [here](http://tinyurl.com/soundclouddownloader-apk)
+You can download the latest stable APK from [here](https://github.com/theapache64/SoundCloud-Downloader/releases)
 
 #### TODOs
 
