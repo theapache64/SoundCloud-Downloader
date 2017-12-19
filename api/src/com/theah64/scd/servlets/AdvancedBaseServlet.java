@@ -19,8 +19,8 @@ import java.io.PrintWriter;
  */
 public abstract class AdvancedBaseServlet extends HttpServlet {
 
-    public static final String VERSION_CODE = "/v1";
-    protected static final String CONTENT_TYPE_JSON = "application/json; charset=utf-8";
+    static final String VERSION_CODE = "/v1";
+    static final String CONTENT_TYPE_JSON = "application/json; charset=utf-8";
     private static final String ERROR_GET_NOT_SUPPORTED = "GET method not supported";
     private static final String ERROR_POST_NOT_SUPPORTED = "POST method not supported";
     private Request request;
@@ -29,7 +29,7 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
     private HttpServletRequest httpServletRequest;
     private HttpServletResponse httpServletResponse;
 
-    protected static void setGETMethodNotSupported(HttpServletResponse response) throws IOException {
+    private static void setGETMethodNotSupported(HttpServletResponse response) throws IOException {
         notSupported(ERROR_GET_NOT_SUPPORTED, response);
     }
 
@@ -45,7 +45,7 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
         out.write(new APIResponse(methodErrorMessage).getResponse());
     }
 
-    public static String getBaseUrl() {
+    static String getBaseUrl() {
         return (Connection.isDebugMode() ? "http://localhost:8080/scd" : "http://theapache64.com/scd");
     }
 
