@@ -18,10 +18,6 @@ You can download the latest stable APK from [here](http://tinyurl.com/soundcloud
 
 - 2 times suspended and 1 time rejected from Google PlayStore.
 
-#### Bugs ?
+#### Bugs?
 
-- Found one ? shoot a mail to theapache64@gmail.com or create a repo issue.
-
-|keepalive|keeplive2
-
-
+- Found one? shoot a mail to theapache64@gmail.com or create a repo issue.
