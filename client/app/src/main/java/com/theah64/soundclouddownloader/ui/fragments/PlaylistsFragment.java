@@ -29,6 +29,7 @@ import com.theah64.soundclouddownloader.services.DownloaderService;
 import com.theah64.soundclouddownloader.ui.activities.PlaylistTracksActivity;
 import com.theah64.soundclouddownloader.utils.App;
 import com.theah64.soundclouddownloader.utils.SingletonToast;
+import com.theah64.soundclouddownloader.utils.UriCompat;
 import com.theah64.soundclouddownloader.widgets.ThemedSnackbar;
 
 import java.util.ArrayList;
@@ -185,7 +186,7 @@ public class PlaylistsFragment extends BaseMusicFragment implements ITSAdapter.T
                 final ArrayList<Uri> existingTracks = new ArrayList<>();
                 for (final Track track : trackList) {
                     if (track.getFile().exists()) {
-                        existingTracks.add(Uri.fromFile(track.getFile()));
+                        existingTracks.add(UriCompat.fromFile(getActivity(), track.getFile()));
                     }
                 }
 

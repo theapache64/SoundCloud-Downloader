@@ -45,11 +45,13 @@ public class DownloadIgniter {
 
         static String parse(final String data) {
 
-            Matcher matcher = urlPattern.matcher(data);
-            if (matcher.find()) {
-                int matchStart = matcher.start(1);
-                int matchEnd = matcher.end();
-                return data.substring(matchStart, matchEnd);
+            if (data != null) {
+                Matcher matcher = urlPattern.matcher(data);
+                if (matcher.find()) {
+                    int matchStart = matcher.start(1);
+                    int matchEnd = matcher.end();
+                    return data.substring(matchStart, matchEnd);
+                }
             }
 
             return null;

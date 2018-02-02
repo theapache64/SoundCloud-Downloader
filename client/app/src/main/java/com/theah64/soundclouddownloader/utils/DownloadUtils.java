@@ -46,13 +46,11 @@ public class DownloadUtils {
         downloadRequest.setTitle(track.getTitle());
         downloadRequest.setDescription(track.getDownloadUrl());
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
-        }
+        downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
 
         final File tempFile = new File(track.getFile().getAbsolutePath() + TEMP_SIGNATURE);
         Log.d(X, "Temp file : " + tempFile.getAbsolutePath());
-        downloadRequest.setDestinationUri(Uri.fromFile(tempFile));
+        downloadRequest.setDestinationUri(UriCompat.fromFile(context, tempFile));
         return dm.enqueue(downloadRequest);
 
     }

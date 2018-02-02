@@ -6,7 +6,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -33,6 +32,7 @@ import com.theah64.soundclouddownloader.utils.OkHttpUtils;
 import com.theah64.soundclouddownloader.utils.PrefUtils;
 import com.theah64.soundclouddownloader.utils.Random;
 import com.theah64.soundclouddownloader.utils.SingletonToast;
+import com.theah64.soundclouddownloader.utils.UriCompat;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -117,7 +117,7 @@ public class DownloaderService extends Service {
                             }
 
                             final Intent openTrackIntent = new Intent(Intent.ACTION_VIEW);
-                            openTrackIntent.setDataAndType(Uri.fromFile(track.getFile()), "audio/*");
+                            openTrackIntent.setDataAndType(UriCompat.fromFile(DownloaderService.this, track.getFile(), openTrackIntent), "audio/*");
                             final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, openTrackIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
                             //noinspection ConstantConditions - already checked with track.isExistInStorage;
@@ -248,7 +248,7 @@ public class DownloaderService extends Service {
 
                                         //It's just a track
                                         final Intent openTrackIntent = new Intent(Intent.ACTION_VIEW);
-                                        openTrackIntent.setDataAndType(Uri.fromFile(theTrack.getFile()), "audio/*");
+                                        openTrackIntent.setDataAndType(UriCompat.fromFile(DownloaderService.this, theTrack.getFile(), openTrackIntent), "audio/*");
                                         final PendingIntent pendingIntent = PendingIntent.getActivity(DownloaderService.this, 0, openTrackIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
                                         //noinspection ConstantConditions - already checked with track.isExistInStorage;

@@ -3,7 +3,6 @@ package com.theah64.soundclouddownloader.ui.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -30,6 +29,7 @@ import com.theah64.soundclouddownloader.utils.App;
 import com.theah64.soundclouddownloader.utils.CommonUtils;
 import com.theah64.soundclouddownloader.utils.DownloadUtils;
 import com.theah64.soundclouddownloader.utils.SingletonToast;
+import com.theah64.soundclouddownloader.utils.UriCompat;
 import com.theah64.soundclouddownloader.widgets.ThemedSnackbar;
 
 import java.util.ArrayList;
@@ -223,7 +223,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
                     final Intent sendIntent = new Intent(Intent.ACTION_SEND);
                     final String mimeType = CommonUtils.getMIMETypeFromUrl(track.getFile(), "audio/*");
                     sendIntent.setType(mimeType);
-                    sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(track.getFile()));
+                    sendIntent.putExtra(Intent.EXTRA_STREAM, UriCompat.fromFile(getActivity(), track.getFile(), sendIntent));
                     startActivity(sendIntent);
 
                 } else {
@@ -271,7 +271,7 @@ public class TracksFragment extends BaseMusicFragment implements ITSAdapter.Trac
             case R.id.miOpenTrackDirectory:
 
                 final Intent storageIntent = new Intent(Intent.ACTION_VIEW);
-                storageIntent.setDataAndType(Uri.fromFile(track.getFile().getParentFile()), "resource/folder");
+                storageIntent.setDataAndType(UriCompat.fromFile(getActivity(), track.getFile().getParentFile(), storageIntent), "resource/folder");
                 if (storageIntent.resolveActivityInfo(getActivity().getPackageManager(), 0) != null) {
                     getActivity().startActivity(storageIntent);
                 } else {
