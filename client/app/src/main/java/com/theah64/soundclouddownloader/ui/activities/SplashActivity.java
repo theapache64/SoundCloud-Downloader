@@ -11,10 +11,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.theah64.soundclouddownloader.BuildConfig;
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.utils.PrefUtils;
 import com.theah64.soundclouddownloader.utils.SingletonToast;
+
+import java.util.List;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -37,6 +45,27 @@ public class SplashActivity extends AppCompatActivity {
 
 
         ((TextView) findViewById(R.id.tvAppVersion)).setText(String.format("v%s", BuildConfig.VERSION_NAME));
+
+        Dexter.withActivity(this)
+                .withPermissions(PERMISSIONS_NEEDED)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        if (report.areAllPermissionsGranted()) {
+                            doNormalSplashWork();
+                        } else {
+                            for (PermissionDeniedResponse deniedResponse : report.getDeniedPermissionResponses()) {
+                                deniedResponse
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                    }
+                })
+                .check();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
