@@ -9,8 +9,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.theah64.soundclouddownloader.utils.PrefUtils;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
@@ -29,12 +27,6 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (isSecureActivity()) {
-            if (!PrefUtils.getInstance(this).getPref().getBoolean(SplashActivity.KEY_IS_ALL_PERMISSION_SET, false)) {
-                throw new IllegalArgumentException("Must start first launch through SplashActivity");
-            }
-        }
     }
 
     public abstract boolean isSecureActivity();

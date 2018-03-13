@@ -67,4 +67,8 @@
     <string name="Please_start_the_application_first">Please start the application first</string>
     <string name="Track_downloaded">Track downloaded</string>
     <string name="You_must_accept_all_the_permissions">You must accept all the permissions</string>
+    <string name="Insufficient_permissions">Insufficient permission</string>
+    <string name="Permission_instructions">This app needs permission to use this feature. You can grant them in app settings.</string>
+    <string name="SETTINGS">SETTINGS</string>
+    <string name="Cancel">Cancel</string>
 </resources>

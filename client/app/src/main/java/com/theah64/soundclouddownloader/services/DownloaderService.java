@@ -92,7 +92,7 @@ public class DownloaderService extends Service {
                 notification.getNotificationManager().cancel(clipNotifId);
             }
 
-            if (PrefUtils.getInstance(this).getPref().getBoolean(SplashActivity.KEY_IS_ALL_PERMISSION_SET, false)) {
+            if (PrefUtils.getInstance(this).getPref().getBoolean(SplashActivity.KEY_IS_APP_STARTED, false)) {
 
 
                 //Converting url to https
