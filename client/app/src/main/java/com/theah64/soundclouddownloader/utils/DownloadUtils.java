@@ -50,7 +50,7 @@ public class DownloadUtils {
 
         final File tempFile = new File(track.getFile().getAbsolutePath() + TEMP_SIGNATURE);
         Log.d(X, "Temp file : " + tempFile.getAbsolutePath());
-        downloadRequest.setDestinationUri(UriCompat.fromFile(context, tempFile));
+        downloadRequest.setDestinationUri(Uri.fromFile(tempFile));
         return dm.enqueue(downloadRequest);
 
     }

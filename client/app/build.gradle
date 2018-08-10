@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.2'
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.theah64.soundclouddownloader"
         minSdkVersion 14
@@ -33,7 +33,7 @@ dependencies {
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.android.support:support-v4:27.1.0'
     compile 'com.mpatric:mp3agic:0.8.1'
-    compile 'com.theah64.bugmailer:bugmailer:1.1.9'
+    compile 'com.theah64.bugmailer:bugmailer:3.0.0'
     implementation 'com.karumi:dexter:4.2.0'
     testCompile 'junit:junit:4.12'
 }

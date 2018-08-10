@@ -7,6 +7,8 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 
+import com.theah64.soundclouddownloader.BuildConfig;
+
 import java.io.File;
 
 /**
@@ -20,7 +22,7 @@ public class UriCompat {
             if (intent != null) {
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             }
-            return FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", file);
+            return FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
         }
 
         return Uri.fromFile(file);
