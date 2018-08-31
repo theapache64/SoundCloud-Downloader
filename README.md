@@ -1,7 +1,7 @@
 # SoundCloud Downloader
 An android application to download tracks/playlists from SoundCloud.
 
-### Statistics as on 31 Aug 2018
+### As on 31 Aug 2018
 ```
 7200+ users, 1,38,000+ tracks downloaded
 ```
