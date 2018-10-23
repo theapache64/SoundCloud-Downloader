@@ -23,6 +23,23 @@ You can download the latest stable APK from [here](https://github.com/theapache6
 
 - 2 times suspended and 1 time rejected from Google PlayStore.
 
+#### Statistics Queries
+
+- Installation per date
+
+```sql
+
+SELECT
+  DATE(u.created_at) AS date,
+  COUNT(u.id) AS total_users_joined
+FROM
+  users u
+GROUP BY
+  DATE(u.created_at)
+ORDER BY
+  date DESC;
+```
+
 #### Bugs?
 
 - Found one? shoot a mail to theapache64@gmail.com or create a repo issue.
