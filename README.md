@@ -40,6 +40,44 @@ ORDER BY
   date DESC;
 ```
 
+- User stats
+
+```sql
+SELECT
+  u.id,
+  u.name,
+  u.email,
+  u.imei,
+  COUNT(DISTINCT r.id) AS total_requests,
+  COUNT(DISTINCT dr.id) AS total_downloads,
+  COUNT(DISTINCT t.id) AS total_tracks,
+  u.is_active,
+  (
+  SELECT
+    soundcloud_url
+  FROM
+    requests
+  WHERE
+    user_id = u.id
+  ORDER BY
+    id DESC
+  LIMIT 1
+) AS last_hit
+FROM
+  users u
+LEFT JOIN
+  requests r ON r.user_id = u.id
+LEFT JOIN
+  download_requests dr ON dr.request_id = r.id
+LEFT JOIN
+  tracks t ON t.request_id = r.id
+GROUP BY
+  u.id
+ORDER BY
+  total_requests DESC;
+
+```
+
 #### Bugs?
 
 - Found one? shoot a mail to theapache64@gmail.com or create a repo issue.
