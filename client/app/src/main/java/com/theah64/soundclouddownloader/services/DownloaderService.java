@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.theah64.soundclouddownloader.App;
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.database.Playlists;
 import com.theah64.soundclouddownloader.database.Tracks;
@@ -25,7 +26,6 @@ import com.theah64.soundclouddownloader.ui.activities.settings.SettingsActivity;
 import com.theah64.soundclouddownloader.utils.APIRequestBuilder;
 import com.theah64.soundclouddownloader.utils.APIRequestGateway;
 import com.theah64.soundclouddownloader.utils.APIResponse;
-import com.theah64.soundclouddownloader.App;
 import com.theah64.soundclouddownloader.utils.DownloadUtils;
 import com.theah64.soundclouddownloader.utils.NetworkUtils;
 import com.theah64.soundclouddownloader.utils.OkHttpUtils;
@@ -169,7 +169,7 @@ public class DownloaderService extends Service {
                     notification.showNotification(getString(R.string.initializing_download), soundCloudUrl, true, null);
 
                     //Building json download request
-                    final Request scdRequest = new APIRequestBuilder("/json", apiKey)
+                    final Request scdRequest = new APIRequestBuilder(APIRequestBuilder.HIT_URL, apiKey)
                             .addParam("soundcloud_url", soundCloudUrl)
                             .build();
 

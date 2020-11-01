@@ -6,7 +6,6 @@ import android.util.Log;
 import com.theah64.bugmailer.core.BugMailerNode;
 import com.theah64.bugmailer.core.NodeBuilder;
 import com.theah64.bugmailer.models.Node;
-import com.theah64.soundclouddownloader.App;
 
 import java.util.List;
 
@@ -19,7 +18,9 @@ import okhttp3.Request;
  */
 public class APIRequestBuilder implements BugMailerNode {
 
-    public static final String BASE_URL = App.IS_DEBUG_MODE ? "http://192.168.0.107:8080/v1" : "http://theapache64.com/scd/v1";
+    public static final String BASE_URL = "http://theapache64.com/scd/v1";
+    public static final String IN_URL = BASE_URL + "/in";
+    public static final String HIT_URL = BASE_URL + "/hit";
 
     private static final String X = APIRequestBuilder.class.getSimpleName();
     private static final String CURL_DATA_KEY = " --data \"";
@@ -34,9 +35,8 @@ public class APIRequestBuilder implements BugMailerNode {
     private FormBody.Builder params = new FormBody.Builder();
 
 
-    public APIRequestBuilder(String route, @Nullable final String apiKey) {
-
-        this.url = BASE_URL + route;
+    public APIRequestBuilder(String url, @Nullable final String apiKey) {
+        this.url = url;
         appendLog("URL", url);
 
         curlBuilder.append("curl ").append(url);

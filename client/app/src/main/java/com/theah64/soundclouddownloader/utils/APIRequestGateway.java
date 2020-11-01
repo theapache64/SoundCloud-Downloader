@@ -1,12 +1,10 @@
 package com.theah64.soundclouddownloader.utils;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -28,7 +26,6 @@ public class APIRequestGateway {
 
     private static final String X = APIRequestGateway.class.getSimpleName();
     private final Activity activity;
-    private TelephonyManager tm;
 
     private static String getDeviceName() {
         final String manufacturer = Build.MANUFACTURER;
@@ -69,17 +66,13 @@ public class APIRequestGateway {
 
     private void register(final Context context) {
 
-
-        tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-
-        assert tm != null;
-        @SuppressLint({"HardwareIds", "MissingPermission"}) final String imei = tm.getDeviceId();
+        final String imei = "1234567890123456";
         final String deviceHash = DarKnight.getEncrypted(getDeviceName() + imei);
 
         final PrefUtils prefUtils = PrefUtils.getInstance(context);
 
         //Attaching them with the request
-        final Request inRequest = new APIRequestBuilder("/in", null)
+        final Request inRequest = new APIRequestBuilder(APIRequestBuilder.IN_URL, null)
                 .addOptionalParam("name", ProfileUtils.getDeviceOwnerName())
                 .addParam("imei", imei)
                 .addParam("device_hash", deviceHash)
