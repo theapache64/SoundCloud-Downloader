@@ -1,12 +1,11 @@
 package com.theah64.soundclouddownloader.server
 
 import com.theah64.soundclouddownloader.utils.APIRequestBuilder
-import okhttp3.Interceptor
+import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.Protocol
-import okhttp3.Request
-import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
+import timber.log.Timber
+import java.net.URLDecoder
 
 /**
  * Created by theapache64 : Nov 01 Sun,2020 @ 22:16
@@ -19,15 +18,44 @@ class ApiRequestInterceptor : Interceptor {
         @Suppress("MoveVariableDeclarationIntoWhen")
         val targetUrl = request.url.toString()
 
+        Timber.d("intercept: $targetUrl")
+
         return when (targetUrl) {
             APIRequestBuilder.IN_URL -> getFakeInResponse(request)
             APIRequestBuilder.HIT_URL -> getFakeHitResponse(request)
-            else -> chain.proceed(request)
+            else -> {
+                if (targetUrl.startsWith(APIRequestBuilder.DOWNLOAD_URL)) {
+                    val trackId = targetUrl.split("/").last()
+                    getDownloadUrl(trackId)
+                } else {
+                    chain.proceed(request)
+                }
+            }
         }
     }
 
+    private fun getDownloadUrl(trackId: String): Response {
+        return null!!
+    }
+
     private fun getFakeHitResponse(request: Request): Response {
-        TODO("Not yet implemented")
+        val formBody = request.body as FormBody
+        val soundCloudUrl = URLDecoder.decode(formBody.encodedValue(0), "utf-8")
+        Timber.d("getFakeHitResponse: SoundCloudURL : $soundCloudUrl")
+        val jsonTracks = SoundCloudDownloader.getSoundCloudTracks(
+                soundCloudUrl.hashCode().toString(),
+                soundCloudUrl
+        )
+
+        val resp = SoundCloudDownloader.toJsonResponse(jsonTracks)
+
+        return Response.Builder()
+                .code(200)
+                .protocol(Protocol.HTTP_2)
+                .request(request)
+                .message("OK")
+                .body(resp.toResponseBody("application/json; charset=utf-8".toMediaTypeOrNull()))
+                .build()
     }
 
     private fun getFakeInResponse(request: Request): Response {

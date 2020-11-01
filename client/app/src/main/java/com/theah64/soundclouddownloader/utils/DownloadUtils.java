@@ -4,13 +4,14 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.util.Log;
 
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.models.Track;
 
 import java.io.File;
+
+import timber.log.Timber;
 
 /**
  * Created by theapache64 on 14/12/16.
@@ -39,7 +40,9 @@ public class DownloadUtils {
 
     public long addToDownloadQueue(final Track track) {
 
-        Log.d(X, "Adding to download queue : " + track.getDownloadUrl() + " track:" + track);
+        Timber.d("Adding to download queue : " + track.getDownloadUrl() + " track:" + track);
+
+        // TODO : Get real download url from here
 
         final DownloadManager.Request downloadRequest = new DownloadManager.Request(Uri.parse(track.getDownloadUrl()));
 
@@ -49,7 +52,7 @@ public class DownloadUtils {
         downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
 
         final File tempFile = new File(track.getFile().getAbsolutePath() + TEMP_SIGNATURE);
-        Log.d(X, "Temp file : " + tempFile.getAbsolutePath());
+        Timber.d("Temp file : " + tempFile.getAbsolutePath());
         downloadRequest.setDestinationUri(Uri.fromFile(tempFile));
         return dm.enqueue(downloadRequest);
 

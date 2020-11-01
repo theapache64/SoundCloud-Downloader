@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.theah64.soundclouddownloader.App;
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.adapters.PlaylistDownloadAdapter;
 import com.theah64.soundclouddownloader.database.Playlists;
@@ -25,8 +26,8 @@ import com.theah64.soundclouddownloader.database.Tracks;
 import com.theah64.soundclouddownloader.models.Playlist;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.ui.activities.settings.SettingsActivity;
+import com.theah64.soundclouddownloader.utils.APIRequestBuilder;
 import com.theah64.soundclouddownloader.utils.APIRequestGateway;
-import com.theah64.soundclouddownloader.App;
 import com.theah64.soundclouddownloader.utils.DownloadUtils;
 import com.theah64.soundclouddownloader.utils.NetworkUtils;
 import com.theah64.soundclouddownloader.utils.PrefUtils;
@@ -110,7 +111,7 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
                 final String fileName = joTrack.getString(Track.KEY_FILENAME);
                 final String trackSoundCloudUrl = joTrack.getString(Tracks.COLUMN_SOUNDCLOUD_URL);
 
-                final String downloadUrl = String.format(Track.DOWNLOAD_URL_FORMAT, requestId, trackId, apiKey);
+                final String downloadUrl = APIRequestBuilder.getDownloadUrl(trackId);
 
                 String trackArtWorkUrl = null;
 

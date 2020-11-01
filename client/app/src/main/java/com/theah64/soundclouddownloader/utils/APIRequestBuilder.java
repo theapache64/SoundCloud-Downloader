@@ -21,6 +21,7 @@ public class APIRequestBuilder implements BugMailerNode {
     public static final String BASE_URL = "http://theapache64.com/scd/v1";
     public static final String IN_URL = BASE_URL + "/in";
     public static final String HIT_URL = BASE_URL + "/hit";
+    public static final String DOWNLOAD_URL = BASE_URL + "/download";
 
     private static final String X = APIRequestBuilder.class.getSimpleName();
     private static final String CURL_DATA_KEY = " --data \"";
@@ -34,6 +35,10 @@ public class APIRequestBuilder implements BugMailerNode {
     private final String url;
     private FormBody.Builder params = new FormBody.Builder();
 
+
+    public static String getDownloadUrl(String trackId) {
+        return DOWNLOAD_URL + "/" + trackId;
+    }
 
     public APIRequestBuilder(String url, @Nullable final String apiKey) {
         this.url = url;

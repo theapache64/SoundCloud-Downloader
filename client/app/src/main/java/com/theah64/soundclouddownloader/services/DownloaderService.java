@@ -45,6 +45,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
+import timber.log.Timber;
 
 /**
  * https://code2flow.com/97OZlU.png
@@ -196,7 +197,6 @@ public class DownloaderService extends Service {
 
                                 final JSONObject joData = apiResponse.getJSONObjectData();
                                 final JSONArray jaTracks = joData.getJSONArray("tracks");
-                                final String requestId = joData.getString("request_id");
 
                                 if (!joData.has(Track.KEY_PLAYLIST_NAME)) {
 
@@ -207,9 +207,9 @@ public class DownloaderService extends Service {
                                     String artworkUrl = null;
                                     if (joTrack.has(Tracks.COLUMN_ARTWORK_URL)) {
                                         artworkUrl = joTrack.getString(Tracks.COLUMN_ARTWORK_URL);
-                                        Log.d(X, title + " has artwork " + artworkUrl);
+                                        Timber.d(title + " has artwork " + artworkUrl);
                                     } else {
-                                        Log.e(X, title + " hasn't artwork url ");
+                                        Timber.e("%s hasn't artwork url ", title);
                                     }
 
                                     final String username = joTrack.getString(Tracks.COLUMN_USERNAME);
@@ -220,7 +220,7 @@ public class DownloaderService extends Service {
                                     final String absFilePath = String.format("%s/%s", baseStorageLocation, fileName);
 
                                     final String trackId = joTrack.getString("id");
-                                    final String downloadUrl = String.format(Track.DOWNLOAD_URL_FORMAT, requestId, trackId, apiKey);
+                                    final String downloadUrl = APIRequestBuilder.getDownloadUrl(trackId);
 
                                     final Track theTrack = new Track(null, title, username, downloadUrl, artworkUrl, null, soundCloudUrl, null, false, false, new File(absFilePath), duration);
 

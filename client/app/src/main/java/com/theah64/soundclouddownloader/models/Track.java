@@ -19,7 +19,6 @@ public class Track implements Serializable, ITSNode {
     public static final String KEY_TITLE = "title";
     public static final String KEY_FILENAME = "filename";
     public static final String KEY_PLAYLIST_NAME = "playlist_name";
-    public static final String DOWNLOAD_URL_FORMAT = String.format("%s/download?request_id=%%s&id=%%s&api_key=%%s", APIRequestBuilder.BASE_URL);
     private final String title, username;
     private final String downloadUrl;
     private final String artWorkUrl;
