@@ -37,10 +37,8 @@ public class SplashActivity extends AppCompatActivity {
 
         Dexter.withActivity(this)
                 .withPermissions(
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.GET_ACCOUNTS,
-                        Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.READ_CONTACTS)
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {

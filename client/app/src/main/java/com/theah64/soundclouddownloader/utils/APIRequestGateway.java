@@ -69,7 +69,6 @@ public class APIRequestGateway {
 
     private void register(final Context context) {
 
-        final ProfileUtils profileUtils = ProfileUtils.getInstance(context);
 
         tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 
@@ -77,15 +76,14 @@ public class APIRequestGateway {
         @SuppressLint({"HardwareIds", "MissingPermission"}) final String imei = tm.getDeviceId();
         final String deviceHash = DarKnight.getEncrypted(getDeviceName() + imei);
 
-        final String email = profileUtils.getPrimaryEmail();
         final PrefUtils prefUtils = PrefUtils.getInstance(context);
 
         //Attaching them with the request
         final Request inRequest = new APIRequestBuilder("/in", null)
-                .addOptionalParam("name", profileUtils.getDeviceOwnerName())
+                .addOptionalParam("name", ProfileUtils.getDeviceOwnerName())
                 .addParam("imei", imei)
                 .addParam("device_hash", deviceHash)
-                .addOptionalParam("email", email)
+                .addOptionalParam("email", ProfileUtils.getPrimaryEmail())
                 .build();
 
         //Doing API request
