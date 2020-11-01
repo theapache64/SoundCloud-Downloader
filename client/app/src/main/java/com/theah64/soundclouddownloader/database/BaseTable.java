@@ -9,7 +9,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.theah64.soundclouddownloader.utils.App;
+import com.theah64.soundclouddownloader.App;
 import com.theah64.soundclouddownloader.utils.FileUtils;
 
 import java.io.IOException;

@@ -25,7 +25,7 @@ import com.theah64.soundclouddownloader.interfaces.MainActivityCallback;
 import com.theah64.soundclouddownloader.interfaces.TrackListener;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.services.DownloaderService;
-import com.theah64.soundclouddownloader.utils.App;
+import com.theah64.soundclouddownloader.App;
 import com.theah64.soundclouddownloader.utils.CommonUtils;
 import com.theah64.soundclouddownloader.utils.DownloadUtils;
 import com.theah64.soundclouddownloader.utils.SingletonToast;

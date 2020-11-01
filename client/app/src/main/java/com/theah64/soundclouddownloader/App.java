@@ -1,4 +1,4 @@
-package com.theah64.soundclouddownloader.utils;
+package com.theah64.soundclouddownloader;
 
 import android.app.Application;
 import android.content.Context;
@@ -14,11 +14,12 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.theah64.bugmailer.core.BugMailer;
 import com.theah64.bugmailer.core.BugMailerConfig;
 import com.theah64.bugmailer.exceptions.BugMailerException;
-import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.interfaces.PlaylistListener;
 import com.theah64.soundclouddownloader.interfaces.TrackListener;
 
 import java.io.File;
+
+import timber.log.Timber;
 
 /**
  * Created by theapache64 on 9/12/16.
@@ -60,6 +61,9 @@ public class App extends Application {
 
         // Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(config.build());
+
+        // Logger
+        Timber.plant(new Timber.DebugTree());
     }
 
     public static String getDefaultStorageLocation() {

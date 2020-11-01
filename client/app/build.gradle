@@ -1,4 +1,7 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+}
 
 android {
     compileSdkVersion 27
@@ -30,6 +33,9 @@ dependencies {
     implementation 'com.mpatric:mp3agic:0.8.1'
     implementation 'com.theah64.bugmailer:bugmailer:3.0.0'
     implementation 'com.karumi:dexter:4.2.0'
+
+    // Timber : No-nonsense injectable logging.
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 }
 
 

@@ -2,6 +2,8 @@ package com.theah64.soundclouddownloader.utils;
 
 import android.util.Log;
 
+import com.theah64.soundclouddownloader.server.ApiRequestInterceptor;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -16,13 +18,16 @@ public class OkHttpUtils {
 
     public static final String METHOD_GET = "GET";
 
+    private static final ApiRequestInterceptor apiRequestInterceptor = new ApiRequestInterceptor();
+
     private static final OkHttpClient okHttpClient = new OkHttpClient.Builder()
             .connectTimeout(10, TimeUnit.MINUTES)
             .readTimeout(10, TimeUnit.MINUTES)
+            .addInterceptor(apiRequestInterceptor)
             .build();
 
     private static final String X = OkHttpUtils.class.getSimpleName();
-    private static OkHttpUtils instance = new OkHttpUtils();
+    private static final OkHttpUtils instance = new OkHttpUtils();
 
     private OkHttpUtils() {
     }

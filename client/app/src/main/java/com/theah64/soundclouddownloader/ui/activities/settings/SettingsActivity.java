@@ -16,7 +16,7 @@ import android.view.View;
 
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.ui.activities.BaseAppCompatActivity;
-import com.theah64.soundclouddownloader.utils.App;
+import com.theah64.soundclouddownloader.App;
 import com.theah64.soundclouddownloader.utils.SingletonToast;
 
 

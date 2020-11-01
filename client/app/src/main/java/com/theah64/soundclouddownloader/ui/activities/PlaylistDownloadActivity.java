@@ -26,7 +26,7 @@ import com.theah64.soundclouddownloader.models.Playlist;
 import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.ui.activities.settings.SettingsActivity;
 import com.theah64.soundclouddownloader.utils.APIRequestGateway;
-import com.theah64.soundclouddownloader.utils.App;
+import com.theah64.soundclouddownloader.App;
 import com.theah64.soundclouddownloader.utils.DownloadUtils;
 import com.theah64.soundclouddownloader.utils.NetworkUtils;
 import com.theah64.soundclouddownloader.utils.PrefUtils;

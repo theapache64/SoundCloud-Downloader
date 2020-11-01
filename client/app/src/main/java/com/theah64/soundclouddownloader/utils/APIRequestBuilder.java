@@ -6,6 +6,7 @@ import android.util.Log;
 import com.theah64.bugmailer.core.BugMailerNode;
 import com.theah64.bugmailer.core.NodeBuilder;
 import com.theah64.bugmailer.models.Node;
+import com.theah64.soundclouddownloader.App;
 
 import java.util.List;
 
