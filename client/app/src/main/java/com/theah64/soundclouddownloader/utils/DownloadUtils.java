@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.models.Track;
+import com.theah64.soundclouddownloader.server.DirectDownloader;
 
 import java.io.File;
 
@@ -38,23 +39,36 @@ public class DownloadUtils {
         }
     }
 
-    public long addToDownloadQueue(final Track track) {
+    public interface Callback {
+        void onAddedToDownloadQueue(long downloadId);
+    }
+
+    public void addToDownloadQueue(final Track track, final Callback callback) {
 
         Timber.d("Adding to download queue : " + track.getDownloadUrl() + " track:" + track);
 
-        // TODO : Get real download url from here
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-        final DownloadManager.Request downloadRequest = new DownloadManager.Request(Uri.parse(track.getDownloadUrl()));
+                final String finalDownloadUrl = DirectDownloader.INSTANCE.getFinalDownloadLink(track.getDownloadUrl());
+                if (finalDownloadUrl != null) {
+                    Timber.d("run: finalDownloadUrl is %s", finalDownloadUrl);
+                    final DownloadManager.Request downloadRequest = new DownloadManager.Request(Uri.parse(finalDownloadUrl));
 
-        downloadRequest.setTitle(track.getTitle());
-        downloadRequest.setDescription(track.getDownloadUrl());
+                    downloadRequest.setTitle(track.getTitle());
+                    downloadRequest.setDescription(finalDownloadUrl);
 
-        downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+                    downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
 
-        final File tempFile = new File(track.getFile().getAbsolutePath() + TEMP_SIGNATURE);
-        Timber.d("Temp file : " + tempFile.getAbsolutePath());
-        downloadRequest.setDestinationUri(Uri.fromFile(tempFile));
-        return dm.enqueue(downloadRequest);
+                    final File tempFile = new File(track.getFile().getAbsolutePath() + TEMP_SIGNATURE);
+                    Timber.d("Temp file : %s", tempFile.getAbsolutePath());
+                    downloadRequest.setDestinationUri(Uri.fromFile(tempFile));
+
+                    callback.onAddedToDownloadQueue(dm.enqueue(downloadRequest));
+                }
+            }
+        }).start();
 
     }
 

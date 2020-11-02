@@ -42,6 +42,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class PlaylistDownloadActivity extends BaseAppCompatActivity implements PlaylistDownloadAdapter.PlaylistListener {
 
     public static final String KEY_TRACKS = "tracks";
@@ -251,15 +253,24 @@ public class PlaylistDownloadActivity extends BaseAppCompatActivity implements P
 
             if (track.isChecked()) {
                 //Starting download
-                final long downloadId = downloadUtils.addToDownloadQueue(track);
-                if (!tracksTable.update(Tracks.COLUMN_ID, track.getId(), Tracks.COLUMN_DOWNLOAD_ID, String.valueOf(downloadId), null)) {
-                    throw new IllegalArgumentException("Failed to set download id");
-                }
+                downloadUtils.addToDownloadQueue(track, new DownloadUtils.Callback() {
+                    @Override
+                    public void onAddedToDownloadQueue(final long downloadId) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!tracksTable.update(Tracks.COLUMN_ID, track.getId(), Tracks.COLUMN_DOWNLOAD_ID, String.valueOf(downloadId), null)) {
+                                    throw new IllegalArgumentException("Failed to set download id");
+                                }
+                            }
+                        });
+                    }
+                });
 
-                Log.i(X, "Added to download queue");
+                Timber.i("Added to download queue");
             }
 
-            Log.e(X, "-------------------------------");
+            Timber.e("-------------------------------");
         }
 
         SingletonToast.makeText(this, R.string.download_started).show();

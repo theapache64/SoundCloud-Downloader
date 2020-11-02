@@ -226,9 +226,14 @@ public class DownloaderService extends Service {
 
                                     if (!theTrack.isExistInStorage()) {
 
-                                        final long downloadId = downloadUtils.addToDownloadQueue(theTrack);
-                                        //Starting download
-                                        theTrack.setDownloadId(String.valueOf(downloadId));
+                                         downloadUtils.addToDownloadQueue(theTrack, new DownloadUtils.Callback() {
+                                            @Override
+                                            public void onAddedToDownloadQueue(long downloadId) {
+                                                //Starting download
+                                                theTrack.setDownloadId(String.valueOf(downloadId));
+                                            }
+                                        });
+
 
                                         showToast(getString(R.string.s_added_to_download_queue, theTrack.getTitle()));
 

@@ -137,4 +137,26 @@ public class SoundCloudDownloader {
         }
 
     }
+
+    private static final String STREAM_TRACK_URL_FORMAT = "https://api.soundcloud.com/i1/tracks/%s/streams?client_id=%s";
+
+    private static String getStreamTrackUrl(final String scTrackId) {
+        return String.format(STREAM_TRACK_URL_FORMAT, scTrackId, SecretConstants.API_KEY);
+    }
+
+    static String getSoundCloudDownloadUrl(String trackId) {
+
+        final String trackDownloadUrl = getStreamTrackUrl(trackId);
+        final String downloadTrackResp = new NetworkHelper(trackDownloadUrl).getResponse();
+
+        if (downloadTrackResp != null) {
+            try {
+                return new JSONObject(downloadTrackResp).getString("http_mp3_128_url");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
 }

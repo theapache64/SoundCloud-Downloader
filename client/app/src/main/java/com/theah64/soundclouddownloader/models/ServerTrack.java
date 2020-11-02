@@ -75,6 +75,7 @@ public class ServerTrack {
 
     public JSONObject toJSONObject() throws JSONException {
         final JSONObject joTrack = new JSONObject();
+        joTrack.put("id", soundcloudTrackId);
         joTrack.put("title", title);
         joTrack.put("original_format", originalFormat);
         joTrack.put("filename", filename);
