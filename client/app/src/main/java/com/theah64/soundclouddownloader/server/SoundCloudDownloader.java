@@ -8,6 +8,7 @@ import com.theah64.soundclouddownloader.models.Track;
 import com.theah64.soundclouddownloader.utils.FileNameUtils;
 import com.theah64.soundclouddownloader.utils.NetworkHelper;
 import com.theah64.soundclouddownloader.utils.SecretConstants;
+import com.theah64.soundclouddownloader.utils.UrlHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,7 +27,11 @@ public class SoundCloudDownloader {
     private static final String KEY_ARTWORK_URL = "artwork_url";
     private static final String FILENAME_FORMAT = "%s_scd.%s";
 
-    private static String getResolveTrackUrl(final String url, final String clientId) {
+    private static String getResolveTrackUrl(String url, final String clientId) {
+        if (url.contains("soundcloud.app.goo.gl")) {
+            // redirection url
+            url = UrlHelper.INSTANCE.getFinalUrl(url);
+        }
         return String.format(RESOLVE_TRACK_URL_FORMAT, url, clientId);
     }
 

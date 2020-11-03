@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.theah64.soundclouddownloader.R;
 import com.theah64.soundclouddownloader.utils.DownloadIgniter;
 
+import timber.log.Timber;
+
 public class DownloaderActivity extends AppCompatActivity {
 
 

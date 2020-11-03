@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
+import timber.log.Timber;
 
 /**
  * Created by shifar on 23/7/16.
@@ -24,6 +25,8 @@ public class OkHttpUtils {
             .connectTimeout(10, TimeUnit.MINUTES)
             .readTimeout(10, TimeUnit.MINUTES)
             .addInterceptor(apiRequestInterceptor)
+            .followRedirects(true)
+            .followSslRedirects(true)
             .build();
 
     private static final String X = OkHttpUtils.class.getSimpleName();
@@ -38,7 +41,7 @@ public class OkHttpUtils {
 
     public static String logAndGetStringBody(final Response response) throws IOException {
         final String stringResp = response.body().string();
-        Log.d(X, "JSONResponse : " + stringResp);
+        Timber.d("JSONResponse : %s", stringResp);
         return stringResp;
     }
 

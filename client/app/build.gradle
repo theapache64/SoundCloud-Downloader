@@ -36,6 +36,12 @@ dependencies {
 
     // Timber : No-nonsense injectable logging.
     implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    // JUnit : JUnit is a unit testing framework for Java, created by Erich Gamma and Kent Beck.
+    testImplementation 'junit:junit:4.13.1'
+
+    // Expekt : An assertion library for Kotlin
+    testImplementation 'com.theapache64:expekt:0.0.1'
 }
 
 

@@ -315,17 +315,18 @@ public class DownloaderService extends Service {
 
         } else {
 
-            final long downloadId = downloadUtils.addToDownloadQueue(track);
+            downloadUtils.addToDownloadQueue(track, new DownloadUtils.Callback() {
+                @Override
+                public void onAddedToDownloadQueue(long downloadId) {
+                    //Updating
+                    track.setDownloadId(String.valueOf(downloadId));
 
-            //Updating
-            track.setDownloadId(String.valueOf(downloadId));
-
-            //Track exist so just updating the download id.
-            tracksTable.update(track, handler);
-            showToast(getString(R.string.s_added_to_download_queue, track.getTitle()));
+                    //Track exist so just updating the download id.
+                    tracksTable.update(track, handler);
+                    showToast(getString(R.string.s_added_to_download_queue, track.getTitle()));
+                }
+            });
         }
-
-
     }
 
     @Override

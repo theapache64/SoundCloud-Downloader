@@ -21,7 +21,7 @@ public class DownloadIgniter {
     public static void ignite(final Context context, String data) {
 
         final String url = UrlParser.parse(data);
-        if (url != null && url.contains("soundcloud.com/")) {
+        if (url != null && url.contains("https://soundcloud")) {
 
             final Intent downloadIntent = new Intent(context, DownloaderService.class);
             downloadIntent.putExtra(Tracks.COLUMN_SOUNDCLOUD_URL, url);
